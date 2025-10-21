@@ -31,6 +31,7 @@ body {
     transition: background-color 0.4s ease, box-shadow 0.4s ease; /*  Adicionado transition para box-shadow */
 }
 
+/* Aplica a posição fixa APENAS na homepage */
 #welcome-page .navbar {
     position: fixed; 
 }

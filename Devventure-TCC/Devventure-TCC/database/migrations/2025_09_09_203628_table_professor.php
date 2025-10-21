@@ -35,7 +35,7 @@ return new class extends Migration
 
         $table->rememberToken();
         $table->timestamps();
-        $table->string('status')->default('ativo');
+        $table->string('status')->default('pendente');
     });
 }
 

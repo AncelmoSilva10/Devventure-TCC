@@ -35,35 +35,26 @@ class ProfessorLoginController extends Controller
         
         Auth::guard('professor')->logout();
 
-        
         return back()->withErrors(['msg' => 'Sua conta está bloqueada. Entre em contato com o suporte.']);
-    }
-
-        
-        $code = rand(100000, 999999);
-        $user->two_factor_code = $code;
-        $user->two_factor_expires_at = now()->addMinutes(10);
-        $user->save();
-        
-       
-        try {
-            Mail::to($user->email)->send(new TwoFactorCodeMail($code));
-        } catch (\Exception $e) {
-            
         }
 
-        
-        Auth::guard('professor')->logout();
 
-        
-        $request->session()->put('user_to_verify', [
-            'id' => $user->id,
-            'guard' => 'professor'
-        ]);
+        if ($user->status === 'pendente') {
+          
+            Auth::guard('professor')->logout();
 
-        
-        return redirect()->route('2fa.verify.form');
+            $request->session()->put('email_for_verification', $user->email);
+       
+            return redirect()->route('login.professor') 
+                ->with('needs_verification', 'Seu e-mail precisa ser verificado para login.')
+                ->withInput($request->only('email'));
+        }
+
+
+        $request->session()->regenerate();
+        return redirect()->intended('/professorDashboard');
     }
+
 
     
     public function logoutUser(Request $request)

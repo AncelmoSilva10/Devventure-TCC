@@ -52,11 +52,11 @@
                        autocomplete="one-time-code" inputmode="numeric" pattern="[0-9]{6}" 
                        maxlength="6" placeholder="------">
             </div>
-            <button type="submit" class="btn-submit">Verificar Código</button>
+            <button type="submit" class="btn-submit">Verificar e Ativar Conta</button>
         </form>
 
         <div class="resend-container">
-            <form method="POST" action="{{ route('2fa.verify.form') }}">
+            <form method="POST" action="{{ route('verification.resend') }}">
                 @csrf
                 <button type="submit" class="btn-resend">Não recebeu? Reenviar código</button>
             </form>

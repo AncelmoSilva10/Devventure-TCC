@@ -46,8 +46,9 @@ Route::post('/login-adm', [AdmLoginController::class, 'verifyUser']);
 
 // VERIFICAÇÃO DE DUAS ETAPAS (2FA) APÓS O LOGIN
 // --- URL ALTERADA para evitar conflito ---
-Route::get('/login/verificar-2fa', [TwoFactorController::class, 'showVerifyForm'])->name('2fa.verify.form');
-Route::post('/login/verificar-2fa', [TwoFactorController::class, 'verifyCode'])->name('2fa.verify.code');
+Route::get('/cadastro/verificar-2fa', [TwoFactorController::class, 'showVerifyForm'])->name('2fa.verify.form');
+Route::post('/cadastro/verificar-2fa', [TwoFactorController::class, 'verifyCode'])->name('2fa.verify.code');
+Route::post('/cadastro/reenviar-verificacao', [TwoFactorController::class, 'resend'])->name('verification.resend');
 
 // ESQUECEU A SENHA
 // Rota para exibir o formulário de "Esqueceu a Senha"
@@ -76,9 +77,9 @@ Route::get('/email/verify/{id}/{hash}', function (EmailVerificationRequest $requ
     $request->fulfill();
     // Redireciona para o dashboard correto após a verificação
     if (Auth::user() instanceof \App\Models\Professor) {
-        return redirect()->route('professorDashboard');
+        return redirect()->route('login-professor');
     }
-    return redirect()->route('aluno.dashboard');
+    return redirect()->route('aluno-login');
 })->middleware(['auth', 'signed'])->name('verification.verify');
 
 Route::post('/email/verification-notification', function (Request $request) {

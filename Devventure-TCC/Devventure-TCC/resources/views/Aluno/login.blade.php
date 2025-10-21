@@ -81,7 +81,7 @@
                 <div class="form-group" id="confirm-password-wrapper" style="display: none;">
                     <label for="confirm_password">Confirmar senha *</label>
                     <div class="senha-wrapper">
-                        <input type="password" id="confirm_password" name="confirm_password" placeholder="Confirme sua senha">
+                        <input type="password" id="confirm_password" name="password_confirmation" placeholder="Confirme sua senha">
                         <span class="toggle-password" onclick="togglePassword('confirm_password', this)">
                             <svg class="icon-eye" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>
                             <svg class="icon-eye-off d-none" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"></path><line x1="1" y1="1" x2="23" y2="23"></line></svg>
@@ -107,15 +107,119 @@
 
     <script src="{{ asset('js/Aluno/loginAluno.js') }}"></script>
 
-    @if ($errors->has('msg'))
-        <script>
+    <script>
+    document.addEventListener('DOMContentLoaded', function () {
+
+        // Pega os erros de validação e dados antigos injetados pelo Laravel
+        const errors = @json($errors->toArray());
+        const oldInput = @json(session()->getOldInput() ?? []);
+
+        document.querySelectorAll('.error-feedback-js').forEach(e => e.remove());
+
+        // Lógica principal para reabrir o formulário de cadastro se a validação falhar
+        if (Object.keys(errors).length > 0 && errors.msg === undefined) {
+            
+            // Força a abertura do formulário (simula o clique no botão "Cadastre-se")
+            const toggleBtn = document.getElementById('toggle-btn');
+            if (toggleBtn && (toggleBtn.textContent.includes('Cadastre-se') || toggleBtn.innerText.includes('Cadastre-se'))) {
+                toggleBtn.click();
+            }
+
+            // Itera sobre os campos para aplicar erros (limpando) ou dados antigos (preenchendo)
+            const form = document.getElementById('aluno-form');
+            form.querySelectorAll('input, textarea, select').forEach(field => {
+                const fieldName = field.name;
+
+                if (fieldName === '_token' || fieldName === 'avatar') return;
+
+                let existingError = field.parentNode.querySelector('.error-feedback-js');
+                if(existingError) existingError.remove();
+
+                if (errors[fieldName]) {
+                    field.value = ''; // Limpa o campo com erro
+                    
+                    const errorElement = document.createElement('small');
+                    errorElement.className = 'error-feedback-js';
+                    errorElement.innerText = errors[fieldName][0];
+                    
+                    if(field.parentNode.classList.contains('senha-wrapper')) {
+                        field.parentNode.parentNode.appendChild(errorElement);
+                    } else {
+                        field.parentNode.appendChild(errorElement);
+                    }
+                    
+                } else if (oldInput[fieldName]) {
+                    field.value = oldInput[fieldName]; // Preenche o campo que estava correto
+                }
+            });
+            
+            // Limpa campos de senha por segurança
+            document.getElementById('password').value = '';
+            document.getElementById('confirm_password').value = '';
+        }
+        
+        // --- LÓGICA DOS POP-UPS (SWEETALERT) ---
+
+        // Exibe pop-up de SUCESSO (ex: "E-mail verificado com sucesso!")
+        @if (session('status'))
+            Swal.fire({
+                icon: 'success',
+                title: 'Sucesso!',
+                text: "{{ session('status') }}", 
+                confirmButtonColor: '#3085d6'
+            });
+        @endif
+
+        // Exibe pop-up de ERRO DE LOGIN (ex: "Senha inválida" ou "Conta bloqueada")
+        @if ($errors->has('msg'))
             Swal.fire({
                 icon: 'error',
-                title: 'Falha na Autenticação',
+                title: 'Oops... Algo deu errado',
                 text: '{{ $errors->first('msg') }}',
                 confirmButtonColor: '#d33'
             });
-        </script>
-    @endif
+        @endif
+
+        // Exibe pop-up de VERIFICAÇÃO PENDENTE
+        @if (session('needs_verification'))
+            Swal.fire({
+                icon: 'warning',
+                title: 'Verificação Necessária',
+                text: "{{ session('needs_verification') }}",
+                showCancelButton: true,
+                confirmButtonText: 'Reenviar E-mail de Verificação',
+                cancelButtonText: 'Cancelar',
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#aaa',
+            }).then((result) => { 
+                if (result.isConfirmed) {
+                    // Cria e submete um formulário dinâmico para reenviar o e-mail
+                    let form = document.createElement('form');
+                    form.method = 'POST';
+                    form.action = "{{ route('verification.resend') }}";
+                    
+                    let csrfToken = document.createElement('input');
+                    csrfToken.type = 'hidden';
+                    csrfToken.name = '_token';
+                    csrfToken.value = '{{ csrf_token() }}';
+                    form.appendChild(csrfToken);
+                    
+                    document.body.appendChild(form);
+                    form.submit();
+                }
+            });
+        @endif
+
+        // Exibe pop-up de SUCESSO NO CADASTRO (se houver)
+        @if (session('cadastro_sucesso'))
+            Swal.fire({
+                icon: 'success',
+                title: 'Cadastro Realizado!',
+                text: "{{ session('cadastro_sucesso') }}",
+                confirmButtonColor: '#3085d6'
+            });
+        @endif
+    });
+    </script>
 </body>
 </html>
