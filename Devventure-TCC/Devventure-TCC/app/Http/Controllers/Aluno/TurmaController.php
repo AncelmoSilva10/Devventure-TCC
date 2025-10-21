@@ -7,6 +7,8 @@ use Illuminate\Http\Request;
 use App\Models\Turma;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Exercicio; 
+use Illuminate\Support\Facades\DB;
+
 
 class TurmaController extends Controller
 {
@@ -17,31 +19,43 @@ class TurmaController extends Controller
         return view('Aluno/turma', ['turmas' => $turmas]);
     }
 
-    public function mostrarTurmaEspecifica(Turma $turma)
-    {
-        
-        $alunoLogado = Auth::guard('aluno')->user();
+ public function mostrarTurmaEspecifica(Turma $turma, Request $request)
+{
+    $alunoLogado = Auth::guard('aluno')->user();
 
-        $alunosDaTurma = $turma->alunos()->orderBy('nome')->get();
-        $aulasDaTurma = $turma->aulas()->orderBy('created_at', 'asc')->get();
+    // PAGINAÇÃO: Colegas de Turma (10 por página, na sidebar)
+    $alunosDaTurma = $turma->alunos()
+        ->orderBy('nome')
+        ->paginate(10, ['*'], 'colegasPage');
 
-        
-        $exerciciosDaTurma = Exercicio::where('turma_id', $turma->id)
-            ->where('data_publicacao', '<=', now()) 
-            ->with(['respostas' => function ($query) use ($alunoLogado) {
-                // Anexa a resposta específica do aluno logado
-                $query->where('aluno_id', $alunoLogado->id);
-            }])
-            ->orderBy('data_fechamento', 'asc') 
-            ->get();
+    // PAGINAÇÃO: Aulas (6 por página)
+    $aulasDaTurma = $turma->aulas()
+        ->orderBy('created_at', 'desc')
+        ->paginate(6, ['*'], 'aulasPage');
+    
+    // PAGINAÇÃO: Avisos (5 por página)
+    $avisosDaTurma = $turma->avisos()
+        ->with('professor')
+        ->orderBy('created_at', 'desc')
+        ->paginate(5, ['*'], 'avisosPage');
 
-        return view('Aluno/turmaEspecifica', [
-            'turma' => $turma,
-            'alunos' => $alunosDaTurma,
-            'exercicios' => $exerciciosDaTurma, 
-            'aulas' => $aulasDaTurma
-        ]);
-    }
+    // PAGINAÇÃO: Exercícios (6 por página)
+    $exerciciosDaTurma = Exercicio::where('turma_id', $turma->id)
+        ->where('data_publicacao', '<=', now()) 
+        ->with(['respostas' => function ($query) use ($alunoLogado) {
+            $query->where('aluno_id', $alunoLogado->id);
+        }])
+        ->orderBy('data_fechamento', 'asc') 
+        ->paginate(6, ['*'], 'exerciciosPage');
+
+    return view('Aluno/turmaEspecifica', [
+        'turma' => $turma,
+        'alunos' => $alunosDaTurma,
+        'exercicios' => $exerciciosDaTurma, 
+        'aulas' => $aulasDaTurma,
+        'avisos' => $avisosDaTurma 
+    ]);
+}
 
     public function mostrarRanking(Turma $turma)
 {

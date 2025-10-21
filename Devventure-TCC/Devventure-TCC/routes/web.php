@@ -15,6 +15,7 @@ use App\Http\Controllers\Aluno\RespostaController;
 use App\Http\Controllers\Auth\ForgotPasswordController;
 use App\Http\Controllers\Auth\ResetPasswordController;
 use App\Http\Controllers\Aluno\ExercicioAlunoController;
+use App\Http\Controllers\Professor\AvisoController;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -129,6 +130,16 @@ Route::middleware(['auth:professor'])->group(function () {
     Route::post('/professor/aulas/{aula}/formulario', [App\Http\Controllers\Professor\FormularioController::class, 'store'])->name('formularios.store');
     Route::get('/professor/turmas/{turma}/ranking', [App\Http\Controllers\Professor\TurmaController::class, 'mostrarRanking'])
      ->name('professor.turma.ranking');
+    Route::get('/professor/avisos/criar', [AvisoController::class, 'create'])->name('professor.avisos.create');
+    Route::post('/professor/avisos', [AvisoController::class, 'store'])->name('professor.avisos.store');
+    Route::get('/professor/exercicios/{exercicio}/respostas', [App\Http\Controllers\Professor\ExercicioController::class, 'mostrarRespostas'])
+     ->name('professor.exercicios.respostas');
+    Route::post('/professor/respostas/{resposta}/avaliar', [App\Http\Controllers\Professor\ExercicioController::class, 'avaliarResposta'])
+     ->name('professor.respostas.avaliar');
+     Route::get('/professor/turmas/{turma}/relatorios', [App\Http\Controllers\Professor\RelatorioController::class, 'index'])
+     ->name('professor.relatorios.index');
+    Route::get('/professor/turmas/{turma}/relatorios/aluno/{aluno}', [App\Http\Controllers\Professor\RelatorioController::class, 'relatorioAluno'])
+     ->name('professor.relatorios.aluno');
 });
 
 
