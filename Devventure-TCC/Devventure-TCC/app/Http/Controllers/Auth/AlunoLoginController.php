@@ -41,11 +41,11 @@ class AlunoLoginController extends Controller
 
         if ($user->status === 'pendente') {
             
-                Auth::guard('professor')->logout();
+                Auth::guard('aluno')->logout();
 
                 $request->session()->put('email_for_verification', $user->email);
         
-                return redirect()->route('login-professor') 
+                return redirect()->route('login.aluno') 
                     ->with('needs_verification', 'Seu e-mail precisa ser verificado para login.')
                     ->withInput($request->only('email'));
             }
