@@ -10,45 +10,53 @@ use Illuminate\Validation\Rule;
 use Illuminate\Validation\Rules\Password;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
+
+use Illuminate\Support\Facades\Mail;
+use App\Mail\TwoFactorCodeMail;
+
 class PerfilController extends Controller
 {
       public function store(Request $request)
-{
+    {
     
     $request->validate([
-        'nome' => ['required', 'string', 'max:255'],
-        'cpf' => ['required', 'string', 'max:14', 'unique:professor'], 
-        'area' => ['required', 'string', 'max:255'],
-        'formacao' => ['required', 'string'],
-        'email' => ['required', 'string', 'email', 'max:255', 'unique:professor'],
-        'password' => ['required', 'string', 'min:8'],
-        'avatar' => ['nullable', 'image', 'mimes:jpg,jpeg,png', 'max:2048'], 
-    ]);
+            'nome' => ['required', 'string', 'max:255'],
+            'cpf' => ['required', 'string', 'unique:professor,cpf'],
+            'area' => ['required', 'string'],
+            'formacao' => ['required', 'string'],
+            'email' => ['required', 'string', 'email', 'max:255', 'unique:professor,email'],
+            'password' => ['required', 'string', 'min:8', 'confirmed'],
+            'avatar' => ['nullable', 'image', 'mimes:jpeg,png,jpg', 'max:2048'],
+        ]);
 
-    
-    $caminhoAvatar = null;
-    if ($request->hasFile('avatar')) {
-        
-        $caminhoAvatar = $request->file('avatar')->store('avatars', 'public');
+        $professor = Professor::create([
+            'nome' => $request->nome,
+            'cpf' => $request->cpf,
+            'areaEnsino' => $request->area,
+            'formacao' => $request->formacao,
+            'telefone' => $request->telefone,
+            'email' => $request->email,
+            'password' => Hash::make($request->password),
+        ]);
+
+        $code = rand(100000, 999999);
+        $professor->two_factor_code = $code;
+        $professor->two_factor_expires_at = now()->addMinutes(15);
+        $professor->save();
+
+        try {
+            Mail::to($professor->email)->send(new TwoFactorCodeMail($code));
+        } catch (\Exception $e) {
+            return back()->withErrors(['msg' => 'Não foi possível enviar o e-mail de verificação. Tente novamente.']);
+        }
+
+        $request->session()->put('user_to_verify', [
+            'id' => $professor->id,
+            'guard' => 'professor'
+        ]);
+
+        return redirect()->route('2fa.verify.form');
     }
-
-    
-    $professor = new Professor();
-    $professor->nome = $request->nome;
-    $professor->cpf = $request->cpf;
-    $professor->areaEnsino = $request->area; 
-    $professor->formacao = $request->formacao;
-    $professor->telefone = $request->telefone;
-    $professor->email = $request->email;
-    $professor->password = Hash::make($request->password);
-    
-   
-    $professor->avatar = $caminhoAvatar;
-    
-    $professor->save();
-
-    return redirect('/loginProfessor')->with('cadastro_sucesso', 'Cadastro realizado com sucesso!');
-}
 
   public function edit()
     {
