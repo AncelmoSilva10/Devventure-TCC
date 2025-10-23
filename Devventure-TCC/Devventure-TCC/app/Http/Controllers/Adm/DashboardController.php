@@ -7,6 +7,8 @@ use Illuminate\Http\Request;
 use App\Models\Aluno;
 use App\Models\Professor;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Response;
 
 class DashboardController extends Controller
 {
@@ -95,4 +97,99 @@ public function unblockProfessor(Professor $professor)
     
     return redirect(url()->previous() . '#professores')->with('success', 'Professor desbloqueado com sucesso!');
 }
+
+public function downloadCsvAlunos() 
+    {
+       
+        $sql = 'select Nome, Email, RA from aluno';
+        $alunos = DB::select($sql);
+
+        
+        $filename = 'lista_de_alunos.csv';
+
+        
+        $headers = [
+            'Content-Type'        => 'text/csv; charset=utf-8',
+            'Content-Disposition' => 'attachment; filename="' . $filename . '"',
+        ];
+
+        
+        $callback = function () use ($alunos) {
+            $file = fopen('php://output', 'w');
+
+            
+            $header_columns = [
+                'Nome',
+                'Email',
+                'RA'
+            ];
+            
+            fputcsv($file, $header_columns, ';');
+
+            
+            foreach ($alunos as $aluno) {
+                
+                $row = [
+                    'nome'  => mb_convert_encoding($aluno->Nome, 'ISO-8859-1', 'UTF-8'),
+                    'email' => $aluno->Email,
+                    'ra'    => $aluno->RA
+                ];
+
+             
+                fputcsv($file, $row, ';');
+            }
+
+            fclose($file);
+        };
+
+      
+        return Response::stream($callback, 200, $headers);
+    }
+
+public function downloadCsvProfessores()
+    {
+        
+        $sql = 'select Nome, Email, CPF from professor';
+        $professores = DB::select($sql);
+
+       
+        $filename = 'lista_de_professores.csv';
+
+      
+        $headers = [
+            'Content-Type'        => 'text/csv; charset=utf-8',
+            'Content-Disposition' => 'attachment; filename="' . $filename . '"',
+        ];
+
+      
+        $callback = function () use ($professores) {
+            $file = fopen('php://output', 'w');
+
+            
+            $header_columns = [
+                'Nome Completo',
+                'E-mail',
+                'CPF'
+            ];
+            fputcsv($file, $header_columns, ';');
+
+            
+            foreach ($professores as $professor) {
+              
+                $row = [
+                    mb_convert_encoding($professor->Nome, 'ISO-8859-1', 'UTF-8'),
+                    $professor->Email,
+                    $professor->CPF
+                ];
+
+                fputcsv($file, $row, ';');
+            }
+
+            fclose($file);
+        };
+
+        
+        return Response::stream($callback, 200, $headers);
+    }
+
 }

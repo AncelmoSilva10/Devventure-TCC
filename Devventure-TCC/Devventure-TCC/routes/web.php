@@ -156,4 +156,9 @@ Route::middleware('auth:admin')->group(function () {
     Route::post('/admin/professores/{professor}/unblock', [App\Http\Controllers\Adm\DashboardController::class, 'unblockProfessor'])->name('admin.professores.unblock');
 
     Route::post('/logout-adm', [AdmLoginController::class, 'logoutUser'])->name('admin.logout');
+
+    Route::get('/download-csvAuno', [App\Http\Controllers\Adm\DashboardController::class, 'downloadCsvAlunos'])->name('download.csvAluno');
+
+     Route::get('/download-csvProf', [App\Http\Controllers\Adm\DashboardController::class, 'downloadCsvProfessores'])->name('download.csvProf');
+
 });
