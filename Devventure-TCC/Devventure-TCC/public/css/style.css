@@ -66,7 +66,7 @@ body {
   .hero-carousel {
   margin-right: 130px;
   margin-bottom: 25px;
-  padding-left: 10px;
+  padding-left: 20px;
   padding-bottom: 25px;
   display: flex;
   justify-content: flex-end;
@@ -158,6 +158,7 @@ body {
   height: 180px;
   perspective: 1000px;
   padding: 65px;
+  margin-left: 10px;
 }
 
 .icon-cards__content {
@@ -201,6 +202,205 @@ body {
   55%, 72.5% { transform: translateZ(-150px) rotateY(-240deg); }
   82.5%, 100% { transform: translateZ(-150px) rotateY(-360deg); }
 }
+
+/* ===========================
+   RESPONSIVIDADE - HERO
+   =========================== */
+
+/* 🟦 Telas grandes (até 1200px) */
+@media (max-width: 1200px) {
+  .hero-container {
+    grid-template-columns: 1fr 400px;
+    left: 5%;
+  }
+
+  .hero-container h1 {
+    font-size: 42px;
+  }
+
+  .hero-container h2 {
+    font-size: 36px;
+  }
+
+  .hero-container p {
+    font-size: 16px;
+    max-width: 90%;
+  }
+
+  .icon-cards {
+    width: 220px;
+    height: 160px;
+    padding: 55px;
+  }
+
+  .icon-cards__item {
+    width: 220px;
+    height: 160px;
+  }
+}
+
+/* 🟩 Telas médias (tablets horizontais, até 992px) */
+@media (max-width: 992px) {
+  .hero-container {
+    grid-template-columns: 1fr;
+    text-align: center;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    justify-items: center;
+    gap: 25px;
+  }
+
+  .hero-carousel {
+    margin: 0;
+    padding: 0;
+    justify-content: center;
+  }
+
+  .hero-container h1 {
+    font-size: 38px;
+  }
+
+  .hero-container h2 {
+    font-size: 30px;
+  }
+
+  .hero-container p {
+    font-size: 16px;
+    margin: 0 auto 25px;
+    max-width: 85%;
+  }
+
+  .buttons {
+    display: flex;
+    justify-content: center;
+  }
+
+  .icon-cards {
+    width: 200px;
+    height: 150px;
+    padding: 40px;
+  }
+
+  .icon-cards__item {
+    width: 200px;
+    height: 150px;
+  }
+}
+
+/* 🟨 Telas pequenas (celulares grandes, até 768px) */
+@media (max-width: 768px) {
+  .hero {
+    height: 100vh;
+    padding: 0 20px;
+  }
+
+  .hero-container {
+    grid-template-columns: 1fr;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    text-align: center;
+    justify-items: center;
+  }
+
+  .hero-carousel {
+    margin-top: 25px;
+    padding: 0;
+    margin-right: 25px;
+    width: 180px;
+    justify-content: center;
+  }
+
+  .hero-container h1 {
+    font-size: 32px;
+  }
+
+  .hero-container h2 {
+    font-size: 26px;
+  }
+
+  .hero-container p {
+    font-size: 15px;
+    max-width: 90%;
+  }
+
+  .btn {
+    font-size: 15px;
+    padding: 10px 20px;
+  }
+
+  .icon-cards {
+    width: 180px;
+    height: 130px;
+    padding: 35px;
+  }
+
+  .icon-cards__item {
+    width: 180px;
+    height: 130px;
+  }
+}
+
+/* 🟥 Telas muito pequenas (celulares compactos até 480px) */
+@media (max-width: 480px) {
+  .hero {
+    height: auto;
+    padding: 80px 15px;
+  }
+
+  .hero-container {
+    position: relative;
+    top: auto;
+    left: auto;
+    transform: none;
+    grid-template-columns: 1fr;
+    text-align: center;
+    gap: 25px;
+    justify-items: center;
+  }
+
+  .hero-container h1 {
+    font-size: 26px;
+  }
+
+  .hero-container h2 {
+    font-size: 22px;
+  }
+
+  .hero-container p {
+    font-size: 14px;
+    line-height: 1.5;
+    max-width: 95%;
+  }
+
+  .buttons {
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .btn {
+    width: 80%;
+    max-width: 240px;
+    font-size: 14px;
+  }
+
+  .icon-cards {
+    width: 150px;
+    height: 110px;
+    padding: 30px;
+  }
+
+  .icon-cards__item {
+    width: 150px;
+    height: 110px;
+  }
+}
+
+
+/* ===========================
+   SEÇÃO MÓDULOS
+   =========================== */
 
 .modulos {
   text-align: center;
@@ -306,6 +506,125 @@ body {
   line-height: 1.4;
 }
 
+/* ===========================
+   RESPONSIVIDADE
+   =========================== */
+
+/* Telas médias (tablets e notebooks pequenos) */
+@media (max-width: 1024px) {
+  .modulos-container {
+    gap: 25px;
+  }
+
+  .modulo-card {
+    width: 180px;
+    height: 260px;
+    padding: 18px;
+  }
+
+  .modulo-card h3 {
+    font-size: 1rem;
+  }
+
+  .modulo-card p {
+    font-size: 0.85rem;
+  }
+
+  .icon-area-modulo {
+    width: 130px;
+    height: 60px;
+  }
+
+  .icon {
+    font-size: 1.8rem;
+  }
+}
+
+/* Telas pequenas (celulares grandes) */
+@media (max-width: 768px) {
+  .modulos {
+    padding: 40px 15px;
+  }
+
+  .modulos h2 {
+    font-size: 1.8rem;
+    margin-bottom: 30px;
+  }
+
+  .modulos-container {
+    flex-direction: row;
+    justify-content: center;
+    gap: 20px;
+  }
+
+  .modulo-card {
+    width: 160px;
+    height: 240px;
+  }
+
+  .icon-area-modulo {
+    width: 120px;
+    height: 55px;
+  }
+
+  .icon {
+    font-size: 1.6rem;
+  }
+
+  .modulo-card h3 {
+    font-size: 0.95rem;
+    margin-top: 80px;
+  }
+
+  .modulo-card p {
+    font-size: 0.8rem;
+  }
+}
+
+/* Telas muito pequenas (celulares compactos) */
+@media (max-width: 480px) {
+  .modulos {
+    padding: 30px 10px;
+  }
+
+  .modulos h2 {
+    font-size: 1.5rem;
+    margin-bottom: 25px;
+  }
+
+  .modulos-container {
+    flex-direction: column;
+    align-items: center;
+    gap: 25px;
+  }
+
+  .modulo-card {
+    width: 90%;
+    max-width: 300px;
+    height: auto;
+    padding: 20px 15px;
+  }
+
+  .icon-area-modulo {
+    width: 100px;
+    height: 50px;
+  }
+
+  .icon {
+    font-size: 1.5rem;
+  }
+
+  .modulo-card h3 {
+    margin-top: 75px;
+    font-size: 1rem;
+  }
+
+  .modulo-card p {
+    font-size: 0.9rem;
+  }
+}
+
+
 /* ========================== */
 /* ====== SEÇÃO JORNADA ===== */
 /* ========================== */
@@ -347,8 +666,8 @@ body {
   top: 50%;
   bottom: 50%;
   transform: translateY(-50%);
-  width: 100px;
-  height: 100px;
+  width: 105px;
+  height: 105px;
   background-color: white;
   color: #15003a;
   font-weight: bold;
@@ -360,6 +679,7 @@ body {
   z-index: 2;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.15);
   border: 2px solid #15003a;
+
 }
 
 /* ===== Card lateral com texto ===== */
@@ -397,6 +717,151 @@ body {
 .etapas .etapa:nth-child(1) { margin-left: 80px; }
 .etapas .etapa:nth-child(2) { margin-left: 40px; }
 .etapas .etapa:nth-child(3) { margin-left: 0px; }
+
+
+
+/* ===========================
+   RESPONSIVIDADE - JORNADA
+   =========================== */
+
+/* 🟦 Telas médias (até 992px) */
+@media (max-width: 992px) {
+  .jornada {
+    max-width: 700px;
+    margin: 50px auto;
+    padding: 0 15px;
+  }
+
+  .jornada h1 {
+    font-size: 26px;
+  }
+
+  .subtitulo {
+    font-size: 15px;
+    margin-bottom: 35px;
+  }
+
+  .numero {
+    width: 85px;
+    height: 85px;
+    font-size: 36px;
+    left: -40px;
+  }
+
+  .card {
+    padding: 16px 25px 16px 45px;
+    height: auto;
+  }
+
+  .card h2 {
+    font-size: 18px;
+  }
+
+  .card p {
+    font-size: 15px;
+  }
+
+  .etapas .etapa:nth-child(1) { margin-left: 60px; }
+  .etapas .etapa:nth-child(2) { margin-left: 30px; }
+  .etapas .etapa:nth-child(3) { margin-left: 0px; }
+}
+
+/* 🟩 Telas pequenas (celulares grandes, até 768px) */
+@media (max-width: 768px) {
+  .jornada {
+    max-width: 90%;
+    margin: 40px auto;
+    padding: 0 10px;
+  }
+
+  .jornada h1 {
+    font-size: 22px;
+  }
+
+  .subtitulo {
+    font-size: 14px;
+    margin-bottom: 30px;
+  }
+
+  .etapas {
+    gap: 35px;
+  }
+
+  .etapa {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+  }
+
+  .numero {
+    position: static;
+    transform: none;
+    width: 70px;
+    height: 70px;
+    font-size: 28px;
+    margin-bottom: 10px;
+  }
+
+  .card {
+    width: 100%;
+    margin-left: 0;
+    background: linear-gradient(to bottom, #a19999 10%, #ffffff05 90%);
+    border-radius: 15px;
+    text-align: center;
+    padding: 15px 20px;
+  }
+
+  .card h2 {
+    font-size: 17px;
+  }
+
+  .card p {
+    font-size: 14px;
+  }
+
+  /* Remove os "degraus" para alinhar verticalmente */
+  .etapas .etapa:nth-child(1),
+  .etapas .etapa:nth-child(2),
+  .etapas .etapa:nth-child(3) {
+    margin-left: 0;
+  }
+}
+
+/* 🟥 Telas muito pequenas (até 480px) */
+@media (max-width: 480px) {
+  .jornada {
+    margin: 35px auto;
+  }
+
+  .jornada h1 {
+    font-size: 20px;
+  }
+
+  .subtitulo {
+    font-size: 13px;
+  }
+
+  .numero {
+    width: 60px;
+    height: 60px;
+    font-size: 25px;
+    margin-bottom: 8px;
+  }
+
+  .card {
+    padding: 12px 15px;
+  }
+
+  .card h2 {
+    font-size: 16px;
+  }
+
+  .card p {
+    font-size: 13px;
+  }
+}
+
+
 
 
 /* ========================== */
@@ -625,68 +1090,7 @@ body {
   transform: rotate(10deg) translate(8px, 10px);
 }
 
-/* ========================== */
-/* ==== INDICADORES ====== */
-/* ========================== */
-.indicadores {
-  display: flex;
-  justify-content: center;
-  gap: 12px;
-  margin-top: 20px;
-  flex-wrap: wrap;
-}
 
-.indicador {
-  width: 12px;
-  height: 12px;
-  border-radius: 50%;
-  background-color: rgba(255, 255, 255, 0.3);
-  cursor: pointer;
-  transition: background-color 0.3s, transform 0.3s;
-}
-
-.indicador.active {
-  background-color: white;
-  transform: scale(1.2);
-}
-
-.indicador:hover {
-  transform: scale(1.3);
-}
-
-/* ========================== */
-/* ==== CONTROLES NAVEGAÇÃO ==== */
-/* ========================== */
-.controles-navegacao {
-  display: flex;
-  justify-content: center;
-  gap: 20px;
-  margin-top: 20px;
-}
-
-.btn-navegacao {
-  background: linear-gradient(45deg, #6a11cb, #2575fc);
-  color: white;
-  border: none;
-  padding: 12px 24px;
-  border-radius: 8px;
-  cursor: pointer;
-  transition: transform 0.3s, box-shadow 0.3s;
-  font-weight: bold;
-  box-shadow: 0 4px 15px rgba(106, 17, 203, 0.3);
-}
-
-.btn-navegacao:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 6px 20px rgba(106, 17, 203, 0.4);
-}
-
-.btn-navegacao:disabled {
-  opacity: 0.5;
-  cursor: not-allowed;
-  transform: none;
-  box-shadow: none;
-}
 
 /* Mensagem quando não há depoimentos */
 .sem-depoimentos {
@@ -699,45 +1103,197 @@ body {
   border: 1px solid rgba(255, 255, 255, 0.1);
 }
 
-/* ========================== */
-/* === RESPONSIVIDADE === */
-/* ========================== */
-@media (max-width: 968px) {
+/* ==========================
+   RESPONSIVIDADE - DEPOIMENTOS
+   ========================== */
+
+/* Tablets grandes e médios (até 992px) */
+@media (max-width: 992px) {
   .container-depoimentos-grid {
-    grid-template-columns: 1fr;
+    grid-template-columns: 1fr; /* empilha formulário e carrossel */
     gap: 40px;
   }
-  
-  .carrossel-depoimentos {
-    position: static;
-  }
-  
+
   .formulario-depoimento {
-    order: 2;
+    padding: 30px;
   }
-  
+
+  .formulario-depoimento h3 {
+    font-size: 1.3rem;
+  }
+
+  .campo-formulario input,
+  .campo-formulario textarea {
+    font-size: 15px;
+    padding: 12px;
+  }
+
+  .btn-enviar {
+    font-size: 15px;
+    padding: 12px;
+  }
+
   .carrossel-depoimentos {
-    order: 1;
+    position: relative;
+    top: auto;
+  }
+
+  .container-depoimentos {
+    margin: 0 auto;
+    height: auto;
+    gap: 40px;
+  }
+
+  .card-wrapper {
+    max-width: 350px;
+    transform: translateX(-50%);
+  }
+
+  .card-depoimento {
+    padding: 20px;
+  }
+
+  .card-depoimento p {
+    font-size: 15px;
+  }
+
+  .card-depoimento span {
+    font-size: 0.85rem;
+  }
+
+  .card-fundo:nth-child(1),
+  .card-fundo:nth-child(2) {
+    transform: none; /* remove inclinação leve */
   }
 }
 
+/* Celulares grandes (até 768px) */
 @media (max-width: 768px) {
   .secao-depoimentos {
     padding: 40px 15px;
   }
-  
+
+  .secao-depoimentos h2 {
+    font-size: 1.7rem;
+  }
+
   .formulario-depoimento {
-    padding: 30px 20px;
+    padding: 25px;
   }
-  
+
+  .formulario-depoimento h3 {
+    font-size: 1.2rem;
+  }
+
+  .campo-formulario input,
+  .campo-formulario textarea {
+    font-size: 14px;
+    padding: 10px;
+  }
+
+  .btn-enviar {
+    font-size: 14px;
+    padding: 10px;
+  }
+
   .container-depoimentos {
-    height: 280px;
+    gap: 30px;
+    flex-direction: column;
+    margin-top: 20px;
+    margin-left: 0;
+    height: auto;
+    
   }
-  
+  .carrossel-depoimentos {
+    position: relative;
+    top: auto;
+    margin-bottom: 20px;
+  }
+
+  .card-wrapper {
+    max-width: 300px;
+  }
+
+  .card-depoimento {
+    padding: 18px;
+    transform: rotate(0deg); /* remove rotação para mobile */
+  }
+
+  .card-depoimento:hover {
+    transform: scale(1.02);
+  }
+
+  .card-depoimento p {
+    font-size: 14px;
+  }
+
+  .card-depoimento span {
+    font-size: 0.8rem;
+  }
+
+  .card-fundo {
+    display: none; /* remove camadas de fundo no mobile */
+  }
+
+}
+
+/* Celulares pequenos (até 480px) */
+@media (max-width: 480px) {
+  .secao-depoimentos {
+    padding: 30px 10px;
+  }
+
+  .secao-depoimentos h2 {
+    font-size: 1.5rem;
+    margin-bottom: 25px;
+  }
+
+  .formulario-depoimento {
+    padding: 20px;
+  }
+
+  .formulario-depoimento h3 {
+    font-size: 1.1rem;
+  }
+
+  .campo-formulario input,
+  .campo-formulario textarea {
+    font-size: 13px;
+    padding: 8px;
+  }
+
+  .btn-enviar {
+    font-size: 13px;
+    padding: 8px;
+  }
+
+  .container-depoimentos {
+    gap: 20px;
+  }
+
+  .carrossel-depoimentos {
+    position: relative;
+    top: auto;
+    margin-bottom: 20px;
+  }
+
   .card-wrapper {
     max-width: 100%;
   }
+
+  .card-depoimento {
+    padding: 15px;
+  }
+
+  .card-depoimento p {
+    font-size: 13px;
+  }
+
+  .card-depoimento span {
+    font-size: 0.75rem;
+  }
 }
+
 
 .reveal {
   opacity: 0;
