@@ -93,7 +93,8 @@
                                     <input type="text" id="searchAlunosInput" placeholder="Pesquisar aluno...">
                                     <button type="submit" class="btn-icon"><i class="fas fa-search"></i></button>
                                 </form>
-                                <button class="btn btn-outline" id="exportStudentsBtn"><i class="fas fa-download"></i> Exportar</button>
+                              <a href="/download-csvAuno"> <button class="btn btn-outline" id="exportStudentsBtn"><i class="fas fa-download"></i> Exportar</button>
+                              </a>
                             </div>
                         </header>
                         <div class="table-responsive">
@@ -158,7 +159,7 @@
                                     <input type="text" id="searchProfessoresInput" placeholder="Pesquisar professor...">
                                     <button type="submit" class="btn-icon"><i class="fas fa-search"></i></button>
                                 </form>
-                                <button class="btn btn-outline" id="exportTeachersBtn"><i class="fas fa-download"></i> Exportar</button>
+                               <a href="/download-csvProf"> <button class="btn btn-outline" id="exportTeachersBtn"><i class="fas fa-download"></i> Exportar</button></a>
                             </div>
                         </header>
                         <div class="table-responsive">
