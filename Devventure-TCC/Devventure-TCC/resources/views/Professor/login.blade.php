@@ -105,6 +105,8 @@
     </div>
   </main>
 
+  <script src="{{ asset('js/Professor/loginProfessor.js') }}"></script> 
+
   <script>
     document.addEventListener('DOMContentLoaded', function () {
     
