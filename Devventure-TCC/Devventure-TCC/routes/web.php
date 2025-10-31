@@ -56,7 +56,6 @@ Route::get('/esqueceu-senha', [ForgotPasswordController::class, 'showLinkRequest
 // Rota para enviar o e-mail com o código
 Route::post('/esqueceu-senha', [ForgotPasswordController::class, 'sendResetLinkEmail'])->name('password.email');
 // Rota para o CÓDIGO de redefinição de senha
-// --- URL ALTERADA para evitar conflito ---
 Route::get('/redefinir-senha/verificar-codigo', [ForgotPasswordController::class, 'showVerifyForm'])->name('password.verify.form');
 Route::post('/redefinir-senha/verificar-codigo', [ForgotPasswordController::class, 'verifyCode'])->name('password.verify.code');
 
