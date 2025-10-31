@@ -105,186 +105,165 @@
     </div>
   </main>
 
-  @if (session('cadastro_sucesso'))
-        <script>
-            window.flashMessage = "{{ session('cadastro_sucesso') }}";
-        </script>
-    @endif
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+    
+        const errors = @json($errors->toArray());
+        const oldInput = @json(session()->getOldInput() ?? []);
 
-  <script src="{{ asset('js/Professor/loginProfessor.js') }}"></script>
+        // Limpa erros JS antigos
+        document.querySelectorAll('.error-feedback-js').forEach(e => e.remove());
 
- <script>
-document.addEventListener('DOMContentLoaded', function () {
- 
-    const errors = @json($errors->toArray());
-    const oldInput = @json(session()->getOldInput() ?? []);
+        // Verifica se há erros de validação (e não é um erro de login 'msg')
+        if (Object.keys(errors).length > 0 && errors.msg === undefined) {
+            
+            // Força a exibição dos campos de cadastro
+            const toggleBtn = document.getElementById('toggle-btn');
+            if (toggleBtn && (toggleBtn.textContent.includes('Cadastre-se') || toggleBtn.innerText.includes('Cadastre-se'))) {
+                toggleBtn.click();
+            }
 
-    // Limpa erros JS antigos
-    document.querySelectorAll('.error-feedback-js').forEach(e => e.remove());
+            const form = document.getElementById('professor-form');
+            form.querySelectorAll('input, textarea, select').forEach(field => {
+                const fieldName = field.name;
+                if (fieldName === '_token') return;
 
-    // Verifica se há erros de validação (e não é um erro de login 'msg')
-    if (Object.keys(errors).length > 0 && errors.msg === undefined) {
-        
-        // Força a exibição dos campos de cadastro
-        const toggleBtn = document.getElementById('toggle-btn');
-        if (toggleBtn && (toggleBtn.textContent.includes('Cadastre-se') || toggleBtn.innerText.includes('Cadastre-se'))) {
-            toggleBtn.click();
+                let existingError = field.parentNode.querySelector('.error-feedback-js');
+                if (existingError) existingError.remove();
+
+                // Verifica se este campo tem um erro
+                if (errors[fieldName]) {
+                    const errorElement = document.createElement('small');
+                    errorElement.className = 'error-feedback-js';
+                    errorElement.innerText = errors[fieldName][0];
+                    field.classList.add('is-invalid'); 
+
+                    if (fieldName === 'avatar') {
+                        const wrapper = document.getElementById('avatar-wrapper');
+                        wrapper.classList.add('is-invalid'); 
+                        wrapper.parentNode.insertBefore(errorElement, wrapper.nextSibling);
+                    } else if (field.parentNode.classList.contains('senha-wrapper')) {
+                        field.parentNode.parentNode.appendChild(errorElement);
+                    } else {
+                        field.parentNode.appendChild(errorElement);
+                    }
+                } else if (oldInput[fieldName]) {
+                    if (fieldName !== 'avatar') {
+                        field.value = oldInput[fieldName];
+                    }
+                }
+            });
+
+            // Limpa as senhas por segurança
+            const passwordField = document.getElementById('password');
+            const confirmField = document.getElementById('confirm_password');
+            if (passwordField) passwordField.value = '';
+            if (confirmField) confirmField.value = '';
         }
 
-        const form = document.getElementById('professor-form');
-        form.querySelectorAll('input, textarea, select').forEach(field => {
-            const fieldName = field.name;
+        // --- SEÇÃO DE SWEETALERTS ---
 
-            // --- MUDANÇA 1 ---
-            // Apenas o _token deve ser pulado
-            if (fieldName === '_token') return;
+        // Exibe erro de LOGIN (ex: "E-mail ou senha inválidos")
+        @if ($errors->has('msg'))
+            Swal.fire({
+                icon: 'error',
+                title: 'Oops... Algo deu errado',
+                text: '{{ $errors->first('msg') }}',
+                confirmButtonColor: '#d33'
+            });
+        @endif
 
-            let existingError = field.parentNode.querySelector('.error-feedback-js');
-            if (existingError) existingError.remove();
+        // Exibe pop-up de VERIFICAÇÃO PENDENTE
+        @if (session('needs_verification'))
+            Swal.fire({
+                icon: 'warning',
+                title: 'Verificação Necessária',
+                text: "{{ session('needs_verification') }}",
+                showCancelButton: true,
+                confirmButtonText: 'Reenviar E-mail de Verificação',
+                cancelButtonText: 'Cancelar',
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#aaa',
+            }).then((result) => { 
+                if (result.isConfirmed) {
+                    let form = document.createElement('form');
+                    form.method = 'POST';
+                    form.action = "{{ route('verification.resend') }}";
+                    let csrfToken = document.createElement('input');
+                    csrfToken.type = 'hidden';
+                    csrfToken.name = '_token';
+                    csrfToken.value = '{{ csrf_token() }}';
+                    form.appendChild(csrfToken);
+                    document.body.appendChild(form);
+                    form.submit();
+                }
+            });
+        @endif
 
-            // Verifica se este campo tem um erro
-            if (errors[fieldName]) {
-                const errorElement = document.createElement('small');
-                errorElement.className = 'error-feedback-js';
-                errorElement.innerText = errors[fieldName][0];
-                
-                // Adiciona a classe de borda vermelha
-                field.classList.add('is-invalid'); // Você precisará de CSS para isso
+        // --- CORREÇÃO DO ALERTA DE SUCESSO ---
+        // Seu TwoFactorController envia 'status'. 
+        // Este script agora 'escuta' por 'status'.
+        @if (session('status'))
+            Swal.fire({
+                icon: 'success',
+                title: 'Sucesso!',
+                text: "{{ session('status') }}",
+                confirmButtonColor: '#3085d6'
+            });
+        @endif
 
-                // --- MUDANÇA 2 ---
-                // Lógica para posicionar a mensagem de erro
-                if (fieldName === 'avatar') {
-                    // Coloca o erro depois do ícone (avatar-wrapper)
-                    const wrapper = document.getElementById('avatar-wrapper');
-                    wrapper.classList.add('is-invalid'); // Adiciona borda vermelha no ícone
-                    wrapper.parentNode.insertBefore(errorElement, wrapper.nextSibling);
+        // --- CÓDIGO DO CPF MOVIDO PARA DENTRO DO DOMCONTENTLOADED ---
+        const cpfInput = document.getElementById('cpf');
+        const cpfFeedback = document.getElementById('cpf-feedback');
 
-                } else if (field.parentNode.classList.contains('senha-wrapper')) {
-                    // Coloca o erro depois do wrapper da senha
-                    field.parentNode.parentNode.appendChild(errorElement);
+        // Só roda o script do CPF se os campos existirem
+        if (cpfInput && cpfFeedback) { 
+            
+            function validarCPF(cpf) {
+                cpf = cpf.replace(/[^\d]+/g, '');
+                if (cpf.length !== 11 || /^(\d)\1+$/.test(cpf)) return false;
+                let soma = 0;
+                for (let i = 0; i < 9; i++) soma += parseInt(cpf.charAt(i)) * (10 - i);
+                let resto = 11 - (soma % 11);
+                if (resto === 10 || resto === 11) resto = 0;
+                if (resto !== parseInt(cpf.charAt(9))) return false;
+                soma = 0;
+                for (let i = 0; i < 10; i++) soma += parseInt(cpf.charAt(i)) * (11 - i);
+                resto = 11 - (soma % 11);
+                if (resto === 10 || resto === 11) resto = 0;
+                if (resto !== parseInt(cpf.charAt(10))) return false;
+                return true;
+            }
+
+            cpfInput.addEventListener('input', function (e) {
+                let value = e.target.value.replace(/\D/g, '');
+                if (value.length > 3 && value.length <= 6)
+                    value = value.replace(/(\d{3})(\d+)/, '$1.$2');
+                else if (value.length > 6 && value.length <= 9)
+                    value = value.replace(/(\d{3})(\d{3})(\d+)/, '$1.$2.$3');
+                else if (value.length > 9)
+                    value = value.replace(/(\d{3})(\d{3})(\d{3})(\d+)/, '$1.$2.$3-$4');
+                e.target.value = value.substring(0, 14);
+            });
+
+            cpfInput.addEventListener('blur', function () {
+                const cpf = cpfInput.value.trim();
+                if (!cpf) {
+                    cpfFeedback.textContent = '';
+                    return;
+                }
+                if (!validarCPF(cpf)) {
+                    cpfFeedback.textContent = '❌ CPF inválido';
+                    cpfFeedback.style.color = '#e74c3c';
                 } else {
-                    // Coloca o erro padrão (depois do campo)
-                    field.parentNode.appendChild(errorElement);
+                    cpfFeedback.textContent = '✅ CPF válido';
+                    cpfFeedback.style.color = '#2ecc71';
                 }
-
-            } else if (oldInput[fieldName]) {
-                
-                // --- MUDANÇA 3 ---
-                // Não tente preencher o 'value' de um campo de arquivo!
-                if (fieldName !== 'avatar') {
-                    field.value = oldInput[fieldName];
-                }
-            }
-        });
-
-        // Limpa as senhas por segurança
-        const passwordField = document.getElementById('password');
-        const confirmField = document.getElementById('confirm_password');
-        if (passwordField) passwordField.value = '';
-        if (confirmField) confirmField.value = '';
-    }
-
-    // O resto do seu código de SweetAlert (está perfeito, não mexa)
-    @if ($errors->has('msg'))
-        Swal.fire({
-            icon: 'error',
-            title: 'Oops... Algo deu errado',
-            text: '{{ $errors->first('msg') }}',
-            confirmButtonColor: '#d33'
-        });
-    @endif
-
-    @if (session('needs_verification'))
-        Swal.fire({
-            icon: 'warning',
-            title: 'Verificação Necessária',
-            text: "{{ session('needs_verification') }}",
-            showCancelButton: true,
-            confirmButtonText: 'Reenviar E-mail de Verificação',
-            cancelButtonText: 'Cancelar',
-            confirmButtonColor: '#3085d6',
-            cancelButtonColor: '#aaa',
-        }).then((result) => { 
-            if (result.isConfirmed) {
-                let form = document.createElement('form');
-                form.method = 'POST';
-                form.action = "{{ route('verification.resend') }}";
-                
-                let csrfToken = document.createElement('input');
-                csrfToken.type = 'hidden';
-                csrfToken.name = '_token';
-                csrfToken.value = '{{ csrf_token() }}';
-                form.appendChild(csrfToken);
-                
-                document.body.appendChild(form);
-                form.submit();
-            }
-        });
-    @endif
-
-    @if (session('cadastro_sucesso'))
-        Swal.fire({
-            icon: 'success',
-            title: 'Cadastro Realizado!',
-            text: "{{ session('cadastro_sucesso') }}",
-            confirmButtonColor: '#3085d6'
-        });
-    @endif
-});
-
-const cpfInput = document.getElementById('cpf');
-const cpfFeedback = document.getElementById('cpf-feedback');
-
-
-function validarCPF(cpf) {
-    cpf = cpf.replace(/[^\d]+/g, '');
-
-    if (cpf.length !== 11 || /^(\d)\1+$/.test(cpf)) return false;
-
-    let soma = 0;
-    for (let i = 0; i < 9; i++) soma += parseInt(cpf.charAt(i)) * (10 - i);
-    let resto = 11 - (soma % 11);
-    if (resto === 10 || resto === 11) resto = 0;
-    if (resto !== parseInt(cpf.charAt(9))) return false;
-
-    soma = 0;
-    for (let i = 0; i < 10; i++) soma += parseInt(cpf.charAt(i)) * (11 - i);
-    resto = 11 - (soma % 11);
-    if (resto === 10 || resto === 11) resto = 0;
-    if (resto !== parseInt(cpf.charAt(10))) return false;
-
-    return true;
-}
-
-
-cpfInput.addEventListener('input', function (e) {
-    let value = e.target.value.replace(/\D/g, '');
-    if (value.length > 3 && value.length <= 6)
-        value = value.replace(/(\d{3})(\d+)/, '$1.$2');
-    else if (value.length > 6 && value.length <= 9)
-        value = value.replace(/(\d{3})(\d{3})(\d+)/, '$1.$2.$3');
-    else if (value.length > 9)
-        value = value.replace(/(\d{3})(\d{3})(\d{3})(\d+)/, '$1.$2.$3-$4');
-    e.target.value = value.substring(0, 14);
-});
-
-cpfInput.addEventListener('blur', function () {
-    const cpf = cpfInput.value.trim();
-    if (!cpf) {
-        cpfFeedback.textContent = '';
-        return;
-    }
-
-    if (!validarCPF(cpf)) {
-        cpfFeedback.textContent = '❌ CPF inválido';
-        cpfFeedback.style.color = '#e74c3c';
-    } else {
-        cpfFeedback.textContent = '✅ CPF válido';
-        cpfFeedback.style.color = '#2ecc71';
-    }
-});
-
-</script>
+            });
+        } // --- Fim do 'if (cpfInput)'
+        
+    }); // <-- FIM DO 'DOMContentLoaded'
+    </script>
 
 </body>
 </html>
