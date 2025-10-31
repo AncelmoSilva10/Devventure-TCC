@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+ <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
     <meta charset="UTF-8" />
@@ -110,7 +110,6 @@
     <script>
     document.addEventListener('DOMContentLoaded', function () {
 
-        // Pega os erros de validação e dados antigos injetados pelo Laravel
         const errors = @json($errors->toArray());
         const oldInput = @json(session()->getOldInput() ?? []);
 
@@ -125,31 +124,45 @@
                 toggleBtn.click();
             }
 
-            // Itera sobre os campos para aplicar erros (limpando) ou dados antigos (preenchendo)
+            // Itera sobre os campos para aplicar erros ou dados antigos
             const form = document.getElementById('aluno-form');
             form.querySelectorAll('input, textarea, select').forEach(field => {
                 const fieldName = field.name;
 
-                if (fieldName === '_token' || fieldName === 'avatar') return;
+                // --- MUDANÇA 1: Apenas o _token é ignorado ---
+                if (fieldName === '_token') return;
 
                 let existingError = field.parentNode.querySelector('.error-feedback-js');
                 if(existingError) existingError.remove();
 
+                // Se houver erro para este campo
                 if (errors[fieldName]) {
-                    field.value = ''; // Limpa o campo com erro
+                    field.classList.add('is-invalid'); // Adiciona borda vermelha
                     
                     const errorElement = document.createElement('small');
                     errorElement.className = 'error-feedback-js';
                     errorElement.innerText = errors[fieldName][0];
                     
-                    if(field.parentNode.classList.contains('senha-wrapper')) {
+                    // --- MUDANÇA 2: Lógica especial para posicionar erro do avatar ---
+                    if (fieldName === 'avatar') {
+                        const wrapper = document.getElementById('avatar-wrapper');
+                        wrapper.classList.add('is-invalid'); // Adiciona borda no ícone
+                        wrapper.parentNode.insertBefore(errorElement, wrapper.nextSibling);
+                    
+                    } else if(field.parentNode.classList.contains('senha-wrapper')) {
+                        // Posiciona erro da senha
                         field.parentNode.parentNode.appendChild(errorElement);
                     } else {
+                        // Posiciona erro padrão
                         field.parentNode.appendChild(errorElement);
                     }
                     
                 } else if (oldInput[fieldName]) {
-                    field.value = oldInput[fieldName]; // Preenche o campo que estava correto
+                    
+                    // --- MUDANÇA 3: Não tenta preencher 'value' de arquivo ---
+                    if (fieldName !== 'avatar') {
+                        field.value = oldInput[fieldName]; // Preenche o campo que estava correto
+                    }
                 }
             });
             
