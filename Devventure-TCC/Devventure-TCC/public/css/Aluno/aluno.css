@@ -253,9 +253,7 @@ button[type="submit"]:hover {
     object-fit: cover; 
 }
 
-/* public/css/Aluno/aluno.css */
 
-/* Adicione ao final do arquivo */
 .password-feedback {
     display: block;
     margin-top: -15px; /* Puxa para mais perto da label */
@@ -272,4 +270,12 @@ button[type="submit"]:hover {
 
 .password-feedback.valido {
     color: #28a745; /* Verde sucesso */
+}
+
+.error-feedback-js {
+    color: #e3342f; /* vermelho padrão do Laravel */
+    font-size: 0.85rem;
+    margin-top: 4px;
+    display: block;
+    font-weight: 500;
 }

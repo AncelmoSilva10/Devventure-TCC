@@ -16,28 +16,35 @@ use App\Mail\TwoFactorCodeMail;
 
 class PerfilController extends Controller
 {
-      public function store(Request $request)
-    {
-    
+    public function store(Request $request)
+{
     $request->validate([
-            'nome' => ['required', 'string', 'max:255'],
-            'cpf' => ['required', 'string', 'unique:professor,cpf'],
-            'area' => ['required', 'string'],
-            'formacao' => ['required', 'string'],
-            'email' => ['required', 'string', 'email', 'max:255', 'unique:professor,email'],
-            'password' => ['required', 'string', 'min:8', 'confirmed'],
-            'avatar' => ['nullable', 'image', 'mimes:jpeg,png,jpg', 'max:2048'],
-        ]);
+        'nome' => ['required', 'string', 'max:255'],
+        'cpf' => ['required', 'string', 'unique:professor,cpf'],
+        'area' => ['required', 'string'],
+        'formacao' => ['required', 'string'],
+        'email' => ['required', 'string', 'email', 'max:255', 'unique:professor,email'],
+        'password' => ['required', 'string', 'min:8', 'confirmed'],
+        'avatar' => ['required', 'image', 'mimes:jpeg,png,jpg', 'max:2048'],
+    ]);
 
-        $professor = Professor::create([
-            'nome' => $request->nome,
-            'cpf' => $request->cpf,
-            'areaEnsino' => $request->area,
-            'formacao' => $request->formacao,
-            'telefone' => $request->telefone,
-            'email' => $request->email,
-            'password' => Hash::make($request->password),
-        ]);
+   
+    $caminhoAvatar = null;
+    if ($request->hasFile('avatar')) {
+        $caminhoAvatar = $request->file('avatar')->store('avatars/professores', 'public');
+    }
+
+  
+    $professor = Professor::create([
+        'nome' => $request->nome,
+        'cpf' => $request->cpf,
+        'areaEnsino' => $request->area,
+        'formacao' => $request->formacao,
+        'telefone' => $request->telefone,
+        'email' => $request->email,
+        'password' => Hash::make($request->password),
+        'avatar' => $caminhoAvatar, 
+    ]);
 
         $code = rand(100000, 999999);
         $professor->two_factor_code = $code;
