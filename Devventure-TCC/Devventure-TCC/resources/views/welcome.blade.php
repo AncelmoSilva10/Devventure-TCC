@@ -7,7 +7,7 @@
     
     <link rel="stylesheet" href="{{ asset('css/style.css') }}" />
     
-    <link href='https://cdn.boxicons.com/fonts/basic/boxicons.min.css' rel='stylesheet'>
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
 </head>
 <body  id="welcome-page">
 
@@ -56,28 +56,28 @@
             <div class="modulos-container">
                 <div class="modulo-card purple">
                     <div class="icon-area-modulo">
-                        <div class="icon"><i class='bxr bxs-laptop'></i></div>
+                       <div class="icon"><i class='bx bx-laptop'></i></div>
                     </div>
                     <h3>Simulador de Algoritmos</h3>
                     <p>Execute e visualize fluxogramas de forma interativa.</p>
                 </div>
                 <div class="modulo-card blue">
                     <div class="icon-area-modulo">
-                        <div class="icon"><i class='bxr bxs-trophy bx-flip-horizontal'></i></div>
+                       <div class="icon"><i class='bx bx-trophy'></i></div>
                     </div>
                     <h3>Rankings & Gamificação</h3>
                     <p>Participe de desafios e acompanhe seu desempenho.</p>
                 </div>
                 <div class="modulo-card pink">
                     <div class="icon-area-modulo">
-                        <div class="icon"><i class='bxr bxs-camcoder'></i></div>
+                       <div class="icon"><i class='bx bx-video'></i></div>
                     </div>
                     <h3>Vídeos Explicativos</h3>
                     <p>Aulas dinâmicas para facilitar seu aprendizado.</p>
                 </div>
                 <div class="modulo-card darkblue">
                     <div class="icon-area-modulo">
-                        <div class="icon"><i class='bxr bxs-message-dots-2'></i></div>
+                       <div class="icon"> <i class='bx bxs-conversation'></i></div>
                     </div>
                     <h3>Fórum Interativo</h3>
                     <p>Tire suas dúvidas e interaja com a comunidade.</p>
@@ -86,8 +86,7 @@
         </section>
 
         <section class="jornada reveal">
-            <h1>Uma jornada de aprendizado intuitiva</h1>
-            <p class="subtitulo">Em apenas três passos, você estará no caminho para dominar a lógica.</p>
+            <h2>Uma jornada de aprendizado intuitiva</h2> <p class="subtitulo">Em apenas três passos, você estará no caminho para dominar a lógica.</p>
             <div class="etapas">
                 <div class="etapa">
                     <div class="numero">1</div>
