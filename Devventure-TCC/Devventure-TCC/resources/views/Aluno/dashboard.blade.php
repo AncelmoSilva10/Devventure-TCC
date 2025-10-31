@@ -28,7 +28,7 @@
                 <p>Olá, {{ Auth::guard('aluno')->user()->nome }}! Continue seus estudos.</p>
             </div>
             <a href="{{ route('aluno.turma') }}" class="btn-primary">
-                <i class='bx bxs-group'></i> Acessar Minhas Turmas
+                <i class='bx bxs-group'></i> Acessar Minha Turma
             </a>
         </div>
 
@@ -115,7 +115,7 @@
     </div>
 
     <div class="card card-minhas-turmas">
-        <h3><i class='bx bxs-chalkboard'></i> Minhas Turmas</h3>
+        <h3><i class='bx bxs-chalkboard'></i> Minha Turma</h3>
         <div class="lista-turmas-dashboard">
             @forelse($minhasTurmas as $turma)
                 <div class="turma-item-wrapper">
