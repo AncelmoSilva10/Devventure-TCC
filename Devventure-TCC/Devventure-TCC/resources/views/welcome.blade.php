@@ -58,8 +58,8 @@
                     <div class="icon-area-modulo">
                        <div class="icon"><i class='bx bx-laptop'></i></div>
                     </div>
-                    <h3>Simulador de Algoritmos</h3>
-                    <p>Execute e visualize fluxogramas de forma interativa.</p>
+                    <h3>Listas de Exercícios</h3>
+                    <p>Acesse as listas, envie suas resoluções e acompanhe seu progresso.</p>
                 </div>
                 <div class="modulo-card blue">
                     <div class="icon-area-modulo">
@@ -98,8 +98,8 @@
                 <div class="etapa">
                     <div class="numero">2</div>
                     <div class="card">
-                        <h2>Pratique no Simulador</h2>
-                        <p>Teste seus conhecimentos com nosso simulador de algoritmos, recebendo feedback visual e instantâneo.</p>
+                        <h2>Resolva os Exercícios</h2>
+                        <p>Teste seus conhecimentos resolvendo exercícios, recebendo feedback visual e instantâneo.</p>
                     </div>
                 </div>
                 <div class="etapa">
