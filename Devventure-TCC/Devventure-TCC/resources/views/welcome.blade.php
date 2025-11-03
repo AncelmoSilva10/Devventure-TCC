@@ -112,65 +112,66 @@
             </div>
         </section>
 
-        <section class="secao-depoimentos reveal">
-            <h2>O que nossos alunos dizem</h2>
-            <br><br>
-            <div class="container-depoimentos-grid">
-                <div class="formulario-depoimento">
-                    <h3>Deixe seu depoimento</h3>
-                    <form id="formDepoimento">
-                        @csrf <div class="campo-formulario">
-                            <label for="textoDepoimento">Seu depoimento:</label>
-                            <textarea id="textoDepoimento" required maxlength="300" placeholder="Compartilhe sua experiência com a plataforma..."></textarea>
-                            <span class="contador-caracteres">0/300</span>
-                        </div>
-                        <div class="campo-formulario">
-                            <label for="autorDepoimento">Seu nome e informações:</label>
-                            <input type="text" id="autorDepoimento" required placeholder="Ex: Maria Silva, Estudante de ADS">
-                        </div>
-                        <button type="submit" class="btn-enviar">Enviar Depoimento</button>
-                    </form>
+     <section class="secao-depoimentos reveal">
+    <h2>O que nossos alunos dizem</h2>
+    <br><br>
+    <div class="container-depoimentos-grid">
+        <div class="formulario-depoimento">
+            <h3>Deixe seu depoimento</h3>
+            <form id="formDepoimento" data-url="{{ route('depoimentos.store') }}" method="POST">
+                @csrf
+                <div class="campo-formulario">
+                    <label for="textoDepoimento">Seu depoimento:</label>
+                    <textarea id="textoDepoimento" required maxlength="300" placeholder="Compartilhe sua experiência com a plataforma..."></textarea>
+                    <span class="contador-caracteres">0/300</span>
                 </div>
+                <div class="campo-formulario">
+                    <label for="autorDepoimento">Seu nome e informações:</label>
+                    <input type="text" id="autorDepoimento" required placeholder="Ex: Maria Silva, Estudante de ADS">
+                </div>
+                <button type="submit" class="btn-enviar">Enviar Depoimento</button>
+            </form>
+        </div>
 
-                <div class="carrossel-depoimentos">
-                    <div class="container-depoimentos" id="containerDepoimentos">
-                        {{-- 
-                            Aqui você pode usar um loop do Blade para exibir os depoimentos
-                            que vêm do seu Controller. Exemplo:
-                        --}}
-                        @if(isset($depoimentos) && $depoimentos->count() > 0)
-                            @foreach($depoimentos as $depoimento)
-                                <div class="card-wrapper">
-                                    <div class="camada-fundo">
-                                        <div class="card-fundo"></div>
-                                        <div class="card-fundo"></div>
-                                    </div>
-                                    <div class="card-depoimento">
-                                        <p>"{{ $depoimento->texto }}"</p>
-                                        <span>- {{ $depoimento->autor }}</span>
-                                    </div>
-                                </div>
-                            @endforeach
-                        @else
-                            {{-- Cards de exemplo caso não haja depoimentos do banco de dados --}}
-                            <div class="card-wrapper">
-                                <div class="camada-fundo">
-                                    <div class="card-fundo"></div><div class="card-fundo"></div>
-                                </div>
-                                <div class="card-depoimento">
-                                    <p>"Uma plataforma incrível que tornou a lógica de programação divertida e acessível!"</p>
-                                    <span>- João da Silva, Desenvolvedor Jr.</span>
-                                </div>
+        <div class="carrossel-depoimentos">
+            <div class="container-depoimentos" id="containerDepoimentos">
+                
+                {{-- 1. Exibe os depoimentos que vêm do banco --}}
+                @if(isset($depoimentos) && $depoimentos->count() > 0)
+                    @foreach($depoimentos as $depoimento)
+                        <div class="card-wrapper">
+                            <div class="camada-fundo">
+                                <div class="card-fundo"></div>
+                                <div class="card-fundo"></div>
                             </div>
-                        @endif
+                            <div class="card-depoimento">
+                                <p>"{{ $depoimento->texto }}"</p>
+                                <span>- {{ $depoimento->autor }}</span>
+                            </div>
+                        </div>
+                    @endforeach
+                @endif
+
+                {{-- 2. Exibe o depoimento fixo (sempre) --}}
+                <div class="card-wrapper">
+                    <div class="camada-fundo">
+                        <div class="card-fundo"></div><div class="card-fundo"></div>
+                    </div>
+                    <div class="card-depoimento">
+                        <p>"Uma plataforma incrível que tornou a lógica de programação divertida e acessível!"</p>
+                        <span>- João da Silva, Desenvolvedor Jr.</span>
                     </div>
                 </div>
+
             </div>
-        </section>
+        </div>
+    </div>
+</section>
     </main>
     
     @include('layouts.footer')
-
+    
+    <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src="{{ asset('js/hero.js') }}"></script>
     <script src="{{ asset('js/script.js') }}"></script>
 </body>

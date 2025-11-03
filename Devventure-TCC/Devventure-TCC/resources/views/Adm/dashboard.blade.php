@@ -24,6 +24,7 @@
                     <li><a href="#overview" class="active"><i class="fas fa-chart-line"></i><span>Visão Geral</span></a></li>
                     <li><a href="#alunos"><i class="fas fa-user-graduate"></i><span>Alunos</span></a></li>
                     <li><a href="#professores"><i class="fas fa-chalkboard-teacher"></i><span>Professores</span></a></li>
+                    <li><a href="#depoimentos"><i class="fas fa-comment-dots"></i><span>Depoimentos</span></a></li>
                     <li><a href="#charts-section"><i class="fas fa-chart-pie"></i><span>Análises</span></a></li>
                     <li><a href="#settings"><i class="fas fa-cog"></i><span>Configurações</span></a></li>
                     <li><a href="{{ route('admin.logout') }}" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
@@ -89,7 +90,8 @@
                         <header class="card-header">
                             <h4>Lista de Alunos</h4>
                             <div class="card-actions">
-                                <form class="search-box" id="searchAlunosForm">
+                                <form class="search-box" id="searchAlunosForm" 
+      data-search-url="{{ route('admin.alunos.search') }}">
                                     <input type="text" id="searchAlunosInput" placeholder="Pesquisar aluno...">
                                     <button type="submit" class="btn-icon"><i class="fas fa-search"></i></button>
                                 </form>
@@ -108,7 +110,10 @@
                                         <th>Ações</th>
                                     </tr>
                                 </thead>
-                                <tbody id="alunosTableBody">
+                               <tbody id="alunosTableBody"
+       data-block-url="/admin/alunos"
+       data-unblock-url="/admin/alunos"
+       data-csrf-token="{{ csrf_token() }}">
                                     @forelse($alunosData as $aluno)
                                     <tr>
                                         <td>{{ $aluno->nome }}</td>
@@ -155,7 +160,8 @@
                         <header class="card-header">
                             <h4>Lista de Professores</h4>
                             <div class="card-actions">
-                                <form class="search-box" id="searchProfessoresForm">
+                                <form class="search-box" id="searchProfessoresForm" 
+      data-search-url="{{ route('admin.professores.search') }}">
                                     <input type="text" id="searchProfessoresInput" placeholder="Pesquisar professor...">
                                     <button type="submit" class="btn-icon"><i class="fas fa-search"></i></button>
                                 </form>
@@ -173,7 +179,10 @@
                                         <th>Ações</th>
                                     </tr>
                                 </thead>
-                                <tbody id="professoresTableBody">
+                                <tbody id="professoresTableBody"
+       data-block-url="/admin/professores"
+       data-unblock-url="/admin/professores"
+       data-csrf-token="{{ csrf_token() }}">
                                     @forelse($professoresData as $professor)
                                     <tr>
                                         <td>{{ $professor->nome }}</td>
@@ -214,6 +223,82 @@
                     </div>
                 </section>
 
+        </section> <section id="depoimentos" class="dashboard-section">
+    <h2>Gerenciar Depoimentos</h2>
+    <div class="card data-table-card">
+
+        <header class="card-header">
+            <h4>Lista de Depoimentos</h4>
+            <div class="card-actions">
+                <form class="search-box" id="searchDepoimentosForm" 
+      data-search-url="{{ route('admin.depoimentos.search') }}">
+                    <input type="text" id="searchDepoimentosInput" placeholder="Pesquisar por autor ou texto...">
+                    <button type="submit" class="btn-icon"><i class="fas fa-search"></i></button>
+                </form>
+            </div>
+        </header>
+
+        <div class="table-responsive">
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th>Autor</th>
+                        <th>Depoimento</th>
+                        <th>Status</th>
+                        <th>Ações</th>
+                    </tr>
+                </thead>
+
+                <tbody id="depoimentosTableBody" 
+       data-block-url="/admin/depoimentos"
+       data-unblock-url="/admin/depoimentos"
+       data-csrf-token="{{ csrf_token() }}">
+                    
+                    @forelse($depoimentosData as $depoimento)
+                    <tr>
+                        <td>{{ $depoimento->autor }}</td>
+                        <td>
+                            <span title="{{ $depoimento->texto }}">
+                                {{ \Illuminate\Support\Str::limit($depoimento->texto, 80, '...') }}
+                            </span>
+                        </td>
+                        <td>
+                            @if ($depoimento->aprovado) 
+                                <span class="badge badge-success">Aprovado</span>
+                            @else
+                                <span class="badge badge-danger">Bloqueado</span>
+                            @endif
+                        </td>
+                        <td>
+                            @if ($depoimento->aprovado)
+                                <form action="{{ route('admin.depoimentos.block', $depoimento->id) }}" method="POST" style="display: inline;" 
+                                      class="form-confirm" data-action-text="bloquear" data-user-name="o depoimento de {{ $depoimento->autor }}">
+                                    @csrf
+                                    <button type="submit" class="btn-icon" title="Bloquear Depoimento"><i class="fas fa-ban" style="color: #e53e3e;"></i></button>
+                                </form>
+                            @else
+                                <form action="{{ route('admin.depoimentos.unblock', $depoimento->id) }}" method="POST" style="display: inline;"
+                                      class="form-confirm" data-action-text="aprovar" data-user-name="o depoimento de {{ $depoimento->autor }}">
+                                    @csrf
+                                    <button type="submit" class="btn-icon" title="Aprovar Depoimento"><i class="fas fa-check-circle" style="color: #48bb78;"></i></button>
+                                </form>
+                            @endif
+                        </td>
+                    </tr>
+                    @empty
+                        <tr><td colspan="4" class="text-center">Nenhum depoimento encontrado.</td></tr>
+                    @endforelse
+                </tbody>
+            </table>
+        </div>
+        
+        <div class="pagination" id="depoimentosPagination">
+             {{ $depoimentosData->fragment('depoimentos')->links() }}
+        </div>
+    </div>
+</section>
+
+<section id="charts-section" class="dashboard-section">
 
                 <section id="charts-section" class="dashboard-section">
                     <h2>Análises e Gráficos</h2>
