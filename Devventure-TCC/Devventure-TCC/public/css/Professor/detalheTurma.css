@@ -6,7 +6,7 @@
 :root {
     --primary-color: #00796b; /* Verde escuro do tema do professor */
     --primary-light: #e0f2f1;
-    --secondary-color: #f97316; /* Laranja para destaque */
+    --secondary-color: #16d6c0; /* Laranja para destaque */
     --light-gray: #f3f4f6;
     --medium-gray: #d1d5db;
     --dark-gray: #374151;
@@ -166,6 +166,11 @@ body {
 .content-item span { font-weight: 500; }
 .content-item small { color: #6b7280; }
 
+.sidebar-column {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+}
 /* =================================
    HISTÓRICO (TIMELINE)
    ================================= */
@@ -235,6 +240,7 @@ body {
     pointer-events: none; /* Impede cliques em links desativados */
 }
 
+
 /* =================================
    MODAIS
    ================================= */
@@ -282,3 +288,43 @@ body {
 }
 .btn-cancelar { background: #e5e7eb; color: var(--dark-gray); }
 .btn-confirmar { background: var(--primary-color); color: white; }
+
+
+.timeline-item--prova .timeline-marker {
+    background-color: var(--secondary-color); /* Laranja para prova */
+}
+
+.timeline-content--linkable {
+    background-color: var(--light-gray);
+    padding: 1rem;
+    border-radius: 8px;
+    flex: 1;
+    text-decoration: none;
+    color: inherit;
+    transition: background-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.timeline-content--linkable:hover {
+    background-color: var(--medium-gray);
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+}
+
+.timeline-content--linkable .timeline-title {
+    color: var(--primary-color);
+}
+
+.timeline-link-indicator {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.25rem;
+    font-size: 0.85rem;
+    font-weight: 500;
+    color: var(--primary-color);
+    margin-top: 0.5rem;
+    opacity: 0;
+    transition: opacity 0.2s ease;
+}
+
+.timeline-content--linkable:hover .timeline-link-indicator {
+    opacity: 1;
+}

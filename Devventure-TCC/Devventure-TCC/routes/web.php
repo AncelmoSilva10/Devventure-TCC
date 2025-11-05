@@ -10,8 +10,10 @@ use App\Http\Controllers\Auth\AlunoLoginController;
 use App\Http\Controllers\Auth\ProfessorLoginController;
 use App\Http\Controllers\Auth\AdmLoginController;
 use App\Http\Controllers\Aluno\PerfilController as AlunoPerfilController;
-use App\Http\Controllers\Professor\PerfilController as ProfessorPerfilController;
+use App\Http\Controllers\Aluno\AlunoProvaController;
 use App\Http\Controllers\Aluno\RespostaController;
+use App\Http\Controllers\Professor\PerfilController as ProfessorPerfilController;
+use App\Http\Controllers\Professor\ProvasController ;
 use App\Http\Controllers\Auth\ForgotPasswordController;
 use App\Http\Controllers\Auth\ResetPasswordController;
 use App\Http\Controllers\Aluno\ExercicioAlunoController;
@@ -108,6 +110,13 @@ Route::middleware(['auth:aluno'])->group(function () {
          ->name('aluno.exercicios.mostrar');
     Route::post('/aluno/exercicios/{exercicio}/responder', [ExercicioAlunoController::class, 'responder'])
          ->name('aluno.exercicios.responder');
+
+    Route::get('/aluno/provas/{prova}', [AlunoProvaController::class, 'show'])->name('aluno.provas.show');
+    Route::post('/aluno/provas/{prova}/iniciar', [AlunoProvaController::class, 'iniciar'])->name('aluno.provas.iniciar');
+    Route::get('/aluno/provas/tentativa/{tentativa}', [AlunoProvaController::class, 'fazer'])->name('aluno.provas.fazer');
+    Route::post('/aluno/provas/tentativa/{tentativa}/submeter', [AlunoProvaController::class, 'submeter'])->name('aluno.provas.submeter');
+    Route::get('/aluno/provas/tentativa/{tentativa}/resultado', [AlunoProvaController::class, 'resultado'])->name('aluno.provas.resultado');
+
     Route::get('/turma/{turma}/ranking', [App\Http\Controllers\Aluno\TurmaController::class, 'mostrarRanking'])->name('aluno.turma.ranking');
 });
 
@@ -124,6 +133,12 @@ Route::middleware(['auth:professor'])->group(function () {
     Route::get('/turmas/{turma}', [App\Http\Controllers\Professor\TurmaController::class, 'turmaEspecificaID'])->name('turmas.especificaID');
     Route::post('/turmas/{turma}/convidar', [App\Http\Controllers\Professor\TurmaController::class, 'convidarAluno'])->name('turmas.convidar');
     Route::post('/turmas/{turma}/aulas', [App\Http\Controllers\Professor\TurmaController::class, 'formsAula'])->name('turmas.aulas.formsAula');
+
+    Route::get('/turmas/{turma}/provas/{prova}/resultados', [ProvasController::class, 'resultados'])->name('Professor.relatorios.provaResultado');
+    Route::get('/professorProvas', [ProvasController::class, 'create'])->name('professor.provas.create');
+    Route::post('/professorCriarProvas', [ProvasController::class, 'store'])->name('professor.provas.store');
+
+
     Route::get('/professorExercicios', [App\Http\Controllers\Professor\ExercicioController::class, 'exercicios'])->name('professor.exercicios.index');
     Route::post('/professorCriarExercicios', [App\Http\Controllers\Professor\ExercicioController::class, 'CriarExercicios'])->name('professor.exercicios.store');
     Route::get('/professor/aulas/{aula}/formulario/create', [App\Http\Controllers\Professor\FormularioController::class, 'create'])->name('formularios.create');

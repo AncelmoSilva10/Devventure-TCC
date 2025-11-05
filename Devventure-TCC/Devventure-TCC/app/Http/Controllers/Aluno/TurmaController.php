@@ -7,6 +7,9 @@ use Illuminate\Http\Request;
 use App\Models\Turma;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Exercicio; 
+use App\Models\Aula;    
+use App\Models\Aviso;
+use App\Models\Prova;
 use Illuminate\Support\Facades\DB;
 
 
@@ -48,12 +51,23 @@ class TurmaController extends Controller
         ->orderBy('data_fechamento', 'asc') 
         ->paginate(6, ['*'], 'exerciciosPage');
 
+    // PAGINAÇÃO: Provas (6 por página, para consistência com exercícios e aulas)
+        $provasDaTurma = $turma->provas()
+            ->where('data_abertura', '<=', now()) 
+            ->with(['tentativas' => function($query) use ($alunoLogado) { 
+                $query->where('aluno_id', $alunoLogado->id);
+            }])
+            ->orderBy('data_fechamento', 'desc')
+            ->paginate(6, ['*'], 'provasPage');
+
+
     return view('Aluno/turmaEspecifica', [
         'turma' => $turma,
         'alunos' => $alunosDaTurma,
         'exercicios' => $exerciciosDaTurma, 
         'aulas' => $aulasDaTurma,
-        'avisos' => $avisosDaTurma 
+        'avisos' => $avisosDaTurma,
+        'provas' => $provasDaTurma,
     ]);
 }
 

@@ -66,12 +66,77 @@
                 </div>
             </div>
 
+            {{-- NOVO BLOCO: DESEMPENHO DETALHADO NAS PROVAS (COM TABELA) --}}
+<div class="card">
+    <div class="card-header">
+        <i class='bx bxs-file-find'></i>
+        <h3>Desempenho Detalhado nas Provas</h3>
+    </div>
+    <div class="table-container">
+        <table>
+            <thead>
+                <tr>
+                    <th>Prova</th>
+                    <th>Data</th>
+                    <th>Pontuação</th>
+                    <th>Acertos / Erros</th>
+                    <th>Questões Erradas</th>
+                </tr>
+            </thead>
+            <tbody>
+                @forelse($aluno->tentativasProvas as $tentativa)
+                    @php
+                        // Calculamos os acertos e erros aqui
+                        $respostas = $tentativa->respostasQuestoes;
+                        $acertos = $respostas->where('correta', true)->count();
+                        $erros = $respostas->where('correta', false)->count();
+                        $totalQuestoes = $respostas->count();
+                    @endphp
+                    <tr>
+                        <td>{{ $tentativa->prova->titulo ?? 'N/A' }}</td>
+                        <td>{{ $tentativa->hora_fim ? $tentativa->hora_fim->format('d/m/Y') : 'N/A' }}</td>
+                        <td>{{ $tentativa->pontuacao_final ?? 'N/A' }}</td>
+                        <td>
+                            @if($totalQuestoes > 0)
+                                <span class="text-success">{{ $acertos }}</span> Acertos<br>
+                                <span class="text-danger">{{ $erros }}</span> Erros
+                            @else
+                                <span>N/A</span>
+                            @endif
+                        </td>
+                        <td>
+                            @if ($erros > 0)
+                                <ul class="erros-detalhes-list">
+                                    @foreach ($respostas->where('correta', false) as $respostaQuestao)
+                                        <li>
+                                            <i class='bx bx-x-circle'></i> 
+                                            {{-- Lembre-se de que o nome da coluna da questão é 'enunciado' --}}
+                                            {{ Str::limit($respostaQuestao->provaQuestao->enunciado ?? 'Questão não encontrada', 50) }}
+                                        </li>
+                                    @endforeach
+                                </ul>
+                            @else
+                                <span class="nenhum-erro">Nenhum erro.</span>
+                            @endif
+                        </td>
+                    </tr>
+                @empty
+                    <tr>
+                        <td colspan="5" class="empty-message">Nenhuma prova finalizada foi encontrada.</td>
+                    </tr>
+                @endforelse
+            </tbody>
+        </table>
+    </div>
+</div>
+{{-- FIM DO NOVO BLOCO --}}
+
             <div class="card">
                 <div class="card-header">
                      <i class='bx bxs-videos'></i>
                     <h3>Aulas Concluídas</h3>
                 </div>
-                 <div class="table-container">
+                   <div class="table-container">
                     <table>
                         <thead>
                             <tr>
@@ -119,8 +184,8 @@
                 </div>
             </div>
             <div class="card">
-                 <div class="card-header">
-                    <i class='bx bx-line-chart'></i>
+                   <div class="card-header">
+                     <i class='bx bx-line-chart'></i>
                     <h3>Evolução de Notas</h3>
                 </div>
                 <div class="chart-container">

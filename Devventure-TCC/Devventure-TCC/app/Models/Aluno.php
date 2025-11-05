@@ -9,50 +9,45 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 
+// --- Imports Corrigidos ---
+use App\Models\Turma;
+use App\Models\Aula;
+use App\Models\RespostaExercicio;
+use App\Models\AlunoRespostaProva; // <-- Este é o nome correto do seu arquivo
+use App\Models\AlunoProvaTentativa;
+use App\Models\RespostaAluno;
+// --- Fim dos Imports ---
+
 class Aluno extends Authenticatable implements MustVerifyEmail, CanResetPassword
 {
     use HasFactory, Notifiable, CanResetPasswordTrait;
     
-    /**
-     * O nome da tabela associada ao model.
-     * @var string
-     */
     protected $table = 'aluno';
 
-    /**
-     * Os atributos que podem ser atribuídos em massa.
-     * @var array<int, string>
-     */
-   protected $fillable = [
-    'nome',
-    'ra',
-    'semestre',
-    'email',
-    'total_pontos', 
-    'telefone',
-    'password',
-    'avatar',
-    'status',
-];
+    protected $fillable = [
+        'nome',
+        'ra',
+        'semestre',
+        'email',
+        'total_pontos', 
+        'telefone',
+        'password',
+        'avatar',
+        'status',
+    ];
 
-    /**
-     * Os atributos que devem ser ocultados para serialização.
-     * @var array<int, string>
-     */
     protected $hidden = [
         'password',
         'remember_token',
-        'two_factor_code', // Oculta o código de segurança
+        'two_factor_code',
     ];
 
-    /**
-     * Os atributos que devem ter seu tipo de dado alterado.
-     * @var array<string, string>
-     */
     protected $casts = [
         'email_verified_at' => 'datetime',
-        'two_factor_expires_at' => 'datetime', // Informa ao Laravel que este campo é uma data
+        'two_factor_expires_at' => 'datetime',
     ];
+
+    // --- Relacionamentos ---
 
     public function turmas()
     {
@@ -68,14 +63,25 @@ class Aluno extends Authenticatable implements MustVerifyEmail, CanResetPassword
     
     public function respostas()
     {
-        return $this->hasMany(RespostaAluno::class);
+        return $this->hasMany(RespostaAluno::class, 'aluno_id');
+    }
+    
+    public function respostasExercicios()
+    {
+        return $this->hasMany(RespostaExercicio::class, 'aluno_id');
     }
 
-    
-public function respostasExercicios()
-{
-    return $this->hasMany(RespostaExercicio::class, 'aluno_id');
-}
+    /**
+     * CORREÇÃO AQUI:
+     * O nome do modelo estava errado. O correto é AlunoRespostaProva::class
+     */
+    public function respostasProvas()
+    {
+        return $this->hasMany(AlunoRespostaProva::class, 'aluno_id');
+    }
 
-    
+    public function tentativasProvas()
+    {
+        return $this->hasMany(AlunoProvaTentativa::class, 'aluno_id');
+    }
 }
