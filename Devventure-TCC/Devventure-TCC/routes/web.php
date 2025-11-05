@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Professor\TurmaController;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Foundation\Auth\EmailVerificationRequest;
 use Illuminate\Http\Request;
@@ -150,6 +151,14 @@ Route::middleware(['auth:professor'])->group(function () {
      ->name('professor.relatorios.index');
     Route::get('/professor/turmas/{turma}/relatorios/aluno/{aluno}', [App\Http\Controllers\Professor\RelatorioController::class, 'relatorioAluno'])
      ->name('professor.relatorios.aluno');
+
+     
+    Route::get('/meus-convites-enviados', [TurmaController::class, 'enviados'])
+         ->name('professor.convites.enviados'); 
+
+    
+    Route::delete('/convites-enviados/{convite}', [TurmaController::class, 'cancelar'])
+           ->name('professor.convites.cancelar');
 });
 
 
