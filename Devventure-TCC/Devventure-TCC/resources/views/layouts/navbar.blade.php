@@ -11,74 +11,88 @@
 
 <nav class="navbar">
     <div class="navbar-container">
-        <a href="#" class="navbar-logo">
+
+        {{-- LOGO --}}
+        <a href="/" class="navbar-logo">
             <img src="{{ asset('images/logoDevventure.png') }}" alt="Logo Devventure">
         </a>
-        
+
+        {{-- BOTÃO MOBILE --}}
         <button class="menu-toggle" id="menu-toggle" aria-label="Abrir menu">
             <span class="bar"></span>
             <span class="bar"></span>
             <span class="bar"></span>
         </button>
 
+        {{-- LINKS PRINCIPAIS --}}
         <div class="navbar-links" id="navbar-links">
             <a href="/"><i class="fa fa-home"></i><span>Home</span></a>
-            <a href="/loginAluno"><i class="fa fa-graduation-cap"></i><span>Login Aluno</span></a>
-            <a href="/loginProfessor"><i class="fa fa-user"></i></i><span>Login Professor</span></a>
+
+            {{-- Exibir apenas se NENHUM usuário estiver autenticado --}}
+            @if(!Auth::guard('aluno')->check() && !Auth::guard('professor')->check())
+                <a href="{{ route('login.aluno') }}"><i class="fa fa-graduation-cap"></i><span>Login Aluno</span></a>
+                <a href="{{ route('login.professor') }}"><i class="fa fa-user"></i><span>Login Professor</span></a>
+            @endif
         </div>
-        
+
+        {{-- PERFIL DO ALUNO --}}
         @auth('aluno')
             <div class="navbar-profile">
                 <button id="profile-dropdown-btn-aluno" class="profile-button">
-                    <img src="{{ Auth::guard('aluno')->user()->avatar ? asset('storage/' . Auth::guard('aluno')->user()->avatar) : asset('images/default-avatar.png') }}" alt="Foto de Perfil" class="profile-avatar">
+                    <img src="{{ Auth::guard('aluno')->user()->avatar ? asset('storage/' . Auth::guard('aluno')->user()->avatar) : asset('images/default-avatar.png') }}" 
+                         alt="Foto de Perfil" class="profile-avatar">
                     <span class="profile-name">{{ Auth::guard('aluno')->user()->nome }}</span>
                     <i class='bx bx-chevron-down'></i>
                 </button>
+
                 <div id="profile-dropdown-aluno" class="profile-dropdown-content">
-    <a href="{{ route('aluno.perfil.edit') }}" class="dropdown-item">
-        <i class='bx bxs-edit'></i>
-        <span>Editar Perfil</span>
-    </a>
-    <div class="dropdown-divider"></div>
-    <form method="POST" action="{{ route('aluno.logout') }}">
-        @csrf
-        <button type="submit" class="dropdown-item dropdown-item-logout">
-            <i class='bx bx-log-out'></i>
-            <span>Sair</span>
-        </button>
-    </form>
-</div>
+                    <a href="{{ route('aluno.perfil.edit') }}" class="dropdown-item">
+                        <i class='bx bxs-edit'></i>
+                        <span>Editar Perfil</span>
+                    </a>
+                    <div class="dropdown-divider"></div>
+                    <form method="POST" action="{{ route('aluno.logout') }}">
+                        @csrf
+                        <button type="submit" class="dropdown-item dropdown-item-logout">
+                            <i class='bx bx-log-out'></i>
+                            <span>Sair</span>
+                        </button>
+                    </form>
+                </div>
             </div>
         @endauth
-@auth('professor')
-    <div class="navbar-profile">
-        <button id="profile-dropdown-btn-professor" class="profile-button">
-            <img src="{{ Auth::guard('professor')->user()->avatar ? asset('storage/' . Auth::guard('professor')->user()->avatar) : asset('images/default-avatar.png') }}" alt="Foto de Perfil" class="profile-avatar">
-            <span class="profile-name">{{ Auth::guard('professor')->user()->nome }}</span>
-            <i class='bx bx-chevron-down'></i>
-        </button>
-        <div id="profile-dropdown-professor" class="profile-dropdown-content">
-            <a href="{{ route('professor.perfil.edit') }}" class="dropdown-item">
-                <i class='bx bxs-edit'></i>
-                <span>Editar Perfil</span>
-            </a>
-            <div class="dropdown-divider"></div>
-            <form method="POST" action="{{ route('professor.logout') }}">
-                @csrf
-                <button type="submit" class="dropdown-item dropdown-item-logout">
-                    <i class='bx bx-log-out'></i>
-                    <span>Sair</span>
+
+        {{-- PERFIL DO PROFESSOR --}}
+        @auth('professor')
+            <div class="navbar-profile">
+                <button id="profile-dropdown-btn-professor" class="profile-button">
+                    <img src="{{ Auth::guard('professor')->user()->avatar ? asset('storage/' . Auth::guard('professor')->user()->avatar) : asset('images/default-avatar.png') }}" 
+                         alt="Foto de Perfil" class="profile-avatar">
+                    <span class="profile-name">{{ Auth::guard('professor')->user()->nome }}</span>
+                    <i class='bx bx-chevron-down'></i>
                 </button>
-            </form>
-        </div>
-    </div>
-@endauth
+
+                <div id="profile-dropdown-professor" class="profile-dropdown-content">
+                    <a href="{{ route('professor.perfil.edit') }}" class="dropdown-item">
+                        <i class='bx bxs-edit'></i>
+                        <span>Editar Perfil</span>
+                    </a>
+                    <div class="dropdown-divider"></div>
+                    <form method="POST" action="{{ route('professor.logout') }}">
+                        @csrf
+                        <button type="submit" class="dropdown-item dropdown-item-logout">
+                            <i class='bx bx-log-out'></i>
+                            <span>Sair</span>
+                        </button>
+                    </form>
+                </div>
+            </div>
+        @endauth
+
     </div>
 </nav>
 
-  
-  <script src="{{ asset('js/layouts/navbar.js') }}"></script>
- 
-  
+<script src="{{ asset('js/layouts/navbar.js') }}"></script>
+
 </body>
 </html>
