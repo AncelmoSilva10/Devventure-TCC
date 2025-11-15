@@ -11,6 +11,13 @@ class ProvaAlternativa extends Model
 
     protected $table = 'prova_alternativas';
 
-    protected $fillable = ['prova_questao_id', 'texto_alternativa', 'correta'];
-public function questao() { return $this->belongsTo(ProvaQuestao::class); }
+    protected $fillable = [
+        'prova_questao_id',
+        'texto_alternativa',
+        'correta'
+        ];
+
+    public function questao() { 
+        return $this->belongsTo(ProvaQuestao::class); 
+    }
 }

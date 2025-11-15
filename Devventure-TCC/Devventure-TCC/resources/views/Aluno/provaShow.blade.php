@@ -5,117 +5,115 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <title>Gerenciador de Provas - {{ $prova->titulo }}</title>
     
-    <link href='https://cdn.boxicons.com/fonts/basic/boxicons.min.css' rel='stylesheet'>
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-    <link href="{{ asset('css/aluno/alunoGeral.css') }}" rel="stylesheet"> {{-- Ajuste o caminho CSS para aluno --}}
-    {{-- Se você usa Bootstrap ou outro framework CSS, adicione aqui --}}
-    {{-- Exemplo: <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet"> --}}
-    <style>
-        .container {
-            max-width: 800px;
-            margin: 20px auto;
-            padding: 20px;
-        }
-        .card {
-            border: 1px solid #ddd;
-            border-radius: 8px;
-            box-shadow: 0 2px 4px rgba(0,0,0,.05);
-        }
-        .card-header {
-            background-color: #007bff; /* Cor primária do Bootstrap */
-            color: white;
-            padding: 15px;
-            border-bottom: 1px solid #ddd;
-            font-weight: bold;
-        }
-        .card-body {
-            padding: 20px;
-        }
-        .card-text {
-            margin-bottom: 10px;
-            line-height: 1.6;
-        }
-        hr {
-            margin-top: 20px;
-            margin-bottom: 20px;
-            border: 0;
-            border-top: 1px solid rgba(0,0,0,.1);
-        }
-        .btn {
-            padding: 10px 20px;
-            border-radius: 4px;
-            cursor: pointer;
-            border: none;
-            color: white;
-            font-weight: 500;
-            text-decoration: none;
-            display: inline-block;
-        }
-        .btn-success { background-color: #28a745; }
-        .alert {
-            padding: 15px;
-            margin-bottom: 20px;
-            border: 1px solid transparent;
-            border-radius: 4px;
-        }
-        .alert-danger {
-            color: #842029;
-            background-color: #f8d7da;
-            border-color: #f5c2c7;
-        }
-        .alert-info {
-            color: #055160;
-            background-color: #cff4fc;
-            border-color: #b6effb;
-        }
-    </style>
+
+    <link href="{{ asset('css/Aluno/iniciandoProva.css') }}" rel="stylesheet"> 
 </head>
 <body>
 
-    @include('layouts.navbar')
-
     <div class="container">
+    
         @if (session('success'))
-            <div class="alert alert-success">{{ session('success') }}</div>
+            <div class="alert alert-success"><i class='bx bx-check-circle'></i> {{ session('success') }}</div>
         @endif
         @if (session('error'))
-            <div class="alert alert-danger">{{ session('error') }}</div>
+            <div class="alert alert-danger"><i class='bx bx-error-alt'></i> {{ session('error') }}</div>
         @endif
         @if (session('info'))
-            <div class="alert alert-info">{{ session('info') }}</div>
+            <div class="alert alert-info"><i class='bx bx-info-circle'></i> {{ session('info') }}</div>
         @endif
 
-        <div class="card shadow-sm">
-            <div class="card-header">
-                <h2 class="mb-0">{{ $prova->titulo }}</h2>
+        <div class="content-grid">
+            <div>
+                <div class="card">
+                    <div class="card-header-custom">
+                        <h2>{{ $prova->titulo }}</h2>
+                        <div class="deadline-info">
+                            <i class='bx bx-time-five'></i> Prazo de entrega: {{ $prova->data_fechamento->format('d/m/Y \à\s H:i') }}
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <p class="card-text"><strong>Turma:</strong> {{ $prova->turma->nome_turma }}</p>
+                        <p class="card-text"><strong>Período para Iniciar:</strong> {{ $prova->data_abertura->format('d/m/Y H:i') }} até {{ $prova->data_fechamento->format('d/m/Y H:i') }}</p>
+                        <p class="card-text"><strong>Duração:</strong> {{ $prova->duracao_minutos }} minutos a partir do início.</p>
+                        
+                        @if($prova->instrucoes)
+                            <h3>Instruções do Professor</h3>
+                            <p class="card-text">{!! nl2br(e($prova->instrucoes)) !!}</p>
+                        @else
+                            <h3>Instruções do Professor</h3>
+                            <p class="card-text">Nenhuma instrução específica fornecida.</p>
+                        @endif
 
-                @if (session('error'))
-                <div class="alert alert-danger" style="background-color: #f8d7da; color: #721c24; padding: 15px; border-radius: 8px; margin-bottom: 20px;">
-                    {{ session('error') }}
+                        <h3>Materiais de Apoio</h3>
+                        <p class="card-text">Nenhum material de apoio fornecido.</p>
+
+                        <div class="button-group">
+                            <button type="button" class="btn btn-secondary-custom" onclick="window.history.back()">
+                                <i class='bx bx-arrow-back'></i> Voltar
+                            </button>
+                            
+                            <form action="{{ route('aluno.provas.iniciar', $prova) }}" method="POST" style="display:inline;">
+                                @csrf
+                                <button type="submit" class="btn btn-primary-custom">
+                                    <i class='bx bx-play-circle'></i> Iniciar Prova
+                                </button>
+                            </form>
+                        </div>
+                    </div>
                 </div>
-            @endif
             </div>
-            <div class="card-body">
-                <p class="card-text"><strong>Turma:</strong> {{ $prova->turma->nome }}</p>
-                <p class="card-text"><strong>Período para Iniciar:</strong> {{ $prova->data_abertura->format('d/m/Y H:i') }} até {{ $prova->data_fechamento->format('d/m/Y H:i') }}</p>
-                <p class="card-text"><strong>Duração:</strong> {{ $prova->duracao_minutos }} minutos a partir do início.</p>
-                
-                @if($prova->instrucoes)
-                    <hr>
-                    <h5>Instruções:</h5>
-                    <p class="card-text">{!! nl2br(e($prova->instrucoes)) !!}</p>
-                @endif
 
-                <hr>
-                <p class="card-text">Ao clicar em "Iniciar Prova", seu tempo começará a correr. Certifique-se de que está pronto!</p>
-                
-                <form action="{{ route('aluno.provas.iniciar', $prova) }}" method="POST">
-                    @csrf
-                    <button type="submit" class="btn btn-success btn-lg">Iniciar Prova</button>
-                </form>
+            <div>
+                <div class="card status-card">
+                    <h3>Status da Prova</h3>
+                    @php
+                        $agora = \Carbon\Carbon::now();
+                        $statusBadgeClass = 'pending'; // Default
+                        $statusBadgeText = 'Pendente';
+                        $statusMessage = 'Você ainda não iniciou esta prova.';
+
+                        $tentativa = Auth::user()->tentativasProvas()->where('prova_id', $prova->id)->first();
+
+                        if ($tentativa) {
+                            if ($tentativa->hora_fim !== null) {
+                                $statusBadgeClass = 'realizada';
+                                $statusBadgeText = 'Realizada';
+                                $statusMessage = 'Você já completou esta prova.';
+                            } elseif ($tentativa->hora_inicio !== null && $tentativa->hora_fim === null) {
+                                $statusBadgeClass = 'iniciada';
+                                $statusBadgeText = 'Em Andamento';
+                                $statusMessage = 'Você já iniciou esta prova. Clique em "Iniciar Prova" para continuar.';
+                            }
+                        } elseif ($agora->isAfter($prova->data_fechamento)) {
+                             $statusBadgeClass = 'fechada';
+                             $statusBadgeText = 'Fechada';
+                             $statusMessage = 'O prazo para esta prova já expirou.';
+                        }
+                    @endphp
+                    <div class="status-badge {{ $statusBadgeClass }}">
+                        <i class='bx bx-info-circle'></i> {{ $statusBadgeText }}
+                    </div>
+                    <p>{{ $statusMessage }}</p>
+                </div>
+
+                <div class="card">
+                    <h3>Sua Pontuação</h3>
+                    @if ($tentativa && $tentativa->hora_fim !== null)
+                        <p><strong>Pontuação Final:</strong> {{ $tentativa->pontuacao_final ?? 'Aguardando correção' }}</p>
+                        <p><strong>Status:</strong> <span class="status-badge realizada">Realizada</span></p>
+                        <p>Você pode ver o resultado completo <a href="{{ route('aluno.provas.resultado', $tentativa->id) }}">aqui</a>.</p>
+                    @elseif ($tentativa && $tentativa->hora_inicio !== null && $tentativa->hora_fim === null)
+                        <p>Você já iniciou esta prova.</p>
+                        <p>Pontuação: 0 pontos (Até o momento)</p>
+                    @else
+                        <p>Você ainda não iniciou</p>
+                        <p>0 pontos</p>
+                    @endif
+                </div>
             </div>
         </div>
     </div>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

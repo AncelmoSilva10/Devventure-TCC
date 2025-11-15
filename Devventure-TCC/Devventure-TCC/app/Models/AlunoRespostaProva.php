@@ -9,7 +9,7 @@ class AlunoRespostaProva extends Model
 {
     use HasFactory;
 
-    protected $table = 'aluno_respostas_provas'; // Certifique-se que este nome está correto
+    protected $table = 'aluno_respostas_provas'; 
 
     protected $fillable = [
         'aluno_prova_tentativa_id',

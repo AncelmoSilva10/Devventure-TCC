@@ -17,16 +17,24 @@ class AlunoProvaTentativa extends Model
     protected $casts = [
         'hora_inicio' => 'datetime',
         'hora_fim' => 'datetime',
-        'data_abertura' => 'datetime', // Adicionado por segurança
-        'data_fechamento' => 'datetime', // Adicionado por segurança
+        'data_abertura' => 'datetime', 
+        'data_fechamento' => 'datetime', 
     ];
-    
-public function prova() { return $this->belongsTo(Prova::class); }
-public function aluno() { return $this->belongsTo(Aluno::class, 'aluno_id'); }
-public function respostas() { return $this->hasMany(AlunoRespostaProva::class); }
+        
+    public function prova() {
+         return $this->belongsTo(Prova::class); 
+        }
 
-public function respostasQuestoes()
-    {
-        return $this->hasMany(AlunoRespostaProva::class, 'aluno_prova_tentativa_id');
-    }
+    public function aluno() {
+         return $this->belongsTo(Aluno::class, 'aluno_id');
+         }
+         
+    public function respostas() {
+         return $this->hasMany(AlunoRespostaProva::class); 
+        }
+
+    public function respostasQuestoes()
+        {
+            return $this->hasMany(AlunoRespostaProva::class, 'aluno_prova_tentativa_id');
+        }
 }

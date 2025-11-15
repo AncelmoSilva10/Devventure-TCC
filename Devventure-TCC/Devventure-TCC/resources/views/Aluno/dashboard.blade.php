@@ -13,19 +13,6 @@
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
     
     <link href="{{ asset('css/Aluno/alunoDashboard.css') }}" rel="stylesheet">
-    <style>
-        /* Adicione estilos específicos para provas aqui, se necessário, ou ajuste no seu CSS */
-        .deadline-item.prova-pending {
-            border-left: 5px solid #007bff; /* Azul para prova pendente */
-        }
-        .deadline-item.prova-iniciada {
-            border-left: 5px solid #ffc107; /* Amarelo/laranja para prova iniciada */
-            background-color: #fff3cd; /* Fundo mais claro para indicar atenção */
-        }
-        .deadline-item.prova-iniciada .status-icon i {
-            color: #ffc107; /* Cor do ícone para iniciada */
-        }
-    </style>
 </head>
 <body>
 
@@ -83,60 +70,69 @@
                 </div>
 
                 <div class="card">
-                    <h3><i class='bx bx-alarm-exclamation'></i> Próximas Entregas</h3>
+                    <h3><i class='bx bx-alarm-exclamation'></i> Histórico de Entregas</h3>
                     <div class="deadlines-list">
-                        {{-- Iterar sobre a coleção unificada $todasEntregas --}}
                         @forelse($todasEntregas as $item)
                             @if($item->type === 'exercicio')
                                 @php
-                                    $entregue = $item->respostas->isNotEmpty(); // Verifica se o aluno já entregou o exercício
+                                    $entregue = $item->respostas->isNotEmpty();
+                                    $statusClass = 'status-pending';
+                                    $statusText = 'Pendente';
+
+                                    if ($entregue) {
+                                        $statusClass = 'status-delivered';
+                                        $statusText = 'Realizado';
+                                    } elseif (now()->isAfter($item->data_fechamento)) {
+                                        $statusClass = 'status-late';
+                                        $statusText = 'Fechado';
+                                    }
                                 @endphp
-                                <a href="{{ route('aluno.exercicios.mostrar', $item->id) }}" class="deadline-item {{ $entregue ? 'delivered' : 'pending' }}">
+                                <a href="{{ route('aluno.exercicios.mostrar', $item->id) }}" class="deadline-item {{ $statusClass }}">
                                     <div class="status-icon">
-                                        @if($entregue)
-                                            <i class='bx bxs-check-circle'></i>
-                                        @else
-                                            <i class='bx bxs-time-five'></i>
-                                        @endif
+                                        <i class='bx bxs-spreadsheet'></i>
                                     </div>
                                     <div class="deadline-info">
                                         <strong>Exercício: {{ $item->nome }}</strong>
                                         <small>Turma: {{ $item->turma->nome_turma }}</small>
                                     </div>
-                                    <div class="deadline-date {{ $item->data_fechamento->isToday() || $item->data_fechamento->isTomorrow() ? 'urgent' : '' }}">
-                                        <span>{{ $item->data_fechamento->setTimezone('America/Sao_Paulo')->format('d/m/Y H:i') }}</span>
+                                    <div class="deadline-date">
+                                        <span>{{ $statusText }} (Até {{ $item->data_fechamento->setTimezone('America/Sao_Paulo')->format('d/m/Y H:i') }})</span>
                                     </div>
                                 </a>
                             @elseif($item->type === 'prova')
                                 @php
-                                    $link = route('aluno.provas.show', $item->id); // Link para a página de instruções da prova
-                                    $statusClass = '';
-                                    $statusIcon = 'bx bxs-file-blank'; // Ícone padrão para prova
-                                    $statusText = 'Fazer Prova';
-
-                                    if ($item->statusTentativa === 'iniciada') {
-                                        $statusClass = 'prova-iniciada';
-                                        $statusIcon = 'bx bxs-hourglass-top'; // Ícone para prova iniciada
-                                        $statusText = 'Continuar Prova';
-                                        $link = route('aluno.provas.fazer', $item->tentativaExistente->id); // Link direto para fazer a prova
-                                    } elseif ($item->statusTentativa === 'pendente') {
-                                        $statusClass = 'prova-pending';
-                                        $statusIcon = 'bx bxs-file-import'; // Ícone para prova pendente
-                                    }
+                                    $link = route('aluno.provas.show', $item->id);
                                     
-                                    // Adicionar classe 'urgent' se a prova estiver próxima do fim
-                                    $isUrgent = $item->data_fechamento->isToday() || $item->data_fechamento->isTomorrow();
+                                    $statusClass = 'status-pending';
+                                    $statusText = 'Pendente';
+
+                                    if ($item->statusTentativa === 'finalizada') {
+                                        $statusClass = 'status-delivered';
+                                        $statusText = 'Realizado';
+                                        $link = route('aluno.provas.resultado', $item->tentativaExistente->id);
+                                    } elseif ($item->statusTentativa === 'iniciada') {
+                                        $statusClass = 'status-iniciada';
+                                        $statusText = 'Em Andamento';
+                                        $link = route('aluno.provas.fazer', $item->tentativaExistente->id);
+                                    } elseif ($item->statusTentativa === 'atrasada') {
+                                        $statusClass = 'status-late';
+                                        $statusText = 'Fechado';
+                                        $link = route('aluno.provas.show', $item->id);
+                                    } elseif ($item->statusTentativa === 'pendente') {
+                                        $statusClass = 'status-pending';
+                                        $statusText = 'Pendente';
+                                    }
                                 @endphp
-                                <a href="{{ $link }}" class="deadline-item {{ $statusClass }} {{ $isUrgent ? 'urgent' : '' }}">
+                                <a href="{{ $link }}" class="deadline-item {{ $statusClass }}">
                                     <div class="status-icon">
-                                        <i class='{{ $statusIcon }}'></i>
+                                        <i class='bx bxs-file-doc'></i>
                                     </div>
                                     <div class="deadline-info">
                                         <strong>Prova: {{ $item->titulo }}</strong>
                                         <small>Turma: {{ $item->turma->nome_turma }}</small>
                                     </div>
                                     <div class="deadline-date">
-                                        <span>{{ $statusText }} até {{ $item->data_fechamento->setTimezone('America/Sao_Paulo')->format('d/m/Y H:i') }}</span>
+                                        <span>{{ $statusText }} (Até {{ $item->data_fechamento->setTimezone('America/Sao_Paulo')->format('d/m/Y H:i') }})</span>
                                     </div>
                                 </a>
                             @endif
@@ -155,7 +151,7 @@
                 <div class="card">
                     <h3><i class='bx bxs-star'></i> Meus Pontos</h3>
                     <div class="my-points-display">
-                        <span>{{ Auth::guard('aluno')->user()->total_pontos ?? 0 }}</span> {{-- Adicionado ?? 0 para segurança --}}
+                        <span>{{ Auth::guard('aluno')->user()->total_pontos ?? 0 }}</span>
                         <small>pontos totais</small>
                     </div>
                     <p class="my-points-info">Continue completando aulas e exercícios para subir no ranking!</p>
@@ -191,14 +187,13 @@
 
 @include('layouts.footer')
 
-{{-- Script para SweetAlert --}}
 @if (session('sweet_success'))
     <script>
         Swal.fire({
             title: 'Sucesso!',
             text: "{{ session('sweet_success') }}",
             icon: 'success',
-            confirmButtonColor: '#0d3c70', // Usando sua cor primária
+            confirmButtonColor: '#0d3c70',
             confirmButtonText: 'Ok'
         });
     </script>

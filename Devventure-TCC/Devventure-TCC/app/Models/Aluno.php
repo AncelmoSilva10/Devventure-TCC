@@ -8,12 +8,10 @@ use Illuminate\Auth\Passwords\CanResetPassword as CanResetPasswordTrait;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
-
-// --- Imports Corrigidos ---
 use App\Models\Turma;
 use App\Models\Aula;
 use App\Models\RespostaExercicio;
-use App\Models\AlunoRespostaProva; // <-- Este é o nome correto do seu arquivo
+use App\Models\AlunoRespostaProva; 
 use App\Models\AlunoProvaTentativa;
 use App\Models\RespostaAluno;
 // --- Fim dos Imports ---
@@ -71,10 +69,6 @@ class Aluno extends Authenticatable implements MustVerifyEmail, CanResetPassword
         return $this->hasMany(RespostaExercicio::class, 'aluno_id');
     }
 
-    /**
-     * CORREÇÃO AQUI:
-     * O nome do modelo estava errado. O correto é AlunoRespostaProva::class
-     */
     public function respostasProvas()
     {
         return $this->hasMany(AlunoRespostaProva::class, 'aluno_id');

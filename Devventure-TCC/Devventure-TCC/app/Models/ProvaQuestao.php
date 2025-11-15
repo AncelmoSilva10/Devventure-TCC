@@ -11,7 +11,18 @@ class ProvaQuestao extends Model
 
     protected $table = 'prova_questoes';
     
-    protected $fillable = ['prova_id', 'enunciado', 'tipo_questao', 'pontuacao'];
-public function prova() { return $this->belongsTo(Prova::class); }
-public function alternativas() { return $this->hasMany(ProvaAlternativa::class); }
+    protected $fillable = [
+        'prova_id',
+        'enunciado',
+        'tipo_questao',
+        'pontuacao'
+    ];
+        
+    public function prova() {
+         return $this->belongsTo(Prova::class); 
+        }
+        
+    public function alternativas() {
+         return $this->hasMany(ProvaAlternativa::class); 
+        }
 }

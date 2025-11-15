@@ -27,24 +27,21 @@ class DashboardController extends Controller
 
         $turmasIds = $aluno->turmas()->pluck('id');
 
-        // Próximos Exercícios
+        // Próximos Exercícios (LÓGICA ALTERADA)
         $proximosExercicios = Exercicio::whereIn('turma_id', $turmasIds)
-            ->where('data_fechamento', '>=', now()) 
+            // ->where('data_fechamento', '>=', now()) // LINHA REMOVIDA para incluir exercícios passados/realizados
             ->orderBy('data_fechamento', 'asc')
             ->with(['turma', 'respostas' => function ($query) use ($aluno) {
                 $query->where('aluno_id', $aluno->id);
             }])
             ->get();
 
-       $proximasProvas = Prova::whereIn('turma_id', $turmasIds)
-                               ->where('data_abertura', '<=', now()) // A prova já está aberta ou abrirá
-                               // ->where('data_fechamento', '>=', now()) // <-- REMOVA ESTA LINHA para incluir provas atrasadas
-                               ->orderBy('data_fechamento', 'asc') // Ordena pelas mais próximas a fechar/mais atrasadas
+        // Próximas Provas (LÓGICA ALTERADA)
+        $proximasProvas = Prova::whereIn('turma_id', $turmasIds)
+                               ->where('data_abertura', '<=', now()) // Apenas provas que já abriram
+                               ->orderBy('data_fechamento', 'asc')
                                ->with('turma') 
-                               ->whereDoesntHave('tentativas', function ($query) use ($aluno) {
-                                   $query->where('aluno_id', $aluno->id)
-                                         ->whereNotNull('hora_fim'); // APENAS EXCLUI AS PROVAS JÁ FINALIZADAS PELO ALUNO
-                               })
+                               // BLOCO whereDoesntHave REMOVIDO para incluir provas finalizadas
                                ->get();
                                
         // Para cada prova, verificar o status (se já iniciou, finalizou, ou se está atrasada)
@@ -54,10 +51,9 @@ class DashboardController extends Controller
                                                             ->first();
             $prova->statusTentativa = 'pendente'; // Assume pendente por padrão
 
-            // Se o aluno já iniciou a tentativa
             if ($prova->tentativaExistente) {
                 if ($prova->tentativaExistente->hora_fim) {
-                    $prova->statusTentativa = 'finalizada'; // Não deveria chegar aqui por conta do whereDoesntHave
+                    $prova->statusTentativa = 'finalizada'; // Agora esta condição será atingida
                 } else {
                     $prova->statusTentativa = 'iniciada'; // Aluno já iniciou, mas não finalizou
                 }
@@ -71,7 +67,7 @@ class DashboardController extends Controller
             
             // Verifica se a prova ainda não abriu (embora o 'data_abertura <= now()' já filtre isso)
             if ($prova->data_abertura && $prova->data_abertura->isFuture()) {
-                 $prova->statusTentativa = 'nao_aberta'; // Pouco provável de acontecer com a consulta atual, mas bom ter
+                 $prova->statusTentativa = 'nao_aberta';
             }
         }
 
@@ -88,9 +84,33 @@ class DashboardController extends Controller
         
         // Ordena a coleção unificada por data_fechamento e depois limita
         $todasEntregas = $todasEntregas->sortBy(function($item) {
-            return $item->data_fechamento;
-        })->take(5);
+            // Lógica de prioridade de status
+            $statusPriority = 99;
+            $dataFechamento = $item->data_fechamento;
 
+            if ($item->type === 'exercicio') {
+                $entregue = $item->respostas->isNotEmpty();
+                if (now()->isAfter($dataFechamento) && !$entregue) {
+                    $statusPriority = 1; // 1. Atrasado (Vermelho)
+                } elseif (!$entregue) {
+                    $statusPriority = 2; // 2. Pendente (Amarelo)
+                } else {
+                    $statusPriority = 3; // 3. Concluído (Verde)
+                }
+            } 
+            elseif ($item->type === 'prova') {
+                if ($item->statusTentativa === 'atrasada') {
+                    $statusPriority = 1; // 1. Atrasado (Vermelho)
+                } elseif ($item->statusTentativa === 'pendente' || $item->statusTentativa === 'iniciada') {
+                    $statusPriority = 2; // 2. Pendente (Amarelo)
+                } else { 
+                    $statusPriority = 3; // 3. Concluído (Verde)
+                }
+            }
+            
+            return $statusPriority . '_' . $dataFechamento->timestamp;
+
+        }); 
 
         // Progresso nas Aulas
         $totalSegundosAulas = Aula::whereIn('turma_id', $turmasIds)->sum('duracao_segundos');
