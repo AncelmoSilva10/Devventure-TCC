@@ -22,6 +22,7 @@ class Exercicio extends Model
     ];
 
     protected $casts = [
+        'data_abertura' => 'datetime',
         'data_fechamento' => 'datetime',
     ];
 

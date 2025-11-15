@@ -1,0 +1,196 @@
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: #f4f7f6;
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 20px auto;
+            padding: 0 20px;
+        }
+
+        /* Layout de grid para as colunas */
+        .content-grid {
+            display: grid;
+            grid-template-columns: 2fr 1fr; /* Coluna principal 2/3, lateral 1/3 */
+            gap: 20px;
+            align-items: start; /* Alinha os cards ao topo */
+        }
+
+        /* Estilo dos cards */
+        .card {
+            background-color: #fff;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+            margin-bottom: 20px; /* Espaçamento entre cards na mesma coluna */
+            padding: 20px;
+        }
+
+        /* Header do card principal (título da prova e prazo) */
+        .card-header-custom {
+            background-color: #343a40; /* Cor escura, como na imagem */
+            color: #fff;
+            padding: 20px;
+            border-top-left-radius: 10px;
+            border-top-right-radius: 10px;
+            margin: -20px -20px 20px -20px; /* Extende o background */
+        }
+
+        .card-header-custom h2 {
+            margin: 0;
+            font-size: 1.8rem;
+            font-weight: 600;
+        }
+
+        .card-header-custom .deadline-info {
+            font-size: 0.95rem;
+            color: #dee2e6;
+            display: flex;
+            align-items: center;
+            margin-top: 10px;
+        }
+
+        .card-header-custom .deadline-info i {
+            margin-right: 8px;
+            font-size: 1.2rem;
+        }
+
+        /* Títulos de seções dentro do card */
+        .card h3 {
+            font-size: 1.3rem;
+            color: #343a40;
+            margin-top: 25px;
+            margin-bottom: 15px;
+            border-bottom: 1px solid #eee;
+            padding-bottom: 10px;
+        }
+
+        /* Parágrafos de texto */
+        .card-text {
+            line-height: 1.6;
+            color: #555;
+            margin-bottom: 10px;
+        }
+        .card-text strong {
+            color: #333;
+        }
+
+        /* Botões */
+        .button-group {
+            display: flex;
+            gap: 15px; /* Espaçamento entre os botões */
+            margin-top: 30px;
+            justify-content: flex-start; /* Alinha à esquerda */
+        }
+        .btn {
+            padding: 12px 25px;
+            border-radius: 8px;
+            cursor: pointer;
+            border: none;
+            color: white;
+            font-weight: 500;
+            text-decoration: none;
+            display: inline-flex; /* Para alinhar ícone e texto */
+            align-items: center;
+            justify-content: center;
+            transition: background-color 0.2s ease, transform 0.2s ease;
+        }
+        .btn i {
+            margin-right: 8px;
+            font-size: 1.1rem;
+        }
+
+        /* Cores dos botões */
+        .btn-primary-custom { /* Botão "Iniciar Prova" */
+            background-color: #6f42c1; /* Roxo mais vibrante */
+        }
+        .btn-primary-custom:hover {
+            background-color: #5c37a0;
+            transform: translateY(-1px);
+        }
+        .btn-secondary-custom { /* Botão "Voltar" */
+            background-color: #6c757d; /* Cinza */
+        }
+        .btn-secondary-custom:hover {
+            background-color: #5a6268;
+            transform: translateY(-1px);
+        }
+
+        /* Status da Prova no card lateral */
+        .status-card .status-badge {
+            display: inline-flex;
+            align-items: center;
+            padding: 8px 15px;
+            border-radius: 20px;
+            font-weight: 600;
+            margin-bottom: 15px;
+        }
+        .status-badge i {
+            margin-right: 8px;
+            font-size: 1.2rem;
+        }
+
+        /* Cores dos badges de status (congruente com o dashboard) */
+        .status-badge.pending {
+            background-color: #fff3cd; /* Fundo amarelo claro */
+            color: #856404; /* Texto amarelo escuro */
+        }
+        .status-badge.iniciada {
+            background-color: #d1ecf1; /* Fundo azul claro */
+            color: #0c5460; /* Texto azul escuro */
+        }
+        .status-badge.realizada {
+            background-color: #d4edda; /* Fundo verde claro */
+            color: #155724; /* Texto verde escuro */
+        }
+        .status-badge.fechada {
+            background-color: #f8d7da; /* Fundo vermelho claro */
+            color: #721c24; /* Texto vermelho escuro */
+        }
+
+        /* Alertas (para mensagens de sessão) */
+        .alert {
+            padding: 15px;
+            margin-bottom: 20px;
+            border-radius: 8px;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+        }
+        .alert i {
+            margin-right: 10px;
+            font-size: 1.3rem;
+        }
+        .alert-success {
+            background-color: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+        .alert-danger {
+            background-color: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+        .alert-info {
+            background-color: #d1ecf1;
+            color: #0c5460;
+            border: 1px solid #bee5eb;
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            .content-grid {
+                grid-template-columns: 1fr; /* Uma única coluna em telas menores */
+            }
+            .card-header-custom {
+                margin: -20px -20px 20px -20px; /* Extende o background */
+                border-radius: 10px; /* Arredonda tudo no mobile */
+            }
+            .button-group {
+                flex-direction: column; /* Botões um abaixo do outro */
+            }
+            .btn {
+                width: 100%; /* Botões ocupam largura total */
+            }
+        }

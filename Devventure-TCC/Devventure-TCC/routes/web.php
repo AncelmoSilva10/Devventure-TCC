@@ -11,8 +11,10 @@ use App\Http\Controllers\Auth\AlunoLoginController;
 use App\Http\Controllers\Auth\ProfessorLoginController;
 use App\Http\Controllers\Auth\AdmLoginController;
 use App\Http\Controllers\Aluno\PerfilController as AlunoPerfilController;
-use App\Http\Controllers\Professor\PerfilController as ProfessorPerfilController;
+use App\Http\Controllers\Aluno\AlunoProvaController;
 use App\Http\Controllers\Aluno\RespostaController;
+use App\Http\Controllers\Professor\PerfilController as ProfessorPerfilController;
+use App\Http\Controllers\Professor\ProvasController ;
 use App\Http\Controllers\Auth\ForgotPasswordController;
 use App\Http\Controllers\Auth\ResetPasswordController;
 use App\Http\Controllers\Aluno\ExercicioAlunoController;
@@ -105,21 +107,29 @@ Route::post('/email/verification-notification', function (Request $request) {
 Route::middleware(['auth:aluno'])->group(function () {
     Route::get('/alunoDashboard', \App\Http\Controllers\Aluno\DashboardController::class)->name('aluno.dashboard');
     Route::post('/logout-aluno', [AlunoLoginController::class, 'logoutUser'])->name('aluno.logout');
-    Route::get('/minhas-turmas', [App\Http\Controllers\Aluno\TurmaController::class, 'minhasTurmas'])->name('aluno.turma');
-    Route::get('/turmaAluno/{turma}', [App\Http\Controllers\Aluno\TurmaController::class, 'mostrarTurmaEspecifica'])->name('turmas.especifica');
-    Route::get('/aula/{aula}', [App\Http\Controllers\Aluno\AulaController::class, 'aula'])->name('aulas.view');
-    Route::post('/aula/progresso', [App\Http\Controllers\Aluno\AulaController::class, 'salvarProgresso'])->name('aulas.progresso');
-    Route::post('/convite/{convite}/aceitar', [App\Http\Controllers\Aluno\ConviteController::class, 'aceitar'])->name('convites.aceitar');
-    Route::post('/convite/{convite}/recusar', [App\Http\Controllers\Aluno\ConviteController::class, 'recusar'])->name('convites.recusar');
     Route::get('/aluno/perfil', [AlunoPerfilController::class, 'edit'])->name('aluno.perfil.edit');
     Route::patch('/aluno/perfil', [AlunoPerfilController::class, 'update'])->name('aluno.perfil.update');
-    Route::post('/aulas/{aula}/formulario/responder', [RespostaController::class, 'store'])
-        ->name('aluno.formulario.responder');
-     Route::get('/aluno/exercicios/{exercicio}', [ExercicioAlunoController::class, 'mostrar'])
-         ->name('aluno.exercicios.mostrar');
-    Route::post('/aluno/exercicios/{exercicio}/responder', [ExercicioAlunoController::class, 'responder'])
-         ->name('aluno.exercicios.responder');
+
+    Route::get('/minhas-turmas', [App\Http\Controllers\Aluno\TurmaController::class, 'minhasTurmas'])->name('aluno.turma');
+    Route::get('/turmaAluno/{turma}', [App\Http\Controllers\Aluno\TurmaController::class, 'mostrarTurmaEspecifica'])->name('turmas.especifica');
     Route::get('/turma/{turma}/ranking', [App\Http\Controllers\Aluno\TurmaController::class, 'mostrarRanking'])->name('aluno.turma.ranking');
+
+    Route::get('/aula/{aula}', [App\Http\Controllers\Aluno\AulaController::class, 'aula'])->name('aulas.view');
+    Route::post('/aula/progresso', [App\Http\Controllers\Aluno\AulaController::class, 'salvarProgresso'])->name('aulas.progresso');
+    Route::post('/aulas/{aula}/formulario/responder', [RespostaController::class, 'store'])->name('aluno.formulario.responder');
+
+    Route::post('/convite/{convite}/aceitar', [App\Http\Controllers\Aluno\ConviteController::class, 'aceitar'])->name('convites.aceitar');
+    Route::post('/convite/{convite}/recusar', [App\Http\Controllers\Aluno\ConviteController::class, 'recusar'])->name('convites.recusar');
+
+    Route::get('/aluno/exercicios/{exercicio}', [ExercicioAlunoController::class, 'mostrar'])->name('aluno.exercicios.mostrar');
+    Route::post('/aluno/exercicios/{exercicio}/responder', [ExercicioAlunoController::class, 'responder'])->name('aluno.exercicios.responder');
+
+    Route::get('/aluno/provas/{prova}', [AlunoProvaController::class, 'show'])->name('aluno.provas.show');
+    Route::post('/aluno/provas/{prova}/iniciar', [AlunoProvaController::class, 'iniciar'])->name('aluno.provas.iniciar');
+    Route::get('/aluno/provas/tentativa/{tentativa}', [AlunoProvaController::class, 'fazer'])->name('aluno.provas.fazer');
+    Route::post('/aluno/provas/tentativa/{tentativa}/submeter', [AlunoProvaController::class, 'submeter'])->name('aluno.provas.submeter');
+    Route::get('/aluno/provas/tentativa/{tentativa}/resultado', [AlunoProvaController::class, 'resultado'])->name('aluno.provas.resultado');
+
 });
 
 
@@ -129,36 +139,34 @@ Route::middleware(['auth:professor'])->group(function () {
     Route::post('/logout-professor', [ProfessorLoginController::class, 'logoutUser'])->name('professor.logout');
     Route::get('/perfilProfessor', [ProfessorPerfilController::class, 'edit'])->name('professor.perfil.edit');
     Route::patch('/perfilProfessorUpdate', [ProfessorPerfilController::class, 'update'])->name('professor.perfil.update');
+
     Route::get('/professorGerenciar', [App\Http\Controllers\Professor\TurmaController::class, 'GerenciarTurma'])->name('professor.turmas');
     Route::get('/professorGerenciarEspecifica', [App\Http\Controllers\Professor\TurmaController::class, 'turmaEspecifica'])->name('professor.turma.especifica');
+
     Route::post('/cadastrar-turma', [App\Http\Controllers\Professor\TurmaController::class, 'turma'])->name('professor.turmas.store');
     Route::get('/turmas/{turma}', [App\Http\Controllers\Professor\TurmaController::class, 'turmaEspecificaID'])->name('turmas.especificaID');
     Route::post('/turmas/{turma}/convidar', [App\Http\Controllers\Professor\TurmaController::class, 'convidarAluno'])->name('turmas.convidar');
     Route::post('/turmas/{turma}/aulas', [App\Http\Controllers\Professor\TurmaController::class, 'formsAula'])->name('turmas.aulas.formsAula');
+    Route::get('/professor/turmas/{turma}/ranking', [App\Http\Controllers\Professor\TurmaController::class, 'mostrarRanking'])->name('professor.turma.ranking');
+    Route::get('/professor/turmas/{turma}/relatorios', [App\Http\Controllers\Professor\RelatorioController::class, 'index'])->name('professor.relatorios.index');
+    Route::get('/professor/turmas/{turma}/relatorios/aluno/{aluno}', [App\Http\Controllers\Professor\RelatorioController::class, 'relatorioAluno'])->name('professor.relatorios.aluno');
+
+    Route::get('/turmas/{turma}/provas/{prova}/resultados', [ProvasController::class, 'resultados'])->name('Professor.relatorios.provaResultado');
+    Route::get('/professorProvas', [ProvasController::class, 'create'])->name('professor.provas.create');
+    Route::post('/professorCriarProvas', [ProvasController::class, 'store'])->name('professor.provas.store');
+    Route::delete('/professor/provas/{prova}', [ProvasController::class, 'destroy'])->name('professor.provas.destroy');
+    
     Route::get('/professorExercicios', [App\Http\Controllers\Professor\ExercicioController::class, 'exercicios'])->name('professor.exercicios.index');
     Route::post('/professorCriarExercicios', [App\Http\Controllers\Professor\ExercicioController::class, 'CriarExercicios'])->name('professor.exercicios.store');
+    Route::get('/professor/exercicios/{exercicio}/respostas', [App\Http\Controllers\Professor\ExercicioController::class, 'mostrarRespostas'])->name('professor.exercicios.respostas');
+    Route::post('/professor/respostas/{resposta}/avaliar', [App\Http\Controllers\Professor\ExercicioController::class, 'avaliarResposta'])->name('professor.respostas.avaliar');
+    
     Route::get('/professor/aulas/{aula}/formulario/create', [App\Http\Controllers\Professor\FormularioController::class, 'create'])->name('formularios.create');
     Route::post('/professor/aulas/{aula}/formulario', [App\Http\Controllers\Professor\FormularioController::class, 'store'])->name('formularios.store');
-    Route::get('/professor/turmas/{turma}/ranking', [App\Http\Controllers\Professor\TurmaController::class, 'mostrarRanking'])
-     ->name('professor.turma.ranking');
+
     Route::get('/professor/avisos/criar', [AvisoController::class, 'create'])->name('professor.avisos.create');
     Route::post('/professor/avisos', [AvisoController::class, 'store'])->name('professor.avisos.store');
-    Route::get('/professor/exercicios/{exercicio}/respostas', [App\Http\Controllers\Professor\ExercicioController::class, 'mostrarRespostas'])
-     ->name('professor.exercicios.respostas');
-    Route::post('/professor/respostas/{resposta}/avaliar', [App\Http\Controllers\Professor\ExercicioController::class, 'avaliarResposta'])
-     ->name('professor.respostas.avaliar');
-     Route::get('/professor/turmas/{turma}/relatorios', [App\Http\Controllers\Professor\RelatorioController::class, 'index'])
-     ->name('professor.relatorios.index');
-    Route::get('/professor/turmas/{turma}/relatorios/aluno/{aluno}', [App\Http\Controllers\Professor\RelatorioController::class, 'relatorioAluno'])
-     ->name('professor.relatorios.aluno');
 
-     
-    Route::get('/meus-convites-enviados', [TurmaController::class, 'enviados'])
-         ->name('professor.convites.enviados'); 
-
-    
-    Route::delete('/convites-enviados/{convite}', [TurmaController::class, 'cancelar'])
-           ->name('professor.convites.cancelar');
 });
 
 

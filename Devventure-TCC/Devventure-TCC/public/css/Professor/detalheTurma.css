@@ -1,6 +1,3 @@
-/* =================================================================== */
-/* detalheTurma.css — Atualizado (modais, inputs com ícone, foco)      */
-/* =================================================================== */
 
 :root{
   --cor-primaria: #00796B;
@@ -117,37 +114,52 @@
 .main-content{ flex: 1 1 65%; display:flex; flex-direction:column; gap:1.5rem; min-width:320px; }
 .sidebar{ flex: 0 0 320px; }
 
-/* CARD comum */
-.card{
-  background: var(--cor-card);
-  border-radius: 12px;
-  padding:1.25rem;
-  box-shadow: var(--sombra-card);
-  border:1px solid var(--cor-borda);
+.sidebar-column {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+}
+/* =================================
+   HISTÓRICO (TIMELINE)
+   ================================= */
+.timeline { list-style: none; margin: 0; padding: 1.5rem; position: relative; }
+.timeline::before {
+    content: ''; position: absolute; top: 0; left: 35px;
+    height: 100%; width: 3px; background-color: var(--light-gray);
+}
+.timeline-item { display: flex; gap: 1.5rem; margin-bottom: 1.5rem; position: relative; }
+.timeline-marker {
+    width: 30px; height: 30px; border-radius: 50%; display: flex; align-items: center;
+    justify-content: center; z-index: 1; border: 3px solid var(--light-gray);
+}
+.timeline-icon { font-size: 1.2rem; color: var(--white-color); }
+.timeline-item--aula .timeline-marker { background-color: #3b82f6; }
+.timeline-item--exercicio .timeline-marker { background-color: var(--primary-color); }
+.timeline-content {
+    background-color: var(--light-gray); padding: 1rem; border-radius: 8px; flex: 1;
 }
 
 /* card header */
 .card-header{ margin-bottom:0.6rem; display:flex; align-items:center; gap:0.6rem; }
 .card-header h2{ margin:0; font-size:1.15rem; color:var(--cor-primaria); }
 
-/* STUDENT LIST */
-.student-list{ list-style:none; margin:0; padding:0; display:flex; flex-direction:column; gap:0.6rem; }
-.student-item{
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-  gap:1rem;
-  padding:0.75rem;
-  background: linear-gradient(180deg, #fff, #fbfeff);
-  border-radius:10px;
-  border:1px solid var(--cor-borda);
-  text-decoration:none;
-  color:inherit;
-  transition: transform .12s ease, box-shadow .12s ease;
+
+/* =================================
+   MODAIS
+   ================================= */
+.modal-overlay {
+    position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+    backdrop-filter: blur(5px); background-color: rgba(0,0,0,0.4);
+    display: none; justify-content: center; align-items: center;
+    z-index: 1000; padding: 1rem; overflow-y: auto;
 }
-.student-item:hover{
-  transform: translateY(-4px);
-  box-shadow: 0 8px 20px rgba(0,0,0,0.06);
+.modal-content {
+    background: white; padding: 2.5rem; border-radius: 20px;
+    width: 100%; max-width: 550px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+    position: relative;
+    transform: scale(0.95); opacity: 0;
+    animation: fadeInModal 0.3s forwards ease-out;
 }
 
 /* student left info */
@@ -222,6 +234,45 @@
   .page-body{ flex-direction:column; padding:0 1rem 1.5rem 1rem; }
   .sidebar{ width:100%; order:2; }
 }
+.btn-cancelar { background: #e5e7eb; color: var(--dark-gray); }
+.btn-confirmar { background: var(--primary-color); color: white; }
 
-/* small fix */
-.turma-wrapper .card, .turma-wrapper .btn, .turma-wrapper .modal-content { -webkit-font-smoothing:antialiased; }
+
+.timeline-item--prova .timeline-marker {
+    background-color: var(--secondary-color); /* Laranja para prova */
+}
+
+.timeline-content--linkable {
+    background-color: var(--light-gray);
+    padding: 1rem;
+    border-radius: 8px;
+    flex: 1;
+    text-decoration: none;
+    color: inherit;
+    transition: background-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.timeline-content--linkable:hover {
+    background-color: var(--medium-gray);
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+}
+
+.timeline-content--linkable .timeline-title {
+    color: var(--primary-color);
+}
+
+.timeline-link-indicator {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.25rem;
+    font-size: 0.85rem;
+    font-weight: 500;
+    color: var(--primary-color);
+    margin-top: 0.5rem;
+    opacity: 0;
+    transition: opacity 0.2s ease;
+}
+
+.timeline-content--linkable:hover .timeline-link-indicator {
+    opacity: 1;
+}

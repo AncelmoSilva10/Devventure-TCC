@@ -430,3 +430,68 @@ body {
     border-top: 1px solid #ddd;
 }
 .turma-ranking-link i { vertical-align: middle; }
+
+ .deadline-item {
+            border-left: 5px solid #ccc;
+            transition: border-color 0.3s ease, background-color 0.3s ease;
+        }
+        
+        .deadline-item .status-icon i {
+            color: #0d3c70;
+            opacity: 0.8;
+            font-size: 1.6rem;
+        }
+
+        .deadline-item.prova-iniciada .status-icon i {
+            color: #0d3c70;
+        }
+
+        .deadline-item.status-delivered,
+        .deadline-item.status-finalizada {
+            border-left-color: #28a745;
+        }
+        .deadline-item.status-delivered .deadline-date span,
+        .deadline-item.status-finalizada .deadline-date span {
+            color: #28a745;
+            font-weight: 500;
+        }
+
+        .deadline-item.status-pending,
+        .deadline-item.status-iniciada {
+            border-left-color: #ffc107;
+        }
+        .deadline-item.status-pending .deadline-date span,
+        .deadline-item.status-iniciada .deadline-date span {
+            color: #ffc107;
+            font-weight: 500;
+        }
+
+        .deadline-item.status-late {
+            border-left-color: #dc3545;
+        }
+        .deadline-item.status-late .deadline-date span {
+            color: #dc3545;
+            font-weight: 500;
+        }
+
+        /* NOVO CSS PARA SCROLLBAR */
+        .deadlines-list {
+            max-height: 400px; /* Define uma altura máxima */
+            overflow-y: auto;  /* Adiciona o scroll vertical */
+            padding-right: 10px; /* Espaço para o scrollbar não cobrir o conteúdo */
+        }
+        /* Estilização leve do scrollbar (opcional, webkit) */
+        .deadlines-list::-webkit-scrollbar {
+            width: 8px;
+        }
+        .deadlines-list::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 10px;
+        }
+        .deadlines-list::-webkit-scrollbar-thumb {
+            background: #ccc;
+            border-radius: 10px;
+        }
+        .deadlines-list::-webkit-scrollbar-thumb:hover {
+            background: #aaa;
+        }

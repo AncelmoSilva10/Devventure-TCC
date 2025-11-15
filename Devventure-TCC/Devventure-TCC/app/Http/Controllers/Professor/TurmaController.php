@@ -6,10 +6,10 @@ use App\Http\Controllers\Controller;
 use App\Models\Turma;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use App\Models\Aluno;
 use App\Models\Convite;
 use App\Models\Aula;
 use App\Models\Exercicio;
+use App\Models\Aluno;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Collection;
@@ -95,21 +95,45 @@ public function turmaEspecificaID(Turma $turma, Request $request)
         
         // 2. PAGINAÇÃO: EXERCÍCIOS (5 por página)
         // É uma boa prática ordenar os resultados
-        $exerciciosPaginados = $turma->exercicios()->orderBy('data_publicacao', 'desc')->paginate(5, ['*'], 'exerciciosPage');
+        $exerciciosPaginados = $turma->exercicios()->orderBy('data_publicacao', 'desc')->paginate(4, ['*'], 'exerciciosPage');
 
         // 3. PAGINAÇÃO: AVISOS (5 por página)
         $avisosPaginados = $turma->avisos()->orderBy('created_at', 'desc')->paginate(5, ['*'], 'avisosPage');
 
+        $provas = $turma->provas()->latest()->paginate(4, ['*'], 'provasPage');
+
         // 4. PAGINAÇÃO MANUAL: HISTÓRICO (5 por página)
         // Primeiro, montamos a lista completa como antes
         $historicoExercicios = $turma->exercicios->map(function ($exercicio) {
-            return [ 'tipo' => 'exercicio', 'data' => $exercicio->data_publicacao, 'titulo' => $exercicio->nome, 'detalhe' => 'Entrega até ' . Carbon::parse($exercicio->data_fechamento)->format('d/m/Y H:i')];
+            return [ 
+                'tipo' => 'exercicio',
+                'data' => $exercicio->data_publicacao,
+                'titulo' => $exercicio->nome,
+                'detalhe' => 'Entrega até ' . Carbon::parse($exercicio->data_fechamento)->format('d/m/Y H:i'),
+                'link' => null,
+            ];
         })->all();
         $historicoAulas = $aulasDaTurma->map(function ($aula) {
-            return [ 'tipo' => 'aula', 'data' => $aula->created_at, 'titulo' => $aula->titulo, 'detalhe' => 'Duração: ' . floor($aula->duracao_segundos / 60) . 'm ' . ($aula->duracao_segundos % 60) . 's'];
+            return [ 
+                'tipo' => 'aula',
+                'data' => $aula->created_at,
+                'titulo' => $aula->titulo,
+                'detalhe' => 'Duração: ' . floor($aula->duracao_segundos / 60) . 'm ' . ($aula->duracao_segundos % 60) . 's',
+                'link' => null,
+            ];
         })->all();
+        $historicoProvas = $provas->map(function ($prova) use ($turma) { 
+            return [
+                'id' => $prova->id,
+                'tipo' => 'prova',
+                'data' => $prova->created_at,
+                'titulo' => $prova->titulo,
+                'detalhe' => 'Prova publicada. Prazo: ' . Carbon::parse($prova->data_fechamento)->format('d/m/Y H:i'),
+                'link' => route('Professor.relatorios.provaResultado', ['turma' => $turma->id, 'prova' => $prova->id]) 
+            ];
+        })->all(); 
         
-        $historicoCompleto = new Collection(array_merge($historicoExercicios, $historicoAulas));
+        $historicoCompleto = new Collection(array_merge($historicoExercicios, $historicoAulas, $historicoProvas));
         $historicoOrdenado = $historicoCompleto->sortByDesc('data');
 
         //  criação do paginador manualmente
@@ -126,6 +150,7 @@ public function turmaEspecificaID(Turma $turma, Request $request)
             'turma' => $turma,
             'alunos' => $alunosComProgresso,      
             'exercicios' => $exerciciosPaginados, 
+            'provas' => $provas,
             'historico' => $historicoPaginado,     
             'avisos' => $avisosPaginados,         
         ]);

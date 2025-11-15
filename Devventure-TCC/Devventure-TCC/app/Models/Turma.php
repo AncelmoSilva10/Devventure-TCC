@@ -46,4 +46,11 @@ public function avisos()
     return $this->belongsToMany(Aviso::class, 'aviso_turma')->orderBy('created_at', 'desc');
 }
 
+public function provas()
+    {
+        // Define que uma Turma "tem muitas" Provas
+        // A chave estrangeira 'turma_id' já é a convenção
+        return $this->hasMany(Prova::class, 'turma_id');
+    }
+
 }

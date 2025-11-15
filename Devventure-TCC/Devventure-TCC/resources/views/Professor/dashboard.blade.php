@@ -34,6 +34,12 @@
                 <h3>Criar Exercício</h3>
                 <p>Elabore e atribua novos exercícios.</p>
             </a>
+
+            <a href="{{ route('professor.provas.create') }}" class="card-acao">
+                <i class='bx bxs-file'></i>
+                <h3>Criar Prova</h3>
+                <p>Acompanhe o rendimento da jornada dos alunos.</p>
+            </a>
           
             <a href="{{ route('professor.avisos.create') }}" class="card-acao">
                 <i class='bx bxs-bell'></i>

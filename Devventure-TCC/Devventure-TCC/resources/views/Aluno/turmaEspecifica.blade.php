@@ -28,6 +28,7 @@
                     <div class="stat-item"><i class='bx bxs-group'></i><span>{{ $alunos->total() }} Alunos</span></div>
                     <div class="stat-item"><i class='bx bxs-book-content'></i><span>{{ $exercicios->total() }} Exercícios</span></div>
                     <div class="stat-item"><i class='bx bxs-videos'></i><span>{{ $aulas->total() }} Aulas</span></div>
+                    <div class="stat-item"><i class='bx bxs-file-blank'></i><span>{{ $provas->total() }} Provas</span></div>
                 </div>
             </div>
         </header>
@@ -38,6 +39,7 @@
                     <button class="tab-link {{ request('tab', 'exercicios') == 'exercicios' ? 'active' : '' }}" data-tab="exercicios"><i class='bx bxs-pencil'></i> Exercícios</button>
                     <button class="tab-link {{ request('tab') == 'aulas' ? 'active' : '' }}" data-tab="aulas"><i class='bx bxs-videos'></i> Aulas</button>
                     <button class="tab-link {{ request('tab') == 'avisos' ? 'active' : '' }}" data-tab="avisos"><i class='bx bxs-bell'></i> Mural de Avisos</button>
+                    <button class="tab-link {{ request('tab') == 'provas' ? 'active' : '' }}" data-tab="provas"><i class='bx bxs-file-blank'></i> Provas</button>
                 </div>
 
                 <div class="tabs-content">
@@ -76,12 +78,74 @@
                                     <i class='bx bx-info-circle'></i>
                                     <p>Nenhum exercício postado nesta turma ainda.</p>
                                 </div>
-                            @endforelse
+                                @endforelse
+                            </div>
+                            <div class="pagination">
+                                {{ $exercicios->appends(['tab' => 'exercicios'])->appends(request()->except('exerciciosPage'))->links() }}
+                            </div>
                         </div>
-                        <div class="pagination">
-                            {{ $exercicios->appends(['tab' => 'exercicios'])->appends(request()->except('exerciciosPage'))->links() }}
+                        <div class="tab-pane {{ request('tab') == 'provas' ? 'active' : '' }}" id="provas">
+                            <div class="content-grid">
+                                @forelse($provas as $provaItem)
+                                    @php
+                                        $statusClass = 'status-pending';
+                                        $statusText = 'Pendente';
+                                        $linkRoute = route('aluno.provas.show', $provaItem->id); // Rota padrão para ver detalhes da prova
+    
+                                        // Verifica se o aluno já tem uma tentativa para esta prova
+                                        $tentativaAluno = $provaItem->tentativas->first();
+    
+                                        if ($tentativaAluno) {
+                                            if ($tentativaAluno->hora_fim !== null) {
+                                                $statusClass = 'status-delivered'; // Concluída
+                                                $statusText = 'Concluída';
+                                                $linkRoute = route('aluno.provas.resultado', $tentativaAluno->id);
+                                            } else {
+                                                $statusClass = 'status-in-progress'; // Em Andamento
+                                                $statusText = 'Em Andamento';
+                                                $linkRoute = route('aluno.provas.fazer', $tentativaAluno->id);
+                                            }
+                                        } elseif (now()->isBefore($provaItem->data_abertura)) {
+                                            $statusClass = 'status-upcoming'; // Em Breve
+                                            $statusText = 'Em Breve';
+                                            $linkRoute = '#'; // Não clicável ou leva para info
+                                        } elseif (now()->isAfter($provaItem->data_fechamento)) {
+                                            $statusClass = 'status-late'; // Prazo Encerrado
+                                            $statusText = 'Prazo Encerrado';
+                                            $linkRoute = '#'; // Não clicável ou leva para info
+                                        }
+                                    @endphp
+                                    <a href="{{ $linkRoute }}" class="exercise-card {{ $statusClass }}">
+                                        <div class="card-content">
+                                            <div class="card-header">
+                                                <h3>{{ $provaItem->titulo }}</h3>
+                                                <span class="status-tag">{{ $statusText }}</span>
+                                            </div>
+                                            <p class="card-description">{{ Str::limit($provaItem->instrucoes, 100) }}</p>
+                                            <div class="card-footer">
+                                                <div class="deadline-info">
+                                                    <i class='bx bxs-hourglass-bottom'></i>
+                                                    <span>Duração: {{ $provaItem->duracao_minutos }} min</span>
+                                                </div>
+                                                <div class="deadline-info">
+                                                    <i class='bx bxs-time-five'></i>
+                                                    <span>Fecha em: {{ \Carbon\Carbon::parse($provaItem->data_fechamento)->format('d/m/Y H:i') }}</span>
+                                                </div>
+                                                <i class='bx bx-right-arrow-alt card-arrow'></i>
+                                            </div>
+                                        </div>
+                                    </a>
+                                @empty
+                                    <div class="empty-state">
+                                        <i class='bx bx-info-circle'></i>
+                                        <p>Nenhuma prova postada nesta turma ainda.</p>
+                                    </div>
+                                @endforelse
+                            </div>
+                            <div class="pagination">
+                                {{ $provas->appends(['tab' => 'provas'])->appends(request()->except('provasPage'))->links() }}
+                            </div>
                         </div>
-                    </div>
 
                     <div class="tab-pane {{ request('tab') == 'aulas' ? 'active' : '' }}" id="aulas">
                         <div class="content-grid">
@@ -137,6 +201,8 @@
                              {{ $avisos->appends(['tab' => 'avisos'])->appends(request()->except('avisosPage'))->links() }}
                         </div>
                     </div>
+
+
                 </div>
             </div>
 

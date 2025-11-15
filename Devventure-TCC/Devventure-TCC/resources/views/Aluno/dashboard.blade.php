@@ -18,7 +18,6 @@
 
 @include('layouts.navbar')
 
-{{-- Usei sua classe original 'page-aluno-dashboard' para manter a compatibilidade --}}
 <main class="page-aluno-dashboard">
     <div class="container">
 
@@ -71,32 +70,76 @@
                 </div>
 
                 <div class="card">
-                    <h3><i class='bx bx-alarm-exclamation'></i> Próximas Entregas</h3>
+                    <h3><i class='bx bx-alarm-exclamation'></i> Histórico de Entregas</h3>
                     <div class="deadlines-list">
-                        @forelse($proximosExercicios as $exercicio)
-                            @php
-                                $entregue = $exercicio->respostas->isNotEmpty();
-                            @endphp
-                            <a href="{{ route('aluno.exercicios.mostrar', $exercicio->id) }}" class="deadline-item {{ $entregue ? 'delivered' : 'pending' }}">
-                                <div class="status-icon">
-                                    @if($entregue)
-                                        <i class='bx bxs-check-circle'></i>
-                                    @else
-                                        <i class='bx bxs-time-five'></i>
-                                    @endif
-                                </div>
-                                <div class="deadline-info">
-                                    <strong>{{ $exercicio->nome }}</strong>
-                                    <small>Turma: {{ $exercicio->turma->nome_turma }}</small>
-                                </div>
-                                <div class="deadline-date {{ $exercicio->data_fechamento->isToday() || $exercicio->data_fechamento->isTomorrow() ? 'urgent' : '' }}">
-                                    <span>{{ $exercicio->data_fechamento->setTimezone('America/Sao_Paulo')->format('d/m/Y') }}</span>
-                                </div>
-                            </a>
+                        @forelse($todasEntregas as $item)
+                            @if($item->type === 'exercicio')
+                                @php
+                                    $entregue = $item->respostas->isNotEmpty();
+                                    $statusClass = 'status-pending';
+                                    $statusText = 'Pendente';
+
+                                    if ($entregue) {
+                                        $statusClass = 'status-delivered';
+                                        $statusText = 'Realizado';
+                                    } elseif (now()->isAfter($item->data_fechamento)) {
+                                        $statusClass = 'status-late';
+                                        $statusText = 'Fechado';
+                                    }
+                                @endphp
+                                <a href="{{ route('aluno.exercicios.mostrar', $item->id) }}" class="deadline-item {{ $statusClass }}">
+                                    <div class="status-icon">
+                                        <i class='bx bxs-spreadsheet'></i>
+                                    </div>
+                                    <div class="deadline-info">
+                                        <strong>Exercício: {{ $item->nome }}</strong>
+                                        <small>Turma: {{ $item->turma->nome_turma }}</small>
+                                    </div>
+                                    <div class="deadline-date">
+                                        <span>{{ $statusText }} (Até {{ $item->data_fechamento->setTimezone('America/Sao_Paulo')->format('d/m/Y H:i') }})</span>
+                                    </div>
+                                </a>
+                            @elseif($item->type === 'prova')
+                                @php
+                                    $link = route('aluno.provas.show', $item->id);
+                                    
+                                    $statusClass = 'status-pending';
+                                    $statusText = 'Pendente';
+
+                                    if ($item->statusTentativa === 'finalizada') {
+                                        $statusClass = 'status-delivered';
+                                        $statusText = 'Realizado';
+                                        $link = route('aluno.provas.resultado', $item->tentativaExistente->id);
+                                    } elseif ($item->statusTentativa === 'iniciada') {
+                                        $statusClass = 'status-iniciada';
+                                        $statusText = 'Em Andamento';
+                                        $link = route('aluno.provas.fazer', $item->tentativaExistente->id);
+                                    } elseif ($item->statusTentativa === 'atrasada') {
+                                        $statusClass = 'status-late';
+                                        $statusText = 'Fechado';
+                                        $link = route('aluno.provas.show', $item->id);
+                                    } elseif ($item->statusTentativa === 'pendente') {
+                                        $statusClass = 'status-pending';
+                                        $statusText = 'Pendente';
+                                    }
+                                @endphp
+                                <a href="{{ $link }}" class="deadline-item {{ $statusClass }}">
+                                    <div class="status-icon">
+                                        <i class='bx bxs-file-doc'></i>
+                                    </div>
+                                    <div class="deadline-info">
+                                        <strong>Prova: {{ $item->titulo }}</strong>
+                                        <small>Turma: {{ $item->turma->nome_turma }}</small>
+                                    </div>
+                                    <div class="deadline-date">
+                                        <span>{{ $statusText }} (Até {{ $item->data_fechamento->setTimezone('America/Sao_Paulo')->format('d/m/Y H:i') }})</span>
+                                    </div>
+                                </a>
+                            @endif
                         @empty
                             <div class="empty-state">
                                 <i class='bx bx-check-double'></i>
-                                <p>Nenhum exercício com prazo futuro. Bom trabalho!</p>
+                                <p>Nenhuma entrega com prazo futuro. Bom trabalho!</p>
                             </div>
                         @endforelse
                     </div>
@@ -105,38 +148,38 @@
 
            <div class="coluna-lateral">
 
-    <div class="card">
-        <h3><i class='bx bxs-star'></i> Meus Pontos</h3>
-        <div class="my-points-display">
-            <span>{{ Auth::guard('aluno')->user()->total_pontos }}</span>
-            <small>pontos totais</small>
-        </div>
-        <p class="my-points-info">Continue completando aulas e exercícios para subir no ranking!</p>
-    </div>
-
-    <div class="card card-minhas-turmas">
-        <h3><i class='bx bxs-chalkboard'></i> Minha Turma</h3>
-        <div class="lista-turmas-dashboard">
-            @forelse($minhasTurmas as $turma)
-                <div class="turma-item-wrapper">
-                    <a href="{{ route('turmas.especifica', $turma) }}" class="turma-item-dashboard">
-                        <div class="turma-info">
-                            <strong>{{ $turma->nome_turma }}</strong>
-                            <small>Professor(a): {{ $turma->professor->nome }}</small>
-                        </div>
-                        <i class='bx bx-chevron-right'></i>
-                    </a>
-                    <a href="{{ route('aluno.turma.ranking', $turma) }}" class="turma-ranking-link">
-                        <i class='bx bx-bar-chart-alt-2'></i> Ver Ranking
-                    </a>
+                <div class="card">
+                    <h3><i class='bx bxs-star'></i> Meus Pontos</h3>
+                    <div class="my-points-display">
+                        <span>{{ Auth::guard('aluno')->user()->total_pontos ?? 0 }}</span>
+                        <small>pontos totais</small>
+                    </div>
+                    <p class="my-points-info">Continue completando aulas e exercícios para subir no ranking!</p>
                 </div>
-            @empty
-                <p class="empty-message">Você ainda não está matriculado em nenhuma turma.</p>
-            @endforelse
-        </div>
-    </div>
 
-</div>
+                <div class="card card-minhas-turmas">
+                    <h3><i class='bx bxs-chalkboard'></i> Minhas Turmas</h3>
+                    <div class="lista-turmas-dashboard">
+                        @forelse($minhasTurmas as $turma)
+                            <div class="turma-item-wrapper">
+                                <a href="{{ route('turmas.especifica', $turma) }}" class="turma-item-dashboard">
+                                    <div class="turma-info">
+                                        <strong>{{ $turma->nome_turma }}</strong>
+                                        <small>Professor(a): {{ $turma->professor->nome }}</small>
+                                    </div>
+                                    <i class='bx bx-chevron-right'></i>
+                                </a>
+                                <a href="{{ route('aluno.turma.ranking', $turma) }}" class="turma-ranking-link">
+                                    <i class='bx bx-bar-chart-alt-2'></i> Ver Ranking
+                                </a>
+                            </div>
+                        @empty
+                            <p class="empty-message">Você ainda não está matriculado em nenhuma turma.</p>
+                        @endforelse
+                    </div>
+                </div>
+
+            </div>
 
         </div>
     </div>
@@ -144,14 +187,13 @@
 
 @include('layouts.footer')
 
-{{-- Script para SweetAlert --}}
 @if (session('sweet_success'))
     <script>
         Swal.fire({
             title: 'Sucesso!',
             text: "{{ session('sweet_success') }}",
             icon: 'success',
-            confirmButtonColor: '#0d3c70', // Usando sua cor primária
+            confirmButtonColor: '#0d3c70',
             confirmButtonText: 'Ok'
         });
     </script>

@@ -223,3 +223,41 @@ tbody tr:hover { background-color: var(--primary-light); }
 html { scroll-behavior: smooth; }
 .reports-wrapper { min-height: 100vh; }
 main { margin-bottom: 3rem; }
+
+/* =================================
+   RELATÓRIO DE PROVAS (DENTRO DA TABELA)
+   ================================= */
+.table-container .erros-detalhes-list {
+    list-style: none;
+    padding-left: 0;
+    margin: 0;
+    font-size: 0.9em;
+}
+.table-container .erros-detalhes-list li {
+    padding: 3px 0;
+    color: #555;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+.table-container .erros-detalhes-list li .bx-x-circle {
+    color: #dc3545; /* Cor de perigo */
+    font-size: 1.1em;
+    flex-shrink: 0;
+}
+
+.table-container .nenhum-erro {
+     color: #28a745; /* Cor de sucesso */
+     font-style: italic;
+     font-size: 0.9em;
+}
+
+/* Helpers de texto (se ainda não existirem globalmente) */
+.text-success {
+    color: #28a745; 
+    font-weight: 600;
+}
+.text-danger {
+    color: #dc3545;
+    font-weight: 600;
+}
