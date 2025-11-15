@@ -27,7 +27,7 @@
                 <p>Olá, {{ Auth::guard('aluno')->user()->nome }}! Continue seus estudos.</p>
             </div>
             <a href="{{ route('aluno.turma') }}" class="btn-primary">
-                <i class='bx bxs-group'></i> Acessar Minhas Turmas
+                <i class='bx bxs-group'></i> Acessar Minha Turma
             </a>
         </div>
 

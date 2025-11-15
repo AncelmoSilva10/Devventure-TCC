@@ -1,1307 +1,831 @@
-/* ========================== */
-/* ===== ESTILO GERAL ======= */
-/* ========================== */
+/* =================================
+   CONFIGURAÇÕES GLOBAIS E VARIÁVEIS
+   ================================= */
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap');
+
+:root {
+    --primary-color: #00796b; /* Verde escuro do tema */
+    --primary-light: #e0f2f1;
+    --secondary-color: #3b82f6; /* AZUL para destaque (Call to Action) */
+    --secondary-hover: #2563eb;
+    --light-gray: #f8fafc; /* Fundo principal */
+    --medium-gray: #e2e8f0;
+    --dark-gray: #334155;
+    --text-color: #1e293b;
+    --white-color: #ffffff;
+    --border-radius: 12px;
+    --box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.05), 0 2px 4px -2px rgb(0 0 0 / 0.05);
+    --box-shadow-hover: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+}
+
 body {
-  margin: 0;
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  background-color: #0b001d;
-  color: white;
-  overflow-x: hidden;
-  
-  
+    margin: 0;
+    font-family: 'Poppins', sans-serif;
+    background-color: var(--light-gray);
+    color: var(--text-color);
+    overflow-x: hidden;
 }
 
-.hero{
-  position: relative;
-  height: 100vh;
-  width: 100%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  overflow: hidden;
-  background-color: black;
-  color: white;
-  margin: 0;
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
-}
-.hero::after {
-  content: "";
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  width: 100%;
-  height: 120px; /* altura do gradiente */
-  background: linear-gradient(to bottom, black 0%, #0b001d 90%);
-  /* ajuste a cor final (#0b0028) para combinar com a próxima seção */
-  z-index: 2;
+/* =================================
+   HERO SECTION
+   ================================= */
+.hero {
+    position: relative;
+    height: 95vh;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    background: linear-gradient(135deg, #f0fdfa 0%, #e0f2f1 100%);
+    padding: 0 5%;
+    box-sizing: border-box;
 }
 
-/* 🔹 Canvas do efeito */
-  canvas {
+canvas {
     position: absolute;
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
     z-index: 0;
-  }
-  
-  .hero-container {
-    display: grid;
-    position: absolute;
-    grid-template-columns: 1fr 450px; /* Duas colunas para texto e botões */
-    top: 50%;
-    left: 5%; /* Alinhamento à esquerda com margem */
-    transform: translateY(-50%); /* Remova o -50% em X para manter alinhado à esquerda */
-    text-align: left; /* Alinha o texto à esquerda */
-    z-index: 10;
-    max-width: 1200px;
-    padding: 5px;
-  }
-  
-  .hero-textos {
-    z-index: 2; 
-  }
-  
-  .hero-carousel {
-  margin-right: 130px;
-  margin-bottom: 25px;
-  padding-left: 20px;
-  padding-bottom: 25px;
-  display: flex;
-  justify-content: flex-end;
-  align-items: center;
-
+    opacity: 0.6;
 }
 
-  /* 🔹 Título */
-  .hero-container h1 {
-    font-size: 48px;
-    font-weight: bold;
+.hero-container {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    align-items: center;
+    gap: 2rem;
+    width: 100%;
+    max-width: 1200px;
+    margin: 0 auto;
+    z-index: 2;
+}
+
+.hero-textos h1 {
+    font-size: 3rem;
+    font-weight: 800;
     margin: 0;
-    color: #ffffff;
-    text-shadow: 0 0 20px rgba(153, 0, 255, 0.6); /* Glow roxo */
-  }
-  
-  /* 🔹 Subtítulo */
-  .hero-container h2 {
-    font-size: 42px;
+    color: var(--primary-color);
+    line-height: 1.1;
+}
+
+.hero-textos h2 {
+    font-size: 2.25rem;
     font-weight: 700;
-    margin: 10px 0 20px;
-    color: #d54dff; /* Azul neon */
-    text-shadow: 0 0 15px rgba(193, 73, 248, 0.7);
-  }
-  
-  /* 🔹 Texto explicativo */
-  .hero-container p {
-    font-size: 18px;
-    color: #d0d0d0;
-    max-height: 70px;
-    line-height: 1.6;
-    margin-bottom: 30px;
-  }
-  
-  /* 🔹 Botões container */
-  .buttons {
-    
-    gap: 15px;
-  }
-  
-  /* 🔹 Base dos botões */
-  .btn {
+    margin: 0.5rem 0 1.5rem 0;
+    color: var(--text-color);
+}
+
+.hero-textos p {
+    font-size: 1.1rem;
+    color: var(--dark-gray);
+    line-height: 1.7;
+    margin-bottom: 2.5rem;
+    max-width: 500px;
+}
+
+.buttons {
+    display: flex;
+    gap: 1rem;
+}
+
+.btn {
     text-decoration: none;
-    padding: 12px 24px;
-    border-radius: 6px;
-    font-size: 16px;
+    padding: 14px 28px;
+    border-radius: 8px;
+    font-size: 1rem;
     font-weight: 600;
     transition: all 0.3s ease;
     cursor: pointer;
     display: inline-block;
-  }
-  
-  /* 🔹 Botão "Começar a aprender" (roxo/azul neon circuito) */
-  .btn.primary {
-    background: transparent;
-    border: 2px solid #9d4dff; /* Roxo neon */
-    color: #9d4dff;
-    box-shadow: 0 0 10px rgba(157, 77, 255, 0.5);
-    margin-right: 40;
-  }
-  
-  .btn.primary:hover {
-    background: rgba(157, 77, 255, 0.1);
-    box-shadow:
-      0 0 15px rgba(157, 77, 255, 0.7),
-      0 0 35px rgba(157, 77, 255, 0.5),
-      0 0 55px rgba(77, 166, 255, 0.3);
-    transform: scale(1.05);
-  }
-  
-  /* 🔹 Botão "Conhecer a plataforma" (clean com detalhe azul) */
-  .btn.secondary {
-    background: transparent;
-    border: 2px solid #888;
-    color: #e0e0e0;
-  }
-  
-  .btn.secondary:hover {
-    border-color: #4da6ff;
-    color: #4da6ff;
-    box-shadow: 0 0 12px rgba(77, 166, 255, 0.7);
-    transform: scale(1.05);
-  }
+    border: 2px solid transparent;
+}
 
-/* CARROSSEL */
+.btn.primary {
+    background-color: #3b82f6;
+    color: var(--white-color);
+}
+
+.btn.primary:hover {
+    background-color: #2563eb;
+    transform: translateY(-3px);
+    box-shadow: var(--box-shadow-hover);
+}
+
+.btn.secondary {
+    background-color: transparent;
+    border-color: var(--primary-color);
+    color: var(--primary-color);
+}
+
+.btn.secondary:hover {
+    background-color: var(--primary-color);
+    color: var(--white-color);
+    transform: translateY(-3px);
+}
+
+/* CARROSSEL DE IMAGENS */
+.hero-carousel {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
 .icon-cards {
-  position: relative;
-  width: 250px;
-  height: 180px;
-  perspective: 1000px;
-  padding: 65px;
-  margin-left: 10px;
+    position: relative;
+    width: 450px;
+    height: 300px;
+    perspective: 1500px;
 }
 
 .icon-cards__content {
-  position: absolute;
-  width: 100%;
-  height: 100%;
-  transform-style: preserve-3d;
-  transform: translateZ(-150px) rotateY(0);
-  animation: carousel 15s infinite cubic-bezier(0.77, 0, 0.175, 1) forwards;
-  margin-bottom: 15px;
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    transform-style: preserve-3d;
+    transform: translateZ(-260px) rotateY(0);
+    animation: carousel 12s infinite cubic-bezier(0.77, 0, 0.175, 1);
 }
 
 .icon-cards__item {
-  position: absolute;
-  width: 250px;
-  height: 180px;
-  object-fit: cover;
-  border-radius: 8px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    border-radius: var(--border-radius);
+    overflow: hidden;
+    box-shadow: var(--box-shadow-hover);
+    border: 4px solid var(--white-color);
 }
+.icon-cards__item img { width: 100%; height: 100%; object-fit: cover; }
 
-.icon-cards__item:nth-child(1) {
-  background: #FDD94F;
-  transform: rotateY(0) translateZ(150px);
-}
-.icon-cards__item:nth-child(2) {
-  background: #F87949;
-  transform: rotateY(120deg) translateZ(150px);
-}
-.icon-cards__item:nth-child(3) {
-  background: #FBAB48;
-  transform: rotateY(240deg) translateZ(150px);
-}
+.icon-cards__item:nth-child(1) { transform: rotateY(0) translateZ(260px); }
+.icon-cards__item:nth-child(2) { transform: rotateY(120deg) translateZ(260px); }
+.icon-cards__item:nth-child(3) { transform: rotateY(240deg) translateZ(260px); }
 
 @keyframes carousel {
-  0%, 17.5% { transform: translateZ(-150px) rotateY(0); }
-  27.5%, 45% { transform: translateZ(-150px) rotateY(-120deg); }
-  55%, 72.5% { transform: translateZ(-150px) rotateY(-240deg); }
-  82.5%, 100% { transform: translateZ(-150px) rotateY(-360deg); }
+  0%, 17.5% { transform: translateZ(-260px) rotateY(0); }
+  27.5%, 45% { transform: translateZ(-260px) rotateY(-120deg); }
+  55%, 72.5% { transform: translateZ(-260px) rotateY(-240deg); }
+  82.5%, 100% { transform: translateZ(-260px) rotateY(-360deg); }
 }
 
-/* ===========================
-   RESPONSIVIDADE - HERO
-   =========================== */
-
-/* 🟦 Telas grandes (até 1200px) */
-@media (max-width: 1200px) {
-  .hero-container {
-    grid-template-columns: 1fr 400px;
-    left: 5%;
-  }
-
-  .hero-container h1 {
-    font-size: 42px;
-  }
-
-  .hero-container h2 {
-    font-size: 36px;
-  }
-
-  .hero-container p {
-    font-size: 16px;
-    max-width: 90%;
-  }
-
-  .icon-cards {
-    width: 220px;
-    height: 160px;
-    padding: 55px;
-  }
-
-  .icon-cards__item {
-    width: 220px;
-    height: 160px;
-  }
-}
-
-/* 🟩 Telas médias (tablets horizontais, até 992px) */
-@media (max-width: 992px) {
-  .hero-container {
-    grid-template-columns: 1fr;
-    text-align: center;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    justify-items: center;
-    gap: 25px;
-  }
-
-  .hero-carousel {
-    margin: 0;
-    padding: 0;
-    justify-content: center;
-  }
-
-  .hero-container h1 {
-    font-size: 38px;
-  }
-
-  .hero-container h2 {
-    font-size: 30px;
-  }
-
-  .hero-container p {
-    font-size: 16px;
-    margin: 0 auto 25px;
-    max-width: 85%;
-  }
-
-  .buttons {
-    display: flex;
-    justify-content: center;
-  }
-
-  .icon-cards {
-    width: 200px;
-    height: 150px;
-    padding: 40px;
-  }
-
-  .icon-cards__item {
-    width: 200px;
-    height: 150px;
-  }
-}
-
-/* 🟨 Telas pequenas (celulares grandes, até 768px) */
-@media (max-width: 768px) {
-  .hero {
-    height: 100vh;
-    padding: 0 20px;
-  }
-
-  .hero-container {
-    grid-template-columns: 1fr;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    text-align: center;
-    justify-items: center;
-  }
-
-  .hero-carousel {
-    margin-top: 25px;
-    padding: 0;
-    margin-right: 25px;
-    width: 180px;
-    justify-content: center;
-  }
-
-  .hero-container h1 {
-    font-size: 32px;
-  }
-
-  .hero-container h2 {
-    font-size: 26px;
-  }
-
-  .hero-container p {
-    font-size: 15px;
-    max-width: 90%;
-  }
-
-  .btn {
-    font-size: 15px;
-    padding: 10px 20px;
-  }
-
-  .icon-cards {
-    width: 180px;
-    height: 130px;
-    padding: 35px;
-  }
-
-  .icon-cards__item {
-    width: 180px;
-    height: 130px;
-  }
-}
-
-/* 🟥 Telas muito pequenas (celulares compactos até 480px) */
-@media (max-width: 480px) {
-  .hero {
-    height: auto;
-    padding: 80px 15px;
-  }
-
-  .hero-container {
-    position: relative;
-    top: auto;
-    left: auto;
-    transform: none;
-    grid-template-columns: 1fr;
-    text-align: center;
-    gap: 25px;
-    justify-items: center;
-  }
-
-  .hero-container h1 {
-    font-size: 26px;
-  }
-
-  .hero-container h2 {
-    font-size: 22px;
-  }
-
-  .hero-container p {
-    font-size: 14px;
-    line-height: 1.5;
-    max-width: 95%;
-  }
-
-  .buttons {
-    flex-direction: column;
-    align-items: center;
-    gap: 12px;
-  }
-
-  .btn {
-    width: 80%;
-    max-width: 240px;
-    font-size: 14px;
-  }
-
-  .icon-cards {
-    width: 150px;
-    height: 110px;
-    padding: 30px;
-  }
-
-  .icon-cards__item {
-    width: 150px;
-    height: 110px;
-  }
-}
-
-
-/* ===========================
-   SEÇÃO MÓDULOS
-   =========================== */
-
+/* =================================
+   SEÇÃO DE MÓDULOS
+   ================================= */
 .modulos {
-  text-align: center;
-  padding: 50px 20px;
+    text-align: center;
+    padding: 80px 20px;
+    background-color: var(--white-color);
 }
 
 .modulos h2 {
-  font-size: 2rem;
-  margin-bottom: 40px;
+    font-size: 2.5rem;
+    font-weight: 700;
+    margin-bottom: 4rem;
 }
 
 .modulos-container {
-  display: flex;
-  justify-content: center;
-  gap: 35px;
-  flex-wrap: wrap;
+    display: flex;
+    justify-content: center;
+    gap: 2rem;
+    flex-wrap: wrap;
+    max-width: 1100px;
+    margin: 0 auto;
 }
 
 .modulo-card {
-  position: relative;
-  background: #f3f3f3;
-  color: #000;
-  width: 200px;
-  height: 280px;
-  padding: 20px;
-  text-align: center;
-  border-radius: 0 20px 20px 0;
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-start;
-  align-items: center;
-  box-shadow: -6px 0 10px rgba(0, 0, 0, 0.25);
-  transition: transform 0.3s, box-shadow 0.3s;
+    background: var(--white-color);
+    color: var(--text-color);
+    width: 240px;
+    padding: 2rem 1.5rem;
+    text-align: center;
+    border-radius: var(--border-radius);
+    box-shadow: var(--box-shadow);
+    transition: transform 0.3s, box-shadow 0.3s;
+    border-top: 4px solid transparent;
 }
 
 .modulo-card:hover {
-  transform: translateY(-8px);
-  box-shadow: -8px 0 18px rgba(0, 0, 0, 0.35);
+    transform: translateY(-10px);
+    box-shadow: var(--box-shadow-hover);
 }
 
-/* Faixa lateral esquerda colada */
-.modulo-card::before {
-  content: "";
-  position: absolute;
-  left: 0;
-  top: -15px;
-  bottom: -15px;
-  width: 5px;
-  background: #d9d9d9;
-  border-radius: 5px 0 0 5px;
-  box-shadow: inset -20px 0 8px rgba(0, 0, 0, 0.5);
-}
-
-.icon-area-modulo {
-  position: absolute;
-  right: 0;
-  top: 20px;
-  width: 150px;
-  height: 70px;
-  border-radius: 15px 0 0 15px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: white;
-}
+.purple { border-color: #8b5cf6; } .purple .icon { color: #8b5cf6; }
+.blue   { border-color: #3b82f6; } .blue .icon   { color: #3b82f6; }
+.pink   { border-color: #ec4899; } .pink .icon   { color: #ec4899; }
+.darkblue{ border-color: #1e40af; } .darkblue .icon { color: #1e40af; }
 
 .icon {
-  font-size: 2rem;
+    font-size: 3rem;
+    margin-bottom: 1.5rem;
 }
-
-/* cores das áreas */
-.purple .icon-area-modulo { background: #6c1edb; }
-.blue .icon-area-modulo { background: #2d8cf0; }
-.pink .icon-area-modulo { background: #c63bfa; }
-.darkblue .icon-area-modulo { background: #12246c; }
-
-/* cores dos títulos */
-.purple h3 { color: #6c1edb; }
-.blue h3 { color: #2d8cf0; }
-.pink h3 { color: #c63bfa; }
-.darkblue h3 { color: #12246c; }
 
 .modulo-card h3 {
-  font-size: 1.1rem;
-  margin-top: 90px; /* para descer depois da faixa */
-  margin-bottom: 12px;
-  position: relative;
-}
-
-/* linha colorida embaixo de cada título */
-.modulo-card h3::after {
-  content: "";
-  display: block;
-  width: 60%;
-  height: 3px;
-  margin: 6px auto 0;
-  background: currentColor; /* usa a mesma cor do texto */
-  border-radius: 2px;
+    font-size: 1.25rem;
+    margin-bottom: 0.75rem;
 }
 
 .modulo-card p {
-  font-size: 0.9rem;
-  line-height: 1.4;
-}
-
-/* ===========================
-   RESPONSIVIDADE
-   =========================== */
-
-/* Telas médias (tablets e notebooks pequenos) */
-@media (max-width: 1024px) {
-  .modulos-container {
-    gap: 25px;
-  }
-
-  .modulo-card {
-    width: 180px;
-    height: 260px;
-    padding: 18px;
-  }
-
-  .modulo-card h3 {
-    font-size: 1rem;
-  }
-
-  .modulo-card p {
-    font-size: 0.85rem;
-  }
-
-  .icon-area-modulo {
-    width: 130px;
-    height: 60px;
-  }
-
-  .icon {
-    font-size: 1.8rem;
-  }
-}
-
-/* Telas pequenas (celulares grandes) */
-@media (max-width: 768px) {
-  .modulos {
-    padding: 40px 15px;
-  }
-
-  .modulos h2 {
-    font-size: 1.8rem;
-    margin-bottom: 30px;
-  }
-
-  .modulos-container {
-    flex-direction: row;
-    justify-content: center;
-    gap: 20px;
-  }
-
-  .modulo-card {
-    width: 160px;
-    height: 240px;
-  }
-
-  .icon-area-modulo {
-    width: 120px;
-    height: 55px;
-  }
-
-  .icon {
-    font-size: 1.6rem;
-  }
-
-  .modulo-card h3 {
     font-size: 0.95rem;
-    margin-top: 80px;
-  }
-
-  .modulo-card p {
-    font-size: 0.8rem;
-  }
+    line-height: 1.6;
+    color: var(--dark-gray);
 }
 
-/* Telas muito pequenas (celulares compactos) */
-@media (max-width: 480px) {
-  .modulos {
-    padding: 30px 10px;
-  }
-
-  .modulos h2 {
-    font-size: 1.5rem;
-    margin-bottom: 25px;
-  }
-
-  .modulos-container {
-    flex-direction: column;
-    align-items: center;
-    gap: 25px;
-  }
-
-  .modulo-card {
-    width: 90%;
-    max-width: 300px;
-    height: auto;
-    padding: 20px 15px;
-  }
-
-  .icon-area-modulo {
-    width: 100px;
-    height: 50px;
-  }
-
-  .icon {
-    font-size: 1.5rem;
-  }
-
-  .modulo-card h3 {
-    margin-top: 75px;
-    font-size: 1rem;
-  }
-
-  .modulo-card p {
-    font-size: 0.9rem;
-  }
-}
-
-
-/* ========================== */
-/* ====== SEÇÃO JORNADA ===== */
-/* ========================== */
+/* =================================
+   SEÇÃO JORNADA
+   ================================= */
 .jornada {
-  max-width: 800px;
-  margin: 60px auto;
-  padding: 0 20px;
-  text-align: center;
+    padding: 100px 20px;
+    background-color: var(--white-color);
+    color: var(--text-color);
+    text-align: center;
+    overflow: hidden;
 }
 
-.jornada h1 {
-  font-size: 28px;
-  margin-bottom: 10px;
+.jornada h2 {
+    font-size: 2.5rem;
+    font-weight: 700;
+    margin-bottom: 1rem;
+    color: var(--text-color);
 }
 
-.subtitulo {
-  color: #cccccc;
-  margin-bottom: 40px;
+.jornada .subtitulo {
+    font-size: 1.1rem;
+    color: var(--dark-gray);
+    margin-bottom: 5rem;
+    max-width: 600px;
+    margin-left: auto;
+    margin-right: auto;
 }
 
-/* Container das etapas */
 .etapas {
-  display: flex;
-  flex-direction: column;
-  gap: 40px;
-}
-
-/* Cada etapa da jornada */
-.etapa {
-  position: relative;
-  display: flex;
-  align-items: center;
-}
-
-/* ===== Círculo com número ===== */
-.numero {
-  position: absolute;
-  left: -50px;
-  top: 50%;
-  bottom: 50%;
-  transform: translateY(-50%);
-  width: 105px;
-  height: 105px;
-  background-color: white;
-  color: #15003a;
-  font-weight: bold;
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 45px;
-  z-index: 2;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.15);
-  border: 2px solid #15003a;
-
-}
-
-/* ===== Card lateral com texto ===== */
-.card {
-  margin-left: 20px;
-  background: linear-gradient(to right, #a19999 10%, #ffffff05 90%);
-  height: 100px;
-  position: relative;
-  z-index: 1;
-  width: 100%;
-  box-sizing: border-box;
-  display: flex;
-  flex-direction: column;
-  justify-content: center; /* centraliza verticalmente */
-  text-align: left;        /* textos alinhados à esquerda */
-  padding: 18px 30px 18px 50px; /* espaçamento interno */
-  border-radius: 0 20px 20px 0;
-}
-
-.card h2 {
-  margin: 0 0 6px 0;
-  font-size: 20px;
-  color: white;
-  line-height: 1.2;
-}
-
-.card p {
-  margin: 0;
-  font-size: 16px;
-  color: #dddddd;
-  line-height: 1.35;
-}
-
-/* Pequeno "degrau" nas etapas para dar movimento */
-.etapas .etapa:nth-child(1) { margin-left: 80px; }
-.etapas .etapa:nth-child(2) { margin-left: 40px; }
-.etapas .etapa:nth-child(3) { margin-left: 0px; }
-
-
-
-/* ===========================
-   RESPONSIVIDADE - JORNADA
-   =========================== */
-
-/* 🟦 Telas médias (até 992px) */
-@media (max-width: 992px) {
-  .jornada {
-    max-width: 700px;
-    margin: 50px auto;
-    padding: 0 15px;
-  }
-
-  .jornada h1 {
-    font-size: 26px;
-  }
-
-  .subtitulo {
-    font-size: 15px;
-    margin-bottom: 35px;
-  }
-
-  .numero {
-    width: 85px;
-    height: 85px;
-    font-size: 36px;
-    left: -40px;
-  }
-
-  .card {
-    padding: 16px 25px 16px 45px;
-    height: auto;
-  }
-
-  .card h2 {
-    font-size: 18px;
-  }
-
-  .card p {
-    font-size: 15px;
-  }
-
-  .etapas .etapa:nth-child(1) { margin-left: 60px; }
-  .etapas .etapa:nth-child(2) { margin-left: 30px; }
-  .etapas .etapa:nth-child(3) { margin-left: 0px; }
-}
-
-/* 🟩 Telas pequenas (celulares grandes, até 768px) */
-@media (max-width: 768px) {
-  .jornada {
-    max-width: 90%;
-    margin: 40px auto;
-    padding: 0 10px;
-  }
-
-  .jornada h1 {
-    font-size: 22px;
-  }
-
-  .subtitulo {
-    font-size: 14px;
-    margin-bottom: 30px;
-  }
-
-  .etapas {
-    gap: 35px;
-  }
-
-  .etapa {
+    display: flex;
     flex-direction: column;
     align-items: center;
-    text-align: center;
-  }
+    gap: 3rem;
+    max-width: 700px;
+    margin: 0 auto;
+    position: relative;
+}
 
-  .numero {
-    position: static;
-    transform: none;
-    width: 70px;
-    height: 70px;
-    font-size: 28px;
-    margin-bottom: 10px;
-  }
+.etapas::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 40px;
+    height: 100%;
+    width: 3px;
+    background-color: var(--medium-gray);
+    z-index: 0;
+}
 
-  .card {
+.etapa {
+    position: relative;
+    z-index: 1;
+    opacity: 0.6;
+    transition: opacity 0.5s ease;
+    width: 600px;
+    max-width: 100%;
+}
+
+.etapa.is-active {
+    opacity: 1;
+}
+
+.numero {
+    position: absolute;
+    left: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 2;
+    width: 80px;
+    height: 80px;
+    background-color: var(--light-gray);
+    border: 3px solid var(--medium-gray);
+    color: var(--dark-gray);
+    font-weight: 700;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 2.5rem;
+    flex-shrink: 0;
+    transition: all 0.5s ease;
+}
+
+.etapa.is-active .numero {
+    background: linear-gradient(45deg, #3b82f6, #60a5fa);
+    color: var(--white-color) !important;
+    border-color: #3b82f6;
+    box-shadow: 0 0 25px rgba(59, 130, 246, 0.5);
+    transform: translateY(-50%) scale(1.1);
+}
+
+.etapa .card {
+    background: var(--white-color);
+    border: 1px solid var(--medium-gray);
+    border-radius: var(--border-radius);
     width: 100%;
-    margin-left: 0;
-    background: linear-gradient(to bottom, #a19999 10%, #ffffff05 90%);
-    border-radius: 15px;
-    text-align: center;
-    padding: 15px 20px;
-  }
-
-  .card h2 {
-    font-size: 17px;
-  }
-
-  .card p {
-    font-size: 14px;
-  }
-
-  /* Remove os "degraus" para alinhar verticalmente */
-  .etapas .etapa:nth-child(1),
-  .etapas .etapa:nth-child(2),
-  .etapas .etapa:nth-child(3) {
-    margin-left: 0;
-  }
+    transition: all 0.5s ease;
+    box-shadow: var(--box-shadow);
+    text-align: left;
+    margin-left: 40px;
+    padding: 1.5rem 2rem 1.5rem 60px;
 }
 
-/* 🟥 Telas muito pequenas (até 480px) */
-@media (max-width: 480px) {
-  .jornada {
-    margin: 35px auto;
-  }
-
-  .jornada h1 {
-    font-size: 20px;
-  }
-
-  .subtitulo {
-    font-size: 13px;
-  }
-
-  .numero {
-    width: 60px;
-    height: 60px;
-    font-size: 25px;
-    margin-bottom: 8px;
-  }
-
-  .card {
-    padding: 12px 15px;
-  }
-
-  .card h2 {
-    font-size: 16px;
-  }
-
-  .card p {
-    font-size: 13px;
-  }
+.etapa.is-active .card {
+    border: 1px solid #3b82f6;
+    box-shadow: 0 0 25px rgba(59, 130, 246, 0.15);
 }
 
+.etapa .card h2 {
+    font-size: 1.25rem;
+    font-weight: 600;
+    margin: 0 0 0.5rem 0;
+    color: var(--text-color) !important;
+}
+.etapa .card p {
+    margin: 0;
+    font-size: 0.95rem;
+    color: var(--dark-gray) !important;
+    line-height: 1.7;
+}
 
+.etapa.is-active {
+    opacity: 1;
+}
 
-
-/* ========================== */
-/* === SEÇÃO DEPOIMENTOS ==== */
-/* ========================== */
+/* =================================
+   SEÇÃO DEPOIMENTOS - FORMULÁRIO NOVO + CARDS ANTIGOS
+   ================================= */
 .secao-depoimentos {
-  padding: 60px 20px;
-  max-width: 1200px;
-  margin: 0 auto;
+    padding: 80px 20px;
+    background-color: var(--white-color);
 }
 
 .secao-depoimentos h2 {
-  font-size: 2rem;
-  margin-bottom: 40px;
-  text-align: center;
+    font-size: 2.5rem;
+    font-weight: 700;
+    text-align: center;
+    margin-bottom: 4rem;
 }
 
-/* Grid principal - formulário à esquerda e carrossel à direita */
 .container-depoimentos-grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 60px;
-  align-items: start;
+    display: grid;
+    grid-template-columns: 1fr 1.2fr;
+    gap: 4rem;
+    max-width: 1100px;
+    margin: 0 auto;
+    align-items: center;
 }
 
-/* ========================== */
-/* ==== FORMULÁRIO ====== */
-/* ========================== */
+/* =================================
+   FORMULÁRIO (NOVO ESTILO CLARO)
+   ================================= */
 .formulario-depoimento {
-  background: linear-gradient(145deg, #2d0069, #180040);
-  padding: 40px;
-  border-radius: 15px;
-  box-shadow: 0 6px 20px rgba(106, 17, 203, 0.4);
-  border: 1px solid #6002f7;
+    background: var(--light-gray);
+    padding: 2.5rem;
+    border-radius: var(--border-radius);
 }
 
 .formulario-depoimento h3 {
-  margin-top: 0;
-  margin-bottom: 25px;
-  text-align: center;
-  font-size: 1.5rem;
-  color: white;
+    margin-top: 0;
+    margin-bottom: 2rem;
+    font-size: 1.75rem;
+    color: var(--text-color);
 }
 
 .campo-formulario {
-  margin-bottom: 25px;
+    margin-bottom: 1.5rem;
 }
 
 .campo-formulario label {
-  display: block;
-  margin-bottom: 10px;
-  font-weight: bold;
-  color: #e0e0e0;
+    display: block;
+    margin-bottom: 0.5rem;
+    font-weight: 600;
+    color: var(--text-color);
 }
 
 .campo-formulario input,
 .campo-formulario textarea {
-  width: 100%;
-  padding: 15px;
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  border-radius: 8px;
-  background-color: rgba(255, 255, 255, 0.05);
-  color: white;
-  box-sizing: border-box;
-  font-family: inherit;
-  font-size: 16px;
-  transition: border-color 0.3s, background-color 0.3s;
+    width: 100%;
+    padding: 1rem;
+    border: 1px solid var(--medium-gray);
+    border-radius: 8px;
+    background-color: var(--white-color);
+    color: var(--text-color);
+    font-family: inherit;
+    font-size: 1rem;
+    transition: border-color 0.3s, box-shadow 0.3s;
+    box-sizing: border-box;
 }
 
 .campo-formulario input:focus,
 .campo-formulario textarea:focus {
-  outline: none;
-  border-color: #6a11cb;
-  background-color: rgba(255, 255, 255, 0.1);
+    outline: none;
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 3px var(--primary-light);
 }
 
 .campo-formulario textarea {
-  height: 120px;
-  resize: vertical;
+    height: 120px;
+    resize: vertical;
 }
 
 .contador-caracteres {
-  display: block;
-  text-align: right;
-  font-size: 0.8rem;
-  color: #aaa;
-  margin-top: 5px;
+    display: block;
+    text-align: right;
+    font-size: 0.8rem;
+    color: var(--dark-gray);
+    margin-top: 5px;
 }
 
 .btn-enviar {
-  background: linear-gradient(90deg, #8f00ff 0%, #4400e2 100%);
-  color: white;
-  border: none;
-  padding: 15px 30px;
-  border-radius: 8px;
-  font-size: 16px;
-  font-weight: bold;
-  cursor: pointer;
-  width: 100%;
-  transition: transform 0.3s, box-shadow 0.3s;
-  box-shadow: 0 4px 15px rgba(106, 17, 203, 0.3);
+    background-color: var(--primary-color);
+    color: var(--white-color);
+    width: 100%;
+    padding: 1rem;
+    font-size: 1rem;
+    font-weight: 600;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.3s, transform 0.2s;
 }
 
 .btn-enviar:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 6px 20px rgba(106, 17, 203, 0.4);
+    background-color: #005a4f;
+    transform: translateY(-2px);
 }
 
-/* ========================== */
-/* ==== CARROSSEL ====== */
-/* ========================== */
+/* =================================
+   CARROSSEL DE DEPOIMENTOS (ESTILO ANTIGO)
+   ================================= */
 .carrossel-depoimentos {
-  position: sticky;
-  top: 20px;
+    position: sticky;
+    top: 20px;
 }
 
-/* Container que segura todos os depoimentos */
 .container-depoimentos {
-  display: flex;
-  justify-content: center;
-  gap: 60px;
-  flex-wrap: wrap;
-  position: relative;
-  height: 300px;
-  margin-bottom: 30px;
-  margin-top: 23%;
-  margin-left: 23%;
+    display: flex;
+    justify-content: center;
+    gap: 60px;
+    flex-wrap: wrap;
+    position: relative;
+    height: 300px;
+    margin-bottom: 30px;
+    margin-top: 23%;
+    margin-left: 23%;
 }
 
-/* Cada card principal + seus fundos */
 .card-wrapper {
-  position: absolute;
-  width: 100%;
-  max-width: 400px;
-  top: 0;
-  left: 50%;
-  transform: translateX(-50%);
-  opacity: 0;
-  transition: opacity 0.5s ease, transform 0.8s ease;
-  z-index: 1;
-  cursor: pointer;
+    position: absolute;
+    width: 100%;
+    max-width: 400px;
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    opacity: 0;
+    transition: opacity 0.5s ease, transform 0.8s ease;
+    z-index: 1;
+    cursor: pointer;
 }
 
-/* Card ativo (visível) */
 .card-wrapper.active {
-  opacity: 1;
-  z-index: 3;
+    opacity: 1;
+    z-index: 3;
 }
 
-/* Card que está saindo da tela */
 .card-wrapper.exiting {
-  transform: translateX(-90%) rotate(-15deg);
-  opacity: 0;
+    transform: translateX(-90%) rotate(-15deg);
+    opacity: 0;
 }
 
-/* Card que está entrando na tela */
 .card-wrapper.entering {
-  transform: translateX(90%) rotate(15deg);
-  opacity: 0;
+    transform: translateX(90%) rotate(15deg);
+    opacity: 0;
 }
 
-/* ========================== */
-/* ==== CARD PRINCIPAL ====== */
-/* ========================== */
 .card-depoimento {
-  background-color: white;
-  color: #333;
-  padding: 25px;
-  border-radius: 12px;
-  width: 100%;
-  box-shadow: 0 8px 25px rgba(0,0,0,0.15);
-  position: relative;
-  z-index: 3;
-  transform: rotate(var(--rotacao, -2deg));
-  transition: transform 0.3s, box-shadow 0.3s;
+    background-color: white;
+    color: #333;
+    padding: 25px;
+    border-radius: 12px;
+    width: 100%;
+    box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+    position: relative;
+    z-index: 3;
+    transform: rotate(var(--rotacao, -2deg));
+    transition: transform 0.3s, box-shadow 0.3s;
 }
 
-/* Hover mantém a rotação e adiciona o scale */
 .card-depoimento:hover {
-  transform: rotate(var(--rotacao, -2deg)) scale(1.05);
-  box-shadow: 0 12px 35px rgba(0,0,0,0.2);
+    transform: rotate(var(--rotacao, -2deg)) scale(1.05);
+    box-shadow: 0 12px 35px rgba(0,0,0,0.2);
 }
 
 .card-depoimento p {
-  font-style: italic;
-  margin-bottom: 15px;
-  font-size: 16px;
-  line-height: 1.5;
+    font-style: italic;
+    margin-bottom: 15px;
+    font-size: 16px;
+    line-height: 1.5;
 }
 
 .card-depoimento span {
-  display: block;
-  font-weight: bold;
-  font-size: 0.9rem;
-  color: #4b0082;
+    display: block;
+    font-weight: bold;
+    font-size: 0.9rem;
+    color: #00796b;
 }
 
-/* ========================== */
-/* ==== CARDS DE FUNDO ====== */
-/* ========================== */
 .camada-fundo {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  z-index: 1; /* ficam atrás do principal */
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 1;
 }
 
 .card-fundo {
-  width: 100%;
-  height: 100%;
-  background: #eee;
-  border-radius: 12px;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.3);
-  opacity: 0.6;
-  position: absolute;
+    width: 100%;
+    height: 100%;
+    background: #eee;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+    opacity: 0.6;
+    position: absolute;
 }
 
-/* Cada fundo tem leve inclinação para aparecer a borda */
 .card-fundo:nth-child(1) {
-  transform: rotate(-12deg) translate(-8px, 6px);
+    transform: rotate(-12deg) translate(-8px, 6px);
 }
 
 .card-fundo:nth-child(2) {
-  transform: rotate(10deg) translate(8px, 10px);
+    transform: rotate(10deg) translate(8px, 10px);
 }
 
-
-
-/* Mensagem quando não há depoimentos */
 .sem-depoimentos {
-  text-align: center;
-  padding: 40px;
-  color: #aaa;
-  font-style: italic;
-  background: rgba(255, 255, 255, 0.05);
-  border-radius: 12px;
-  border: 1px solid rgba(255, 255, 255, 0.1);
+    text-align: center;
+    padding: 40px;
+    color: #aaa;
+    font-style: italic;
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 12px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
 }
 
-/* ==========================
-   RESPONSIVIDADE - DEPOIMENTOS
-   ========================== */
-
-/* Tablets grandes e médios (até 992px) */
-@media (max-width: 992px) {
-  .container-depoimentos-grid {
-    grid-template-columns: 1fr; /* empilha formulário e carrossel */
-    gap: 40px;
-  }
-
-  .formulario-depoimento {
-    padding: 30px;
-  }
-
-  .formulario-depoimento h3 {
-    font-size: 1.3rem;
-  }
-
-  .campo-formulario input,
-  .campo-formulario textarea {
-    font-size: 15px;
-    padding: 12px;
-  }
-
-  .btn-enviar {
-    font-size: 15px;
-    padding: 12px;
-  }
-
-  .carrossel-depoimentos {
-    position: relative;
-    top: auto;
-  }
-
-  .container-depoimentos {
-    margin: 0 auto;
-    height: auto;
-    gap: 40px;
-  }
-
-  .card-wrapper {
-    max-width: 350px;
-    transform: translateX(-50%);
-  }
-
-  .card-depoimento {
-    padding: 20px;
-  }
-
-  .card-depoimento p {
-    font-size: 15px;
-  }
-
-  .card-depoimento span {
-    font-size: 0.85rem;
-  }
-
-  .card-fundo:nth-child(1),
-  .card-fundo:nth-child(2) {
-    transform: none; /* remove inclinação leve */
-  }
-}
-
-/* Celulares grandes (até 768px) */
-@media (max-width: 768px) {
-  .secao-depoimentos {
-    padding: 40px 15px;
-  }
-
-  .secao-depoimentos h2 {
-    font-size: 1.7rem;
-  }
-
-  .formulario-depoimento {
-    padding: 25px;
-  }
-
-  .formulario-depoimento h3 {
-    font-size: 1.2rem;
-  }
-
-  .campo-formulario input,
-  .campo-formulario textarea {
-    font-size: 14px;
-    padding: 10px;
-  }
-
-  .btn-enviar {
-    font-size: 14px;
-    padding: 10px;
-  }
-
-  .container-depoimentos {
-    gap: 30px;
-    flex-direction: column;
-    margin-top: 20px;
-    margin-left: 0;
-    height: auto;
-    
-  }
-  .carrossel-depoimentos {
-    position: relative;
-    top: auto;
-    margin-bottom: 20px;
-  }
-
-  .card-wrapper {
-    max-width: 300px;
-  }
-
-  .card-depoimento {
-    padding: 18px;
-    transform: rotate(0deg); /* remove rotação para mobile */
-  }
-
-  .card-depoimento:hover {
-    transform: scale(1.02);
-  }
-
-  .card-depoimento p {
-    font-size: 14px;
-  }
-
-  .card-depoimento span {
-    font-size: 0.8rem;
-  }
-
-  .card-fundo {
-    display: none; /* remove camadas de fundo no mobile */
-  }
-
-}
-
-/* Celulares pequenos (até 480px) */
-@media (max-width: 480px) {
-  .secao-depoimentos {
-    padding: 30px 10px;
-  }
-
-  .secao-depoimentos h2 {
-    font-size: 1.5rem;
-    margin-bottom: 25px;
-  }
-
-  .formulario-depoimento {
-    padding: 20px;
-  }
-
-  .formulario-depoimento h3 {
-    font-size: 1.1rem;
-  }
-
-  .campo-formulario input,
-  .campo-formulario textarea {
-    font-size: 13px;
-    padding: 8px;
-  }
-
-  .btn-enviar {
-    font-size: 13px;
-    padding: 8px;
-  }
-
-  .container-depoimentos {
-    gap: 20px;
-  }
-
-  .carrossel-depoimentos {
-    position: relative;
-    top: auto;
-    margin-bottom: 20px;
-  }
-
-  .card-wrapper {
-    max-width: 100%;
-  }
-
-  .card-depoimento {
-    padding: 15px;
-  }
-
-  .card-depoimento p {
-    font-size: 13px;
-  }
-
-  .card-depoimento span {
-    font-size: 0.75rem;
-  }
-}
-
-
+/* =================================
+   ANIMAÇÃO DE REVELAR AO ROLAR
+   ================================= */
 .reveal {
-  opacity: 0;
-  transform: translateX(50px);
-  transition: all 1.5s ease;
+    opacity: 0;
+    transform: translateX(-50px);
+    transition: all 1s ease-out;
 }
 
 .reveal.active {
-  opacity: 1;
-  transform: translateX(0);
+    opacity: 1;
+    transform: translateX(0);
+}
+
+/* =================================
+   RESPONSIVIDADE GERAL
+   ================================= */
+@media (max-width: 992px) {
+    .hero-container {
+        grid-template-columns: 1fr;
+        text-align: center;
+    }
+    .hero-textos p { margin-left: auto; margin-right: auto; }
+    .buttons { justify-content: center; }
+    .hero-carousel { display: none; }
+
+    .etapas {
+        flex-direction: column;
+        gap: 4rem;
+    }
+    .etapas::before { display: none; }
+    .etapa { width: 100%; max-width: 400px; }
+
+    .container-depoimentos-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .formulario-depoimento {
+        padding: 30px;
+    }
+
+    .formulario-depoimento h3 {
+        font-size: 1.3rem;
+    }
+
+    .campo-formulario input,
+    .campo-formulario textarea {
+        font-size: 15px;
+        padding: 12px;
+    }
+
+    .btn-enviar {
+        font-size: 15px;
+        padding: 12px;
+    }
+
+    .carrossel-depoimentos {
+        position: relative;
+        top: auto;
+    }
+
+    .container-depoimentos {
+        margin: 0 auto;
+        height: auto;
+        gap: 40px;
+    }
+
+    .card-wrapper {
+        max-width: 350px;
+        transform: translateX(-50%);
+    }
+
+    .card-depoimento {
+        padding: 20px;
+    }
+
+    .card-depoimento p {
+        font-size: 15px;
+    }
+
+    .card-depoimento span {
+        font-size: 0.85rem;
+    }
+
+    .card-fundo:nth-child(1),
+    .card-fundo:nth-child(2) {
+        transform: none;
+    }
+}
+
+@media (max-width: 768px) {
+    .hero-textos h1 {
+        font-size: 2.5rem;
+    }
+
+    .hero-textos h2 {
+        font-size: 2rem;
+    }
+
+    .modulos h2,
+    .jornada h2,
+    .secao-depoimentos h2 {
+        font-size: 2rem;
+    }
+
+    .secao-depoimentos {
+        padding: 40px 15px;
+    }
+
+    .secao-depoimentos h2 {
+        font-size: 1.7rem;
+    }
+
+    .formulario-depoimento {
+        padding: 25px;
+    }
+
+    .formulario-depoimento h3 {
+        font-size: 1.2rem;
+    }
+
+    .campo-formulario input,
+    .campo-formulario textarea {
+        font-size: 14px;
+        padding: 10px;
+    }
+
+    .btn-enviar {
+        font-size: 14px;
+        padding: 10px;
+    }
+
+    .container-depoimentos {
+        gap: 30px;
+        flex-direction: column;
+        margin-top: 20px;
+        margin-left: 0;
+        height: auto;
+    }
+    
+    .carrossel-depoimentos {
+        position: relative;
+        top: auto;
+        margin-bottom: 20px;
+    }
+
+    .card-wrapper {
+        max-width: 300px;
+    }
+
+    .card-depoimento {
+        padding: 18px;
+        transform: rotate(0deg);
+    }
+
+    .card-depoimento:hover {
+        transform: scale(1.02);
+    }
+
+    .card-depoimento p {
+        font-size: 14px;
+    }
+
+    .card-depoimento span {
+        font-size: 0.8rem;
+    }
+
+    .card-fundo {
+        display: none;
+    }
+}
+
+@media (max-width: 480px) {
+    .hero-textos h1 {
+        font-size: 2rem;
+    }
+
+    .hero-textos h2 {
+        font-size: 1.5rem;
+    }
+
+    .buttons {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .btn {
+        width: 100%;
+        max-width: 280px;
+        text-align: center;
+    }
+
+    .modulos h2,
+    .jornada h2,
+    .secao-depoimentos h2 {
+        font-size: 1.5rem;
+    }
+
+    .secao-depoimentos {
+        padding: 30px 10px;
+    }
+
+    .secao-depoimentos h2 {
+        font-size: 1.5rem;
+        margin-bottom: 25px;
+    }
+
+    .formulario-depoimento {
+        padding: 20px;
+    }
+
+    .formulario-depoimento h3 {
+        font-size: 1.1rem;
+    }
+
+    .campo-formulario input,
+    .campo-formulario textarea {
+        font-size: 13px;
+        padding: 8px;
+    }
+
+    .btn-enviar {
+        font-size: 13px;
+        padding: 8px;
+    }
+
+    .container-depoimentos {
+        gap: 20px;
+    }
+
+    .carrossel-depoimentos {
+        position: relative;
+        top: auto;
+        margin-bottom: 20px;
+    }
+
+    .card-wrapper {
+        max-width: 100%;
+    }
+
+    .card-depoimento {
+        padding: 15px;
+    }
+
+    .card-depoimento p {
+        font-size: 13px;
+    }
+
+    .card-depoimento span {
+        font-size: 0.75rem;
+    }
 }

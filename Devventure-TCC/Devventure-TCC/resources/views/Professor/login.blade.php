@@ -105,26 +105,67 @@
     </div>
   </main>
 
-  @if (session('cadastro_sucesso'))
-        <script>
-            window.flashMessage = "{{ session('cadastro_sucesso') }}";
-        </script>
-    @endif
-
-  <script src="{{ asset('js/Professor/loginProfessor.js') }}"></script>
+  <script src="{{ asset('js/Professor/loginProfessor.js') }}"></script> 
 
   <script>
     document.addEventListener('DOMContentLoaded', function () {
-        
-        @if (session('status'))
-            Swal.fire({
-                icon: 'success',
-                title: 'Sucesso!',
-                text: "{{ session('status') }}", 
-                confirmButtonColor: '#3085d6'
-            });
-        @endif
+    
+        const errors = @json($errors->toArray());
+        const oldInput = @json(session()->getOldInput() ?? []);
 
+        // Limpa erros JS antigos
+        document.querySelectorAll('.error-feedback-js').forEach(e => e.remove());
+
+        // Verifica se há erros de validação (e não é um erro de login 'msg')
+        if (Object.keys(errors).length > 0 && errors.msg === undefined) {
+            
+            // Força a exibição dos campos de cadastro
+            const toggleBtn = document.getElementById('toggle-btn');
+            if (toggleBtn && (toggleBtn.textContent.includes('Cadastre-se') || toggleBtn.innerText.includes('Cadastre-se'))) {
+                toggleBtn.click();
+            }
+
+            const form = document.getElementById('professor-form');
+            form.querySelectorAll('input, textarea, select').forEach(field => {
+                const fieldName = field.name;
+                if (fieldName === '_token') return;
+
+                let existingError = field.parentNode.querySelector('.error-feedback-js');
+                if (existingError) existingError.remove();
+
+                // Verifica se este campo tem um erro
+                if (errors[fieldName]) {
+                    const errorElement = document.createElement('small');
+                    errorElement.className = 'error-feedback-js';
+                    errorElement.innerText = errors[fieldName][0];
+                    field.classList.add('is-invalid'); 
+
+                    if (fieldName === 'avatar') {
+                        const wrapper = document.getElementById('avatar-wrapper');
+                        wrapper.classList.add('is-invalid'); 
+                        wrapper.parentNode.insertBefore(errorElement, wrapper.nextSibling);
+                    } else if (field.parentNode.classList.contains('senha-wrapper')) {
+                        field.parentNode.parentNode.appendChild(errorElement);
+                    } else {
+                        field.parentNode.appendChild(errorElement);
+                    }
+                } else if (oldInput[fieldName]) {
+                    if (fieldName !== 'avatar') {
+                        field.value = oldInput[fieldName];
+                    }
+                }
+            });
+
+            // Limpa as senhas por segurança
+            const passwordField = document.getElementById('password');
+            const confirmField = document.getElementById('confirm_password');
+            if (passwordField) passwordField.value = '';
+            if (confirmField) confirmField.value = '';
+        }
+
+        // --- SEÇÃO DE SWEETALERTS ---
+
+        // Exibe erro de LOGIN (ex: "E-mail ou senha inválidos")
         @if ($errors->has('msg'))
             Swal.fire({
                 icon: 'error',
@@ -134,6 +175,7 @@
             });
         @endif
 
+        // Exibe pop-up de VERIFICAÇÃO PENDENTE
         @if (session('needs_verification'))
             Swal.fire({
                 icon: 'warning',
@@ -144,34 +186,86 @@
                 cancelButtonText: 'Cancelar',
                 confirmButtonColor: '#3085d6',
                 cancelButtonColor: '#aaa',
-
-            }).then((result) => {           
+            }).then((result) => { 
                 if (result.isConfirmed) {
                     let form = document.createElement('form');
                     form.method = 'POST';
                     form.action = "{{ route('verification.resend') }}";
-                    
                     let csrfToken = document.createElement('input');
                     csrfToken.type = 'hidden';
                     csrfToken.name = '_token';
                     csrfToken.value = '{{ csrf_token() }}';
                     form.appendChild(csrfToken);
-                    
                     document.body.appendChild(form);
                     form.submit();
                 }
             });
         @endif
 
-        if (window.flashMessage) {
-             Swal.fire({
+        // --- CORREÇÃO DO ALERTA DE SUCESSO ---
+        // Seu TwoFactorController envia 'status'. 
+        // Este script agora 'escuta' por 'status'.
+        @if (session('status'))
+            Swal.fire({
                 icon: 'success',
-                title: 'Cadastro Realizado!',
-                text: window.flashMessage,
+                title: 'Sucesso!',
+                text: "{{ session('status') }}",
                 confirmButtonColor: '#3085d6'
             });
-        }
-    });
-  </script>
+        @endif
+
+        // --- CÓDIGO DO CPF MOVIDO PARA DENTRO DO DOMCONTENTLOADED ---
+        const cpfInput = document.getElementById('cpf');
+        const cpfFeedback = document.getElementById('cpf-feedback');
+
+        // Só roda o script do CPF se os campos existirem
+        if (cpfInput && cpfFeedback) { 
+            
+            function validarCPF(cpf) {
+                cpf = cpf.replace(/[^\d]+/g, '');
+                if (cpf.length !== 11 || /^(\d)\1+$/.test(cpf)) return false;
+                let soma = 0;
+                for (let i = 0; i < 9; i++) soma += parseInt(cpf.charAt(i)) * (10 - i);
+                let resto = 11 - (soma % 11);
+                if (resto === 10 || resto === 11) resto = 0;
+                if (resto !== parseInt(cpf.charAt(9))) return false;
+                soma = 0;
+                for (let i = 0; i < 10; i++) soma += parseInt(cpf.charAt(i)) * (11 - i);
+                resto = 11 - (soma % 11);
+                if (resto === 10 || resto === 11) resto = 0;
+                if (resto !== parseInt(cpf.charAt(10))) return false;
+                return true;
+            }
+
+            cpfInput.addEventListener('input', function (e) {
+                let value = e.target.value.replace(/\D/g, '');
+                if (value.length > 3 && value.length <= 6)
+                    value = value.replace(/(\d{3})(\d+)/, '$1.$2');
+                else if (value.length > 6 && value.length <= 9)
+                    value = value.replace(/(\d{3})(\d{3})(\d+)/, '$1.$2.$3');
+                else if (value.length > 9)
+                    value = value.replace(/(\d{3})(\d{3})(\d{3})(\d+)/, '$1.$2.$3-$4');
+                e.target.value = value.substring(0, 14);
+            });
+
+            cpfInput.addEventListener('blur', function () {
+                const cpf = cpfInput.value.trim();
+                if (!cpf) {
+                    cpfFeedback.textContent = '';
+                    return;
+                }
+                if (!validarCPF(cpf)) {
+                    cpfFeedback.textContent = '❌ CPF inválido';
+                    cpfFeedback.style.color = '#e74c3c';
+                } else {
+                    cpfFeedback.textContent = '✅ CPF válido';
+                    cpfFeedback.style.color = '#2ecc71';
+                }
+            });
+        } // --- Fim do 'if (cpfInput)'
+        
+    }); // <-- FIM DO 'DOMContentLoaded'
+    </script>
+
 </body>
 </html>

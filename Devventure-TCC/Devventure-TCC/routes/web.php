@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Professor\TurmaController;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Foundation\Auth\EmailVerificationRequest;
 use Illuminate\Http\Request;
@@ -18,6 +19,8 @@ use App\Http\Controllers\Auth\ForgotPasswordController;
 use App\Http\Controllers\Auth\ResetPasswordController;
 use App\Http\Controllers\Aluno\ExercicioAlunoController;
 use App\Http\Controllers\Professor\AvisoController;
+use App\Http\Controllers\DepoimentoController;
+use App\Models\Depoimento;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -25,10 +28,19 @@ use App\Http\Controllers\Professor\AvisoController;
 */
 
 // --- PÁGINAS PÚBLICAS E FORMULÁRIOS DE LOGIN ---
-
+//Home
 Route::get('/', function () {
-    return view('welcome');
+    
+    $depoimentos = Depoimento::where('aprovado', true)->latest()->get();
+
+    return view('welcome', [
+        'depoimentos' => $depoimentos
+    ]);
+
 });
+
+// Rota para SALVAR o depoimento
+Route::post('/depoimentos', [DepoimentoController::class, 'store'])->name('depoimentos.store');
 
 Route::get('loginAluno', function () { return view('Aluno.login'); })->name('login.aluno');
 Route::get('loginProfessor', function () { return view('Professor.login'); })->name('login.professor');
@@ -58,7 +70,6 @@ Route::get('/esqueceu-senha', [ForgotPasswordController::class, 'showLinkRequest
 // Rota para enviar o e-mail com o código
 Route::post('/esqueceu-senha', [ForgotPasswordController::class, 'sendResetLinkEmail'])->name('password.email');
 // Rota para o CÓDIGO de redefinição de senha
-// --- URL ALTERADA para evitar conflito ---
 Route::get('/redefinir-senha/verificar-codigo', [ForgotPasswordController::class, 'showVerifyForm'])->name('password.verify.form');
 Route::post('/redefinir-senha/verificar-codigo', [ForgotPasswordController::class, 'verifyCode'])->name('password.verify.code');
 
@@ -171,10 +182,24 @@ Route::middleware('auth:admin')->group(function () {
     Route::post('/admin/professores/{professor}/block', [App\Http\Controllers\Adm\DashboardController::class, 'blockProfessor'])->name('admin.professores.block');
     Route::post('/admin/professores/{professor}/unblock', [App\Http\Controllers\Adm\DashboardController::class, 'unblockProfessor'])->name('admin.professores.unblock');
 
+    // Rota para buscar Alunos
+Route::get('/admin/alunos/search', [App\Http\Controllers\Adm\DashboardController::class, 'searchAlunos'])
+     ->name('admin.alunos.search');
+
+// Rota para buscar Professores
+Route::get('/admin/professores/search', [App\Http\Controllers\Adm\DashboardController::class, 'searchProfessores'])
+     ->name('admin.professores.search');
+
     Route::post('/logout-adm', [AdmLoginController::class, 'logoutUser'])->name('admin.logout');
 
     Route::get('/download-csvAuno', [App\Http\Controllers\Adm\DashboardController::class, 'downloadCsvAlunos'])->name('download.csvAluno');
 
      Route::get('/download-csvProf', [App\Http\Controllers\Adm\DashboardController::class, 'downloadCsvProfessores'])->name('download.csvProf');
+
+     //Rotas do Depoimento
+    Route::post('/admin/depoimentos/{depoimento}/block', [App\Http\Controllers\Adm\DashboardController::class, 'blockDepoimento'])->name('admin.depoimentos.block');
+    Route::post('/admin/depoimentos/{depoimento}/unblock', [App\Http\Controllers\Adm\DashboardController::class, 'unblockDepoimento'])->name('admin.depoimentos.unblock');
+    Route::get('/admin/depoimentos/search', [App\Http\Controllers\Adm\DashboardController::class, 'searchDepoimentos'])->name('admin.depoimentos.search');
+
 
 });

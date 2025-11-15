@@ -6,10 +6,9 @@ document.addEventListener('DOMContentLoaded', function() {
     let activeCharts = [];
 
     //-----------------------------------------
-    //  FUNÇÃO PRINCIPAL PARA TROCAR DE ABA
+    //  FUNÇÃO PRINCIPAL PARA TROCAR DE ABA
     //-----------------------------------------
     function showSection(targetId) {
-        // 1. Atualiza os links da barra lateral
         navLinks.forEach(item => {
             if (item.getAttribute('href') === '#' + targetId) {
                 item.classList.add('active');
@@ -17,12 +16,9 @@ document.addEventListener('DOMContentLoaded', function() {
                 item.classList.remove('active');
             }
         });
-
-        // 2. Mostra a seção correta e esconde as outras
         sections.forEach(section => {
             if (section.id === targetId) {
                 section.classList.add('active');
-                // Inicializa os gráficos para a seção que acabou de ficar ativa
                 initSectionCharts(targetId);
             } else {
                 section.classList.remove('active');
@@ -31,27 +27,18 @@ document.addEventListener('DOMContentLoaded', function() {
     }
     
     //-----------------------------------------
-    //  LÓGICA QUE RODA AO CARREGAR A PÁGINA
+    //  LÓGICA QUE RODA AO CARREGAR A PÁGINA
     //-----------------------------------------
     function handlePageLoad() {
-        // Pega a âncora da URL (ex: "alunos" de "...#alunos")
         const hash = window.location.hash.substring(1);
-        
-        // Se existir uma âncora na URL (vindo da paginação), usa ela.
-        // Se não, usa 'overview' como padrão.
         const initialSectionId = hash || 'overview';
-        
         showSection(initialSectionId);
     }
-
-    // Executa a função assim que a página carrega
     handlePageLoad();
 
     //-----------------------------------------------------
-    //  EVENTOS DE CLIQUE E REDIMENSIONAMENTO (Seu código)
+    //  EVENTOS DE CLIQUE E REDIMENSIONAMENTO
     //-----------------------------------------------------
-    
-    // Toggle Sidebar
     if (menuToggle) {
         menuToggle.addEventListener('click', function() {
             sidebar.classList.toggle('collapsed');
@@ -59,18 +46,15 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
     
-    // Navegação pelas abas ao clicar
     navLinks.forEach(link => {
         link.addEventListener('click', function(e) {
             e.preventDefault();
             const targetId = this.getAttribute('href').substring(1);
-            // Atualiza a URL sem recarregar a página
             history.pushState(null, '', '#' + targetId);
             showSection(targetId);
         });
     });
 
-    // Redimensionamento dos gráficos
     window.addEventListener('resize', function() {
         activeCharts.forEach(chart => {
             if (chart && chart.resize) {
@@ -80,7 +64,7 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 
     //---------------------------------------------------
-    //  INICIALIZAÇÃO DE GRÁFICOS (Seu código, sem alteração)
+    //  INICIALIZAÇÃO DE GRÁFICOS (Seu código)
     //---------------------------------------------------
     function initSectionCharts(sectionId) {
         activeCharts.forEach(chart => {
@@ -147,127 +131,285 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
 
-const searchAlunosForm = document.getElementById('searchAlunosForm');
-const searchAlunosInput = document.getElementById('searchAlunosInput');
-const alunosTableBody = document.getElementById('alunosTableBody');
-const alunosPagination = document.getElementById('alunosPagination');
+    // ===================================================
+    //             SEÇÃO DE BUSCA ALUNOS
+    // ===================================================
+    const searchAlunosForm = document.getElementById('searchAlunosForm');
+    const searchAlunosInput = document.getElementById('searchAlunosInput');
+    const alunosTableBody = document.getElementById('alunosTableBody');
+    const alunosPagination = document.getElementById('alunosPagination');
 
-searchAlunosForm.addEventListener('submit', function(event) {
-    // A linha MAIS IMPORTANTE: Impede que o formulário recarregue a página.
-    event.preventDefault();
-
-    const query = searchAlunosInput.value;
-
-    
-    if (query.length === 0) {
-        window.location.href = '/admDashboard#alunos'; 
-        return;
-    }
-    
-    
-    fetch(`/admin/alunos/search?query=${query}`)
-        .then(response => response.json())
-        .then(data => {
-            alunosPagination.style.display = 'none';
-            alunosTableBody.innerHTML = ''; 
-
-            if (data.length > 0) {
-                data.forEach(aluno => {
-                    const row = `
-                        <tr>
-                            <td>${aluno.nome}</td>
-                            <td>${aluno.email}</td>
-                            <td>${aluno.ra}</td>
-                            <td>
-                                <button class="btn-icon edit-btn" data-id="${aluno.id}"><i class="fas fa-edit"></i></button>
-                                <button class="btn-icon delete-btn" data-id="${aluno.id}"><i class="fas fa-trash"></i></button>
-                            </td>
-                        </tr>
-                    `;
-                    alunosTableBody.innerHTML += row;
-                });
-            } else {
-                alunosTableBody.innerHTML = '<tr><td colspan="4" class="text-center">Nenhum resultado encontrado.</td></tr>';
-            }
-        });
-});
-
-
-
-const searchProfessoresForm = document.getElementById('searchProfessoresForm');
-const searchProfessoresInput = document.getElementById('searchProfessoresInput');
-const professoresTableBody = document.getElementById('professoresTableBody');
-const professoresPagination = document.getElementById('professoresPagination');
-
-searchProfessoresForm.addEventListener('submit', function(event) {
-    event.preventDefault(); 
-
-    const query = searchProfessoresInput.value;
-    
-    if (query.length === 0) {
-        window.location.href = '/admDashboard#professores'; 
-        return;
-    }
-
-    fetch(`/admin/professores/search?query=${query}`)
-        .then(response => response.json())
-        .then(data => {
-            professoresPagination.style.display = 'none';
-            professoresTableBody.innerHTML = '';
-
-            if (data.length > 0) {
-                data.forEach(professor => {
-                    const row = `
-                        <tr>
-                            <td>${professor.nome}</td>
-                            <td>${professor.email}</td>
-                            <td>${professor.cpf}</td>
-                            <td>
-                                <button class="btn-icon edit-btn" data-id="${professor.id}"><i class="fas fa-edit"></i></button>
-                                <button class="btn-icon delete-btn" data-id="${professor.id}"><i class="fas fa-trash"></i></button>
-                            </td>
-                        </tr>
-                    `;
-                    professoresTableBody.innerHTML += row;
-                });
-            } else {
-                professoresTableBody.innerHTML = '<tr><td colspan="4" class="text-center">Nenhum resultado encontrado.</td></tr>';
-            }
-        });
-});
-
-
-searchAlunosInput.addEventListener('input', function() {
-    if (this.value.length === 0) {
-        window.location.href = '/admDashboard#alunos';
-    }
-});
-
-
-searchProfessoresInput.addEventListener('input', function() {
-    if (this.value.length === 0) {
-        window.location.href = '/admin/dashboard#professores';
-    }
-});
-
-
-const confirmationForms = document.querySelectorAll('.form-confirm');
-
-
-confirmationForms.forEach(form => {
-    form.addEventListener('submit', function(event) {
-        // Prevenimos o envio imediato do formulário! Esta é a parte mais importante.
+    searchAlunosForm.addEventListener('submit', function(event) {
         event.preventDefault();
+        const query = searchAlunosInput.value;
+        const searchUrl = searchAlunosForm.dataset.searchUrl; 
+        
+        if (query.length === 0) {
+            window.location.href = '/admDashboard#alunos'; 
+            return;
+        }
+        
+        fetch(`${searchUrl}?query=${query}`)
+            .then(response => response.json())
+            .then(data => {
+                alunosPagination.style.display = 'none';
+                alunosTableBody.innerHTML = ''; 
 
-        // Pegamos os dados que definimos no HTML
-        const actionText = this.dataset.actionText; // 'bloquear' ou 'desbloquear'
+                const blockUrlBase = alunosTableBody.dataset.blockUrl; // Será "/admin/alunos"
+                const unblockUrlBase = alunosTableBody.dataset.unblockUrl; // Será "/admin/alunos"
+                const csrfToken = alunosTableBody.dataset.csrfToken;
+
+                if (data.length > 0) {
+                    data.forEach(aluno => {
+                        const statusBadge = aluno.status === 'ativo' ? '<span class="badge badge-success">Ativo</span>' : '<span class="badge badge-danger">Bloqueado</span>';
+                        let actionButton = '';
+                        const nomeEscapado = aluno.nome.replace(/"/g, '&quot;');
+                        
+                        if (aluno.status === 'ativo') {
+                            // **** CORREÇÃO DA URL: Agora é ${blockUrlBase}/${aluno.id}/block ****
+                            actionButton = `
+                                <form action="${blockUrlBase}/${aluno.id}/block" method="POST" style="display: inline;" 
+                                      class="form-confirm" data-action-text="bloquear" data-user-name="${nomeEscapado}">
+                                    <input type="hidden" name="_token" value="${csrfToken}">
+                                    <button type="submit" class="btn-icon" title="Bloquear Aluno"><i class="fas fa-ban" style="color: #e53e3e;"></i></button>
+                                </form>
+                            `;
+                        } else {
+                            // **** CORREÇÃO DA URL: Agora é ${unblockUrlBase}/${aluno.id}/unblock ****
+                            actionButton = `
+                                <form action="${unblockUrlBase}/${aluno.id}/unblock" method="POST" style="display: inline;"
+                                      class="form-confirm" data-action-text="desbloquear" data-user-name="${nomeEscapado}">
+                                    <input type="hidden" name="_token" value="${csrfToken}">
+                                    <button type="submit" class="btn-icon" title="Desbloquear Aluno"><i class="fas fa-check-circle" style="color: #48bb78;"></i></button>
+                                </form>
+                            `;
+                        }
+                        actionButton = `<a href="#" class="btn-icon" title="Ver Detalhes do Aluno"><i class="fas fa-eye"></i></a> ` + actionButton;
+
+                        const row = `
+                            <tr>
+                                <td>${aluno.nome}</td>
+                                <td>${aluno.email}</td>
+                                <td>${aluno.ra}</td>
+                                <td>${statusBadge}</td>
+                                <td>${actionButton}</td>
+                            </tr>
+                        `;
+                        alunosTableBody.innerHTML += row;
+                    });
+                } else {
+                    alunosTableBody.innerHTML = '<tr><td colspan="5" class="text-center">Nenhum resultado encontrado.</td></tr>';
+                }
+                
+                attachConfirmListeners();
+            });
+    });
+
+    // ===================================================
+    //          SEÇÃO DE BUSCA PROFESSORES
+    // ===================================================
+    const searchProfessoresForm = document.getElementById('searchProfessoresForm');
+    const searchProfessoresInput = document.getElementById('searchProfessoresInput');
+    const professoresTableBody = document.getElementById('professoresTableBody');
+    const professoresPagination = document.getElementById('professoresPagination');
+
+    searchProfessoresForm.addEventListener('submit', function(event) {
+        event.preventDefault(); 
+        const query = searchProfessoresInput.value;
+        const searchUrl = searchProfessoresForm.dataset.searchUrl;
+
+        if (query.length === 0) {
+            window.location.href = '/admDashboard#professores'; 
+            return;
+        }
+
+        fetch(`${searchUrl}?query=${query}`)
+            .then(response => response.json())
+            .then(data => {
+                professoresPagination.style.display = 'none';
+                professoresTableBody.innerHTML = '';
+
+                const blockUrlBase = professoresTableBody.dataset.blockUrl; // Será "/admin/professores"
+                const unblockUrlBase = professoresTableBody.dataset.unblockUrl; // Será "/admin/professores"
+                const csrfToken = professoresTableBody.dataset.csrfToken;
+
+                if (data.length > 0) {
+                    data.forEach(professor => {
+                        const statusBadge = professor.status === 'ativo' ? '<span class="badge badge-success">Ativo</span>' : '<span class="badge badge-danger">Bloqueado</span>';
+                        let actionButton = '';
+                        const nomeEscapado = professor.nome.replace(/"/g, '&quot;');
+                        
+                        if (professor.status === 'ativo') {
+                            // **** CORREÇÃO DA URL: Agora é ${blockUrlBase}/${professor.id}/block ****
+                            actionButton = `
+                                <form action="${blockUrlBase}/${professor.id}/block" method="POST" style="display: inline;" 
+                                      class="form-confirm" data-action-text="bloquear" data-user-name="${nomeEscapado}">
+                                    <input type="hidden" name="_token" value="${csrfToken}">
+                                    <button type="submit" class="btn-icon" title="Bloquear Professor"><i class="fas fa-ban" style="color: #e53e3e;"></i></button>
+                                </form>
+                            `;
+                        } else {
+                            // **** CORREÇÃO DA URL: Agora é ${unblockUrlBase}/${professor.id}/unblock ****
+                            actionButton = `
+                                <form action="${unblockUrlBase}/${professor.id}/unblock" method="POST" style="display: inline;"
+                                      class="form-confirm" data-action-text="desbloquear" data-user-name="${nomeEscapado}">
+                                    <input type="hidden" name="_token" value="${csrfToken}">
+                                    <button type="submit" class="btn-icon" title="Desbloquear Professor"><i class="fas fa-check-circle" style="color: #48bb78;"></i></button>
+                                </form>
+                            `;
+                        }
+                        actionButton = `<a href="#" class="btn-icon" title="Ver Detalhes do Professor"><i class="fas fa-eye"></i></a> ` + actionButton;
+
+                        const row = `
+                            <tr>
+                                <td>${professor.nome}</td>
+                                <td>${professor.email}</td>
+                                <td>${professor.cpf}</td>
+                                <td>${statusBadge}</td>
+                                <td>${actionButton}</td>
+                            </tr>
+                        `;
+                        professoresTableBody.innerHTML += row;
+                    });
+                } else {
+                    professoresTableBody.innerHTML = '<tr><td colspan="5" class="text-center">Nenhum resultado encontrado.</td></tr>';
+                }
+                
+                attachConfirmListeners();
+            });
+    });
+
+    // ===================================================
+    //          SEÇÃO DE BUSCA DEPOIMENTOS
+    // ===================================================
+    const searchDepoForm = document.getElementById('searchDepoimentosForm');
+    const searchDepoInput = document.getElementById('searchDepoimentosInput');
+    const depoTableBody = document.getElementById('depoimentosTableBody');
+    const depoPagination = document.getElementById('depoimentosPagination');
+    
+    const originalDepoHTML = depoTableBody.innerHTML; 
+    const originalDepoPagination = depoPagination.innerHTML;
+
+    function popularTabelaDepoimentos(data) {
+        const blockUrlBase = depoTableBody.dataset.blockUrl; // Será "/admin/depoimentos"
+        const unblockUrlBase = depoTableBody.dataset.unblockUrl; // Será "/admin/depoimentos"
+        const csrfToken = depoTableBody.dataset.csrfToken;
+
+        depoTableBody.innerHTML = ''; 
+
+        if (data.length === 0) {
+            depoTableBody.innerHTML = '<tr><td colspan="4" class="text-center">Nenhum depoimento encontrado.</td></tr>';
+            return;
+        }
+
+        data.forEach(depoimento => {
+            const statusBadge = depoimento.aprovado ? '<span class="badge badge-success">Aprovado</span>' : '<span class="badge badge-danger">Bloqueado</span>';
+            let actionButton = '';
+            const autorEscapado = depoimento.autor.replace(/"/g, '&quot;');
+            
+            if (depoimento.aprovado) {
+                // **** CORREÇÃO DA URL: Agora é ${blockUrlBase}/${depoimento.id}/block ****
+                actionButton = `
+                    <form action="${blockUrlBase}/${depoimento.id}/block" method="POST" style="display: inline;" 
+                          class="form-confirm" data-action-text="bloquear" data-user-name="o depoimento de ${autorEscapado}">
+                        <input type="hidden" name="_token" value="${csrfToken}">
+                        <button type="submit" class="btn-icon" title="Bloquear Depoimento"><i class="fas fa-ban" style="color: #e53e3e;"></i></button>
+                    </form>
+                `;
+            } else {
+                // **** CORREÇÃO DA URL: Agora é ${unblockUrlBase}/${depoimento.id}/unblock ****
+                actionButton = `
+                    <form action="${unblockUrlBase}/${depoimento.id}/unblock" method="POST" style="display: inline;"
+                          class="form-confirm" data-action-text="aprovar" data-user-name="o depoimento de ${autorEscapado}">
+                        <input type="hidden" name="_token" value="${csrfToken}">
+                        <button type="submit" class="btn-icon" title="Aprovar Depoimento"><i class="fas fa-check-circle" style="color: #48bb78;"></i></button>
+                    </form>
+                `;
+            }
+            
+            const textoLimitado = depoimento.texto.length > 80 ? depoimento.texto.substring(0, 80) + '...' : depoimento.texto;
+            const textoEscapado = depoimento.texto.replace(/"/g, '&quot;');
+
+            const newRow = `
+                <tr>
+                    <td>${depoimento.autor}</td>
+                    <td><span title="${textoEscapado}">${textoLimitado}</span></td>
+                    <td>${statusBadge}</td>
+                    <td>${actionButton}</td>
+                </tr>
+            `;
+            depoTableBody.innerHTML += newRow;
+        });
+        
+        attachConfirmListeners();
+    }
+
+    searchDepoForm.addEventListener('submit', function(e) {
+        e.preventDefault(); 
+        const query = searchDepoInput.value.trim();
+        const searchUrl = searchDepoForm.dataset.searchUrl;
+
+        if (query.length === 0) {
+            depoTableBody.innerHTML = originalDepoHTML;
+            depoPagination.innerHTML = originalDepoPagination;
+            depoPagination.style.display = 'block';
+            attachConfirmListeners();
+            return;
+        }
+
+        depoPagination.style.display = 'none';
+
+        fetch(`${searchUrl}?query=${encodeURIComponent(query)}`, {
+            method: 'GET',
+            headers: { 'Accept': 'application/json', 'X-Requested-With': 'XMLHttpRequest' }
+        })
+        .then(response => response.json())
+        .then(data => {
+            popularTabelaDepoimentos(data);
+        })
+        .catch(error => {
+            console.error('Erro ao buscar depoimentos:', error);
+            depoTableBody.innerHTML = '<tr><td colspan="4" class="text-center">Erro ao carregar resultados.</td></tr>';
+        });
+    });
+
+
+    // ===================================================
+    //          LISTENERS DE LIMPAR CAMPO
+    // ===================================================
+    searchAlunosInput.addEventListener('input', function() {
+        if (this.value.length === 0) {
+            window.location.href = '/admDashboard#alunos';
+        }
+    });
+
+    searchProfessoresInput.addEventListener('input', function() {
+        if (this.value.length === 0) {
+            window.location.href = '/admin/dashboard#professores';
+        }
+    });
+
+    searchDepoInput.addEventListener('input', function() {
+        if (this.value.length === 0) {
+            depoTableBody.innerHTML = originalDepoHTML;
+            depoPagination.innerHTML = originalDepoPagination;
+            depoPagination.style.display = 'block';
+            attachConfirmListeners();
+        }
+    });
+
+
+    // ===================================================
+    //          CÓDIGO DE CONFIRMAÇÃO (REATORADO)
+    // ===================================================
+    function handleConfirmSubmit(event) {
+        event.preventDefault(); 
+        const actionText = this.dataset.actionText;
         const userName = this.dataset.userName;
-
         
         Swal.fire({
             title: 'Tem certeza?',
-            // Usamos HTML para poder colocar o nome do usuário em negrito
-            html: `Você realmente deseja <b>${actionText}</b> o usuário <strong>${userName}</strong>?`,
+            html: `Você realmente deseja <b>${actionText}</b> ${userName}?`,
             icon: 'warning',
             showCancelButton: true,
             confirmButtonColor: '#3085d6', 
@@ -275,14 +417,21 @@ confirmationForms.forEach(form => {
             confirmButtonText: `Sim, ${actionText}!`,
             cancelButtonText: 'Cancelar'
         }).then((result) => {
-           
             if (result.isConfirmed) {
-                
-                this.submit();
+                this.submit(); 
             }
         });
-    });
-});
+    }
 
+    function attachConfirmListeners() {
+        const confirmationForms = document.querySelectorAll('.form-confirm');
+        
+        confirmationForms.forEach(form => {
+            form.removeEventListener('submit', handleConfirmSubmit); 
+            form.addEventListener('submit', handleConfirmSubmit);
+        });
+    }
+    
+    attachConfirmListeners();
 
 });

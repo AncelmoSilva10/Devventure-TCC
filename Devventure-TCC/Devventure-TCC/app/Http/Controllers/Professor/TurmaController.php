@@ -200,6 +200,51 @@ public function convidarAluno(Request $request, Turma $turma)
 }
 
 
+public function enviados()
+    {
+        // Usamos o Guard 'professor' para pegar o usuário logado
+        $professorLogado = Auth::guard('professor')->user();
+
+        // 1. Buscamos os convites onde o 'professor_id' é o ID do professor logado.
+        $convitesEnviados = Convite::where('professor_id', $professorLogado->id)
+                                     // 2. Carregamos os relacionamentos 'turma' e 'aluno'
+                                     ->with(['turma', 'aluno']) 
+                                     ->orderBy('created_at', 'desc')
+                                     ->get();
+
+        // 3. Retorna a nova view
+        return view('Professor.enviados', [
+            'convites' => $convitesEnviados
+        ]);
+    }
+
+    /**
+     * [CORRIGIDO] Cancela um convite PENDENTE (Ação do Professor).
+     */
+    public function cancelar(Convite $convite)
+    {
+        // 1. Autorização: 
+        //    Verifica se o convite foi mesmo enviado pelo professor logado
+        //    Usamos Auth::guard('professor')->id()
+        if ($convite->professor_id !== Auth::guard('professor')->id()) {
+            abort(403, 'Ação não autorizada.');
+        }
+
+        // 2. Regra de Negócio: 
+        //    Só pode cancelar um convite que ainda está 'pendente'
+        if ($convite->status !== 'pendente') {
+            return redirect()->route('convites.enviados')
+                             ->with('erro', 'Este convite não está mais pendente e não pode ser cancelado.');
+        }
+
+        // 3. Ação: Deleta o convite
+        $convite->delete();
+
+        // 4. Redireciona de volta
+        return redirect()->route('Professor.enviados')
+                         ->with('sucesso', 'Convite cancelado com sucesso.');
+    }
+
 public function formsAula(Request $request, Turma $turma)
 {
     

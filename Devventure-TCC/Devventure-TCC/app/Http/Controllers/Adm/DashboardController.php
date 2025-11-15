@@ -9,7 +9,7 @@ use App\Models\Professor;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Response;
-
+use App\Models\Depoimento;
 class DashboardController extends Controller
 {
     public function admDashboard()
@@ -21,7 +21,9 @@ class DashboardController extends Controller
     $alunosData = Aluno::paginate(5);
     $professoresData = Professor::paginate(5);
 
-    return view('Adm/dashboard', compact('alunosCount', 'professoresCount', 'alunosData', 'professoresData'));
+    $depoimentosData = Depoimento::latest()->paginate(5);
+
+    return view('Adm/dashboard', compact('alunosCount', 'professoresCount', 'alunosData', 'professoresData', 'depoimentosData'));
     }
 
    
@@ -191,5 +193,35 @@ public function downloadCsvProfessores()
         
         return Response::stream($callback, 200, $headers);
     }
+
+    public function blockDepoimento(Depoimento $depoimento)
+{
+    $depoimento->update(['aprovado' => false]);
+
+    
+    return redirect(url()->previous() . '#depoimentos')->with('success', 'Depoimento bloqueado com sucesso!');
+}
+
+
+public function unblockDepoimento(Depoimento $depoimento)
+{
+    $depoimento->update(['aprovado' => true]);
+
+    
+    return redirect(url()->previous() . '#depoimentos')->with('success', 'Depoimento aprovado com sucesso!');
+}
+
+public function searchDepoimentos(Request $request)
+{
+    $query = $request->input('query');
+
+    
+    $depoimentos = Depoimento::where('autor', 'LIKE', "%{$query}%")
+                             ->orWhere('texto', 'LIKE', "%{$query}%")
+                             ->get();
+    
+    
+    return response()->json($depoimentos);
+}
 
 }

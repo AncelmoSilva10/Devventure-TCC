@@ -1,170 +1,118 @@
-/* =================================
-   CONFIGURAÇÕES GLOBAIS E VARIÁVEIS
-   ================================= */
-@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap');
 
-:root {
-    --primary-color: #00796b; /* Verde escuro do tema do professor */
-    --primary-light: #e0f2f1;
-    --secondary-color: #16d6c0; /* Laranja para destaque */
-    --light-gray: #f3f4f6;
-    --medium-gray: #d1d5db;
-    --dark-gray: #374151;
-    --text-color: #1f293b;
-    --white-color: #ffffff;
-    --border-radius: 12px;
-    --box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+:root{
+  --cor-primaria: #00796B;
+  --cor-primaria-hover: #004D40;
+  --cor-fundo: #f8fafc;
+  --cor-card: #ffffff;
+  --cor-texto-principal: #1e293b;
+  --cor-texto-secundario: #64748b;
+  --cor-borda: #e2e8f0;
+  --sombra-card: 0 6px 20px rgba(0,0,0,0.06);
+  --radius: 12px;
 }
 
-body {
-    font-family: 'Poppins', sans-serif;
-    background-color: var(--light-gray);
-    color: var(--text-color);
-    margin: 0;
-}
+/* scope */
+.turma-wrapper * { box-sizing: border-box; }
 
-/* =================================
-   CABEÇALHO DA TURMA
-   ================================= */
 .turma-wrapper {
-    max-width: 1400px;
-    margin: 0 auto;
-    padding: 0 2rem 2rem 2rem;
+  font-family: 'Poppins', system-ui, -apple-system, "Inter", sans-serif;
+  background: var(--cor-fundo);
+  color: var(--cor-texto-principal);
 }
-.turma-header {
-    background: linear-gradient(45deg, #004d40, #00796b);
-    color: var(--white-color);
-    padding: 2rem;
-    border-radius: 0 0 var(--border-radius) var(--border-radius);
-    margin-bottom: 2rem;
+
+/* HEADER */
+.turma-header{
+  position: relative;
+  background: linear-gradient(135deg, var(--cor-primaria), var(--cor-primaria-hover));
+  padding: 2rem;
+  border-radius: 0 0 var(--radius) var(--radius);
+  color: #fff;
+  box-shadow: var(--sombra-card);
+  margin-bottom: 1.5rem;
 }
-.header-content {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    flex-wrap: wrap;
-    gap: 1.5rem;
+.header-content{
+  display:flex;
+  align-items:center;
+  gap:1.25rem;
+  justify-content:space-between;
+  flex-wrap:wrap;
 }
+.header-info { flex:1; min-width:220px; }
+.header-info h1{ margin:0; font-size:1.6rem; font-weight:700; }
+.header-info p{ margin:0.2rem 0 0; color: rgba(255,255,255,0.9); font-weight:500; }
+
+/* "Voltar para Minhas Turmas" estilizado */
 .back-link {
-    color: var(--white-color); text-decoration: none; font-size: 1rem; font-weight: 500;
-    display: inline-flex; align-items: center; gap: 0.5rem; transition: opacity 0.2s;
+  display:inline-flex;
+  align-items:center;
+  gap:.5rem;
+  padding:.45rem .75rem;
+  background: rgba(255,255,255,0.08);
+  color: #fff;
+  border-radius:8px;
+  font-weight:600;
+  text-decoration:none;
+  transition: all .16s ease;
 }
-.back-link:hover { opacity: 0.8; }
-.header-info h1 { margin: 0; font-size: 2.25rem; }
-.header-info p { margin: 0; opacity: 0.8; }
-.header-actions { display: flex; gap: 1rem; align-items: center; }
+.back-link:hover{
+  transform: translateX(-4px);
+  background: rgba(255,255,255,0.14);
+}
+.back-link i { font-size:1rem; }
 
-/* =================================
-   BOTÕES E CARDS
-   ================================= */
-.btn {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.5rem;
-    padding: 0.75rem 1.25rem;
-    border-radius: 8px;
-    border: none;
-    font-weight: 600;
-    font-size: 0.9rem;
-    cursor: pointer;
-    text-decoration: none;
-    transition: all 0.2s ease-in-out;
-}
-.btn-primary { background-color: var(--secondary-color); color: var(--white-color); }
-.btn-primary:hover { background-color: #ea580c; }
-.btn-secondary { background-color: rgba(255,255,255,0.1); color: var(--white-color); border: 1px solid rgba(255,255,255,0.3); }
-.btn-secondary:hover { background-color: rgba(255,255,255,0.2); }
-
-.card {
-    background-color: var(--white-color);
-    border-radius: var(--border-radius);
-    box-shadow: var(--box-shadow);
-    overflow: hidden; /* Garante que o conteúdo não vaze das bordas arredondadas */
-}
-.card-header { padding: 1.5rem 1.5rem 0 1.5rem; }
-.card h2 { font-size: 1.25rem; margin: 0; display: flex; align-items: center; gap: 0.75rem; }
-
-/* =================================
-   LAYOUT DO CORPO DA PÁGINA
-   ================================= */
-.page-body {
-    display: grid;
-    grid-template-columns: 2.5fr 1fr;
-    gap: 2rem;
-}
-@media (max-width: 992px) { .page-body { grid-template-columns: 1fr; } }
-.main-content { display: flex; flex-direction: column; gap: 2rem; }
-
-/* =================================
-   LISTA DE ALUNOS
-   ================================= */
-.student-list { list-style: none; padding: 1.5rem; margin: 0; }
-.student-item {
-    display: flex; align-items: center; justify-content: space-between;
-    gap: 1rem; padding: 1rem; border-bottom: 1px solid var(--light-gray);
-    text-decoration: none; color: inherit; border-radius: 8px;
-    margin: 0 -1rem; padding: 1rem;
-    transition: background-color 0.2s;
-}
-.student-item:hover { background-color: var(--light-gray); }
-.student-list > a:last-of-type { border-bottom: none; }
-.student-info { display: flex; align-items: center; gap: 1rem; font-weight: 500; }
-.avatar { width: 40px; height: 40px; border-radius: 50%; object-fit: cover; }
-.student-progress { width: 40%; text-align: right; }
-.student-progress small { font-size: 0.8rem; color: #6b7280; }
-.progress-bar-container { background-color: #e9ecef; border-radius: 50px; height: 8px; overflow: hidden; margin-top: 4px; }
-.progress-bar { height: 100%; background-color: var(--primary-color); border-radius: 50px; }
-
-/* =================================
-   MURAL DE AVISOS (NOVO)
-   ================================= */
-.avisos-list {
-    list-style: none;
-    padding: 1.5rem;
-    margin: 0;
-    display: flex;
-    flex-direction: column;
-    gap: 1rem;
-}
-.aviso-item {
-    background-color: var(--light-gray);
-    border-left: 5px solid var(--primary-color);
-    padding: 1.25rem;
-    border-radius: 8px;
-}
-.aviso-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 0.5rem;
-}
-.aviso-title {
-    font-size: 1.1rem;
-    font-weight: 600;
-    margin: 0;
-}
-.aviso-date {
-    font-size: 0.8rem;
-    color: #6b7280;
-    font-style: italic;
-}
-.aviso-content p {
-    margin: 0;
-    line-height: 1.6;
-    color: var(--dark-gray);
+/* header actions (Botões) */
+.header-actions{
+  display:flex;
+  gap:0.6rem;
+  align-items:center;
+  flex-shrink:0;
 }
 
-/* =================================
-   LISTA DE EXERCÍCIOS E CONTEÚDO
-   ================================= */
-.content-list { list-style: none; padding: 1.5rem; margin: 0; }
-.content-item {
-    display: flex; justify-content: space-between; align-items: center;
-    padding: 0.75rem 0; border-bottom: 1px solid var(--light-gray);
+/* base button */
+.turma-wrapper .btn{
+  display:inline-flex;
+  align-items:center;
+  gap:0.5rem;
+  padding:0.55rem 0.9rem;
+  border-radius:8px;
+  font-weight:600;
+  cursor:pointer;
+  border:0;
+  transition: transform .12s ease, box-shadow .12s ease, opacity .12s;
 }
-.content-item:last-child { border-bottom: none; }
-.content-item span { font-weight: 500; }
-.content-item small { color: #6b7280; }
+
+/* botão em header sobre fundo escuro: versão secundária translúcida */
+.turma-wrapper .btn.btn-secondary{
+  background: rgba(255,255,255,0.12);
+  color:#fff;
+  border: 1px solid rgba(255,255,255,0.12);
+  backdrop-filter: blur(2px);
+}
+.turma-wrapper .btn.btn-secondary:hover{
+  transform: translateY(-2px);
+  background: rgba(255,255,255,0.16);
+}
+
+/* botão primário */
+.turma-wrapper .btn.btn-primary{
+  background: var(--cor-primaria);
+  color: #fff;
+  box-shadow: 0 6px 18px rgba(0,121,107,0.12);
+}
+.turma-wrapper .btn.btn-primary:hover{
+  background: var(--cor-primaria-hover);
+  transform: translateY(-2px);
+}
+
+/* main layout */
+.page-body{
+  display:flex;
+  gap:2rem;
+  padding: 0 2rem 2rem 2rem;
+  align-items:flex-start;
+}
+.main-content{ flex: 1 1 65%; display:flex; flex-direction:column; gap:1.5rem; min-width:320px; }
+.sidebar{ flex: 0 0 320px; }
 
 .sidebar-column {
     display: flex;
@@ -190,55 +138,10 @@ body {
 .timeline-content {
     background-color: var(--light-gray); padding: 1rem; border-radius: 8px; flex: 1;
 }
-.timeline-date { font-size: 0.8rem; color: #6b7280; font-weight: 500; }
-.timeline-title { font-size: 1rem; font-weight: 600; margin: 0.25rem 0; }
-.timeline-detail { font-size: 0.9rem; margin: 0; }
-.empty-message { text-align: center; color: #6b7280; padding: 2rem 0; }
 
-/* =================================
-   PAGINAÇÃO (REFORMULADO)
-   ================================= */
-.pagination {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    padding: 1.5rem;
-    list-style: none;
-}
-.page-item {
-    margin: 0 4px;
-}
-.page-link {
-    display: block;
-    padding: 0.6rem 1rem;
-    border-radius: 8px;
-    text-decoration: none;
-    font-weight: 600;
-    font-size: 0.9rem;
-    color: var(--primary-color);
-    background-color: var(--white-color);
-    border: 1px solid var(--medium-gray);
-    transition: all 0.3s ease;
-}
-.page-item a.page-link:hover {
-    background-color: var(--primary-light);
-    border-color: var(--primary-color);
-    box-shadow: 0 2px 5px rgba(0, 121, 107, 0.2);
-    transform: translateY(-2px);
-}
-.page-item.active .page-link {
-    background-color: var(--primary-color);
-    color: var(--white-color);
-    border-color: var(--primary-color);
-    box-shadow: 0 4px 8px rgba(0, 121, 107, 0.3);
-    cursor: default;
-}
-.page-item.disabled .page-link {
-    color: var(--medium-gray);
-    background-color: var(--light-gray);
-    border-color: #e5e7eb;
-    pointer-events: none; /* Impede cliques em links desativados */
-}
+/* card header */
+.card-header{ margin-bottom:0.6rem; display:flex; align-items:center; gap:0.6rem; }
+.card-header h2{ margin:0; font-size:1.15rem; color:var(--cor-primaria); }
 
 
 /* =================================
@@ -258,33 +161,78 @@ body {
     transform: scale(0.95); opacity: 0;
     animation: fadeInModal 0.3s forwards ease-out;
 }
-@keyframes fadeInModal { to { transform: scale(1); opacity: 1; } }
-.modal-close {
-    position: absolute; top: 1rem; right: 1rem; background: none; border: none;
-    font-size: 1.75rem; color: #9ca3af; cursor: pointer; transition: color 0.2s;
+
+/* student left info */
+.student-info{ display:flex; align-items:center; gap:0.8rem; }
+.student-info .avatar{ width:44px; height:44px; border-radius:50%; object-fit:cover; border:2px solid rgba(0,0,0,0.04); }
+
+/* progresso */
+.student-progress{ text-align:right; min-width:110px; }
+.progress-bar-container{ width:110px; height:8px; background:var(--cor-borda); border-radius:999px; overflow:hidden; margin-top:6px; }
+.progress-bar{ height:100%; background:var(--cor-primaria); border-radius:999px; }
+
+/* AVISOS */
+.avisos-list{ list-style:none; margin:0; padding:0; display:flex; flex-direction:column; gap:0.6rem; }
+.aviso-item{ padding:0.9rem; border-radius:10px; background:#fffaf0; border-left:4px solid var(--cor-primaria); }
+
+/* TIMELINE */
+.timeline{ list-style:none; margin:0; padding:0; display:flex; flex-direction:column; gap:0.8rem; }
+.timeline-item{ display:flex; gap:0.8rem; align-items:flex-start; }
+.timeline-marker .timeline-icon{ width:40px; height:40px; border-radius:50%; display:flex; align-items:center; justify-content:center; background:var(--cor-primaria); color:#fff; }
+.timeline-content{ flex:1; padding:0.6rem; background: #ffffff; border-radius:8px; border:1px solid var(--cor-borda); }
+
+/* EXERCICIOS (sidebar) */
+.content-list{ list-style:none; margin:0; padding:0; display:flex; flex-direction:column; gap:0.5rem; }
+.content-item{ padding:0.7rem; border-radius:8px; background:#fff; border:1px solid var(--cor-borda); display:flex; justify-content:space-between; align-items:center; }
+
+/* BOTÕES das turmas */
+.turma-actions .btn-acao{ padding:0.45rem 0.8rem; border-radius:8px; font-weight:600; font-size:0.9rem; }
+.turma-actions .btn-gerenciar{ background:var(--cor-primaria); color:#fff; border:0; }
+.turma-actions .btn-gerenciar:hover{ background:var(--cor-primaria-hover); }
+.turma-actions .btn-relatorio{ background:transparent; border:1.25px solid var(--cor-primaria); color:var(--cor-primaria); }
+.turma-actions .btn-relatorio:hover{ background: rgba(0,121,107,0.08); }
+
+/* -----------------------------
+   MODAIS: base, inputs com ícone
+   ----------------------------- */
+.modal-overlay{ position:fixed; inset:0; display:none; align-items:center; justify-content:center; background: rgba(0,0,0,0.45); z-index:1200; padding:1rem; overflow-y:auto; }
+.modal-overlay.active{ display:flex; }
+.modal-content{ width:100%; max-width:540px; background:var(--cor-card); border-radius:12px; padding:1.6rem; box-shadow: 0 12px 30px rgba(0,0,0,0.12); border:1px solid var(--cor-borda); position:relative; }
+.modal-close{ position:absolute; right:12px; top:12px; background:transparent; border:0; font-size:1.15rem; cursor:pointer; color:var(--cor-texto-secundario); }
+
+/* form-group */
+.form-group{ display:flex; flex-direction:column; gap:0.35rem; margin-top:0.6rem; }
+.form-group label{ font-weight:600; color:var(--cor-texto-principal); font-size:0.95rem; }
+
+/* inputs padrão */
+.form-group input[type="text"], .form-group input[type="url"], .form-group input[type="number"]{
+  padding:0.65rem 0.9rem; border-radius:8px; border:1px solid var(--cor-borda); background:#fff; font-size:0.95rem; transition: box-shadow .12s ease, border-color .12s ease;
 }
-.modal-close:hover { color: var(--dark-gray); }
-.modal-content h2 { color: var(--primary-color); margin: 0 0 0.5rem 0; }
-.modal-content p { color: #6b7280; margin-bottom: 2rem; }
-.modal-content form { display: flex; flex-direction: column; gap: 1.25rem; }
-.form-group { display: flex; flex-direction: column; gap: 0.5rem; }
-.modal-content label { font-size: 0.9rem; font-weight: 600; }
-.modal-content input, .modal-content select {
-    padding: 0.8rem 1rem; border: 1px solid var(--medium-gray); border-radius: 10px;
-    font-size: 1rem; width: 100%; box-sizing: border-box; font-family: 'Poppins', sans-serif;
-    transition: border-color 0.2s, box-shadow 0.2s;
+.form-group input:focus, .form-group select:focus {
+  outline:none; border-color:var(--cor-primaria); box-shadow: 0 0 0 6px rgba(0,121,107,0.08);
 }
-.modal-content input:focus, .modal-content select:focus {
-    outline: none; border-color: var(--primary-color);
-    box-shadow: 0 0 0 3px var(--primary-light);
+
+/* input com ícone (ex: RA) */
+.form-group.com-icone { position:relative; }
+.form-group.com-icone i {
+  position:absolute; left:12px; top:50%; transform:translateY(-50%); color:var(--cor-texto-secundario); font-size:1rem; pointer-events:none;
 }
-.modal-buttons {
-    display: flex; justify-content: flex-end; gap: 1rem; margin-top: 1.5rem;
-    border-top: 1px solid var(--light-gray); padding-top: 1.5rem;
-}
-.modal-buttons button {
-    padding: 0.7rem 1.5rem; border-radius: 8px; font-weight: 600;
-    cursor: pointer; font-size: 0.9rem; border: none;
+.form-group.com-icone input { padding-left:40px; }
+
+/* botões dos modais */
+.modal-buttons{ display:flex; justify-content:flex-end; gap:0.6rem; margin-top:1rem; }
+.btn-cancelar{ padding:0.55rem 0.9rem; border-radius:8px; background:#e5e7eb; color:var(--cor-texto-principal); border:0; cursor:pointer; }
+.btn-confirmar{ padding:0.55rem 0.9rem; border-radius:8px; background:var(--cor-primaria); color:#fff; border:0; cursor:pointer; box-shadow:0 6px 18px rgba(0,121,107,0.12); }
+.btn-cancelar:hover{ filter:brightness(.98); }
+.btn-confirmar:hover{ background:var(--cor-primaria-hover); transform:translateY(-2px); }
+
+/* foco acessível */
+.turma-wrapper button:focus, .turma-wrapper a:focus, .turma-wrapper input:focus { box-shadow: 0 0 0 6px rgba(0,121,107,0.06); outline:none; }
+
+/* Responsividade */
+@media (max-width: 1024px){
+  .page-body{ flex-direction:column; padding:0 1rem 1.5rem 1rem; }
+  .sidebar{ width:100%; order:2; }
 }
 .btn-cancelar { background: #e5e7eb; color: var(--dark-gray); }
 .btn-confirmar { background: var(--primary-color); color: white; }

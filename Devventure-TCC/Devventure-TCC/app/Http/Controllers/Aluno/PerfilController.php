@@ -22,7 +22,7 @@ class PerfilController extends Controller
             'semestre' => ['required', 'string'],
             'email' => ['required', 'string', 'email', 'max:255', 'unique:aluno,email'],
             'password' => ['required', 'string', 'min:8', 'confirmed'],
-            'avatar' => ['nullable', 'image', 'mimes:jpg,jpeg,png', 'max:2048'],
+            'avatar' => ['required', 'image', 'mimes:jpg,jpeg,png', 'max:2048'],
         ]);
 
         $caminhoAvatar = null;

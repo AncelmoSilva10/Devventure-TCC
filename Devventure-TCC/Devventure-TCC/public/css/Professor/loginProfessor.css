@@ -62,9 +62,12 @@ body {
   align-items: center;
   margin: 0 auto 20px;
   border: 3px solid var(--border-color);
+cursor: pointer;
+  transition: border-color 0.3s ease;
 }
-.icon svg {
-  color: #888;
+
+.icon:hover {
+  border-color: var(--primary-color);
 }
 
 /* Título do formulário */
@@ -257,4 +260,30 @@ button[type="submit"]:hover {
 
 .password-feedback.valido {
     color: #00796B; /* Verde */
+}
+
+.password-feedback {
+    display: block;
+    margin-top: -15px; /* Puxa para mais perto da label */
+    margin-bottom: 8px;
+    font-size: 0.85rem;
+    font-weight: 500;
+    height: 1.2em; /* Altura fixa para não "pular" o layout */
+    transition: color 0.3s;
+}
+
+.password-feedback.invalido {
+    color: var(--error-color); /* Usa sua variável de erro */
+}
+
+.password-feedback.valido {
+    color: #28a745; /* Verde sucesso */
+}
+
+.error-feedback-js {
+    color: #e3342f; /* vermelho padrão do Laravel */
+    font-size: 0.85rem;
+    margin-top: 4px;
+    display: block;
+    font-weight: 500;
 }
