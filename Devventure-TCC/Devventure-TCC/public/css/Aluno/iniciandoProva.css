@@ -331,6 +331,6 @@ body {
     }
     .btn {
         width: 100%;
-        box-sizing: border-box; /* Para o padding não estourar */
+        box-sizing: border-box; 
     }
 }
