@@ -23,19 +23,6 @@
             <h2>Resultado da Prova: {{ $tentativa->prova->titulo }}</h2>
         </div>
 
-        @if (session('success'))
-            <div class="alert alert-success"><i class='bx bx-check-circle'></i> {{ session('success') }}</div>
-        @endif
-        @if (session('error'))
-            <div class="alert alert-danger"><i class='bx bx-error-alt'></i> {{ session('error') }}</div>
-        @endif
-        @if (session('info'))
-            <div class="alert alert-info"><i class='bx bx-info-circle'></i> {{ session('info') }}</div>
-        @endif
-        @if (session('warning'))
-            <div class="alert alert-warning"><i class='bx bx-error'></i> {{ session('warning') }}</div>
-        @endif
-
         <div class="content-grid">
 
             <div class="report-main-content">
@@ -107,5 +94,52 @@
         </div>
     </div>
     
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            
+            
+            @if (session('success'))
+                Swal.fire({
+                    title: 'Excelente!',
+                    text: "{{ session('success') }}",
+                    icon: 'success',
+                    confirmButtonText: 'Ver Resultados',
+                    confirmButtonColor: '#28a745' // Cor verde
+                });
+            @endif
+
+            @if (session('error'))
+                Swal.fire({
+                    title: 'Ops!',
+                    text: "{{ session('error') }}",
+                    icon: 'error',
+                    confirmButtonText: 'Ok',
+                    confirmButtonColor: '#dc3545'
+                });
+            @endif
+
+            @if (session('warning'))
+                Swal.fire({
+                    title: 'Atenção!',
+                    text: "{{ session('warning') }}",
+                    icon: 'warning',
+                    confirmButtonText: 'Entendi',
+                    confirmButtonColor: '#ffc107'
+                });
+            @endif
+
+            @if (session('info'))
+                Swal.fire({
+                    title: 'Informação',
+                    text: "{{ session('info') }}",
+                    icon: 'info',
+                    confirmButtonText: 'Ok',
+                    confirmButtonColor: '#17a2b8'
+                });
+            @endif
+        });
+    </script>
+
 </body>
 </html>

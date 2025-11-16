@@ -7,8 +7,8 @@ use App\Models\Aluno;
 use App\Models\Exercicio;
 use App\Models\RespostaExercicio;
 use App\Models\Turma;
-use App\Models\Prova; // <--- ADICIONADO IMPORT
-use App\Models\AlunoProvaTentativa; // <--- ADICIONADO IMPORT
+use App\Models\Prova;
+use App\Models\AlunoProvaTentativa;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -49,13 +49,39 @@ class RelatorioController extends Controller
             ->withAvg('respostas', 'nota')
             ->get();
             
-        // --- ADICIONADO: Estatísticas de Provas ---
+        // --- Estatísticas de Provas ---
         $mediaGeralProvas = AlunoProvaTentativa::whereHas('prova', function ($query) use ($turma) {
             $query->where('turma_id', $turma->id);
         })->whereNotNull('hora_fim')->avg('pontuacao_final'); // Média das provas finalizadas
 
+
+        // --- ADICIONADO: LÓGICA PARA CRIAR A $mediaGeral QUE A VIEW ESPERA ---
+        // Vamos calcular a média das duas médias (Exercícios e Provas)
+        $medias = [];
+        if (!is_null($mediaGeralExercicios)) {
+            $medias[] = $mediaGeralExercicios;
+        }
+        if (!is_null($mediaGeralProvas)) {
+            // Se a pontuação da prova for até 100, ok. Se for (ex: 10), normalize para 100.
+            // Assumindo que a pontuacao_final já é base 100, como os exercícios.
+            $medias[] = $mediaGeralProvas;
+        }
+
+        if (count($medias) > 0) {
+            // Calcula a média das médias disponíveis
+            $mediaGeral = array_sum($medias) / count($medias);
+        } else {
+            // Caso não haja nenhuma nota de exercício ou prova
+            $mediaGeral = 0;
+        }
+        // --- FIM DA ADIÇÃO ---
+
+
         return view('Professor.relatorios.index', compact(
-            'turma', 'mediaGeralExercicios', 'mediaGeralProvas', // <--- Média de provas adicionada
+            'turma', 
+            'mediaGeral', // <--- ADICIONADO: A variável que a view realmente espera
+            'mediaGeralExercicios', 
+            'mediaGeralProvas',
             'alunosDestaque', 'alunosAtencao',
             'desempenhoPorExercicio', 'taxaEngajamento', 'ultimoExercicio'
         ));
@@ -64,7 +90,7 @@ class RelatorioController extends Controller
     /**
      * Mostra o relatório individual de um aluno específico.
      */
-   public function relatorioAluno(Turma $turma, Aluno $aluno)
+    public function relatorioAluno(Turma $turma, Aluno $aluno)
     {
         if ($turma->professor_id !== Auth::guard('professor')->id()) {
             abort(403);
@@ -78,12 +104,12 @@ class RelatorioController extends Controller
             // --- CARREGAMENTO DE PROVAS AGORA MAIS PROFUNDO ---
             'tentativasProvas' => function($query) {
                 $query->whereNotNull('hora_fim') // Apenas tentativas finalizadas
-                      ->with([
-                          'prova', // Carrega a prova (para o título)
-                          'respostasQuestoes' => function($q) {
-                              $q->with('questao'); // Carrega as respostas individuais e suas questões
-                          }
-                      ]);
+                        ->with([
+                            'prova', // Carrega a prova (para o título)
+                            'respostasQuestoes' => function($q) {
+                                $q->with('questao'); // Carrega as respostas individuais e suas questões
+                            }
+                        ]);
             }
         ]);
 

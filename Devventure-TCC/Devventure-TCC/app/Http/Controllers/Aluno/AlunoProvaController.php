@@ -6,7 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Prova;
 use App\Models\ProvaQuestao;
 use App\Models\ProvaAlternativa;
-use App\Models\Turma; // Certifique-se de ter o Model Turma
+use App\Models\Turma; 
 use App\Models\AlunoProvaTentativa;
 use App\Models\AlunoRespostaProva;
 use Illuminate\Http\Request;

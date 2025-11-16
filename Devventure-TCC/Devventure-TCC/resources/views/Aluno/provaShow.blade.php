@@ -46,8 +46,6 @@
                             <p class="card-text">Nenhuma instrução específica fornecida.</p>
                         @endif
 
-                        <h3>Materiais de Apoio</h3>
-                        <p class="card-text">Nenhum material de apoio fornecido.</p>
 
                         <div class="button-group">
                             <button type="button" class="btn btn-secondary-custom" onclick="window.history.back()">

@@ -146,7 +146,7 @@
         /* =================================
            BOTÕES E ALERTAS
            ================================= */
-        .btn-custom {
+       .btn-custom {
             padding: 12px 25px;
             border-radius: 8px;
             cursor: pointer;
@@ -158,7 +158,10 @@
             align-items: center;
             justify-content: center;
             transition: background-color 0.2s ease, transform 0.2s ease;
-            width: 100%; /* Botão ocupa 100% da sidebar */
+            
+      
+            width: 100%; 
+            box-sizing: border-box; /* Faz o padding contar dentro da largura */
         }
         .btn-custom i {
             margin-right: 8px;
