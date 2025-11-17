@@ -107,7 +107,7 @@ document.addEventListener('DOMContentLoaded', function() {
             const newIndex = (currentIndex + 1) % cards.length;
             changeTestimonial(newIndex);
         }
-    }, 8000); // 8 segundos
+    }, 3000); // 8 segundos
     
     // --- 3. ENVIO DO FORMULÁRIO (novo) ---
    // --- 3. ENVIO DO FORMULÁRIO (novo) ---
