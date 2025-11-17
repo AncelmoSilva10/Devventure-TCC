@@ -111,13 +111,12 @@ document.addEventListener('DOMContentLoaded', function() {
     
     // --- 3. ENVIO DO FORMULÁRIO (novo) ---
    // --- 3. ENVIO DO FORMULÁRIO (novo) ---
+// --- 3. ENVIO DO FORMULÁRIO (CORRIGIDO PARA MODERAÇÃO) ---
 if (form) {
     form.addEventListener('submit', function (e) {
         e.preventDefault(); // Impede o recarregamento da página
 
-        // Pega a URL do atributo data-url (da correção anterior)
         const postUrl = form.dataset.url;
-
         const autorInput = document.getElementById('autorDepoimento');
         const textoInput = document.getElementById('textoDepoimento');
         const csrfToken = document.querySelector('input[name="_token"]').value;
@@ -146,25 +145,22 @@ if (form) {
         })
         .then(data => {
             if (data.success) {
-                // 1. Adiciona o novo depoimento ao DOM
-                adicionarDepoimentoAoDOM(data.depoimento);
-
-                // 2. Limpa o formulário e reseta o contador
+                // 1. Limpa o formulário e reseta o contador
                 form.reset();
                 if (charCounter) charCounter.textContent = '0/300';
 
-                // 3. RE-INICIALIZA O CARROSSEL
-                inicializarCarrossel();
-
-                // **** ALERTA DE SUCESSO COM SWEETALERT ****
+                // **** ALERTA DE SUCESSO CORRIGIDO ****
                 Swal.fire({
                     title: 'Enviado!',
-                    text: 'Seu depoimento foi enviado com sucesso.',
+                    // Esta é a mensagem que vem do seu Controller:
+                    text: data.message, // "Depoimento enviado para aprovação!"
                     icon: 'success',
-                    timer: 2000, // Fecha sozinho depois de 2 segundos
+                    timer: 3000, // 3 segundos
                     showConfirmButton: false
                 });
 
+                // REMOVIDO: adicionarDepoimentoAoDOM(data.depoimento);
+                // REMOVIDO: inicializarCarrossel();
             }
         })
         .catch(error => {
@@ -173,21 +169,18 @@ if (form) {
                 // Erros de validação (ex: campos vazios)
                 let errorMsg = 'Por favor, verifique os campos:<br><br>';
                 for (const field in error.errors) {
-                    errorMsg += `- ${error.errors[field][0]}<br>`; // Usa <br> para SweetAlert
+                    errorMsg += `- ${error.errors[field][0]}<br>`;
                 }
                 
-                // **** ALERTA DE VALIDAÇÃO COM SWEETALERT ****
                 Swal.fire({
                     title: 'Campos Inválidos',
-                    html: errorMsg, // Usa 'html' para renderizar o <br>
+                    html: errorMsg,
                     icon: 'error',
                     confirmButtonText: 'Entendi'
                 });
 
             } else {
-                // Erro genérico (404, 500, etc.)
-                
-                // **** ALERTA DE ERRO GENÉRICO COM SWEETALERT ****
+                // Este é o erro "Oops" que você estava vendo
                 Swal.fire({
                     title: 'Oops... Algo deu errado.',
                     text: 'Ocorreu um erro ao enviar seu depoimento. Tente novamente.',
@@ -203,29 +196,4 @@ if (form) {
         });
     });
 }
-
-    // --- 4. FUNÇÃO AUXILIAR PARA ADICIONAR CARD (nova) ---
-    function adicionarDepoimentoAoDOM(depoimento) {
-        // Escapa HTML simples para segurança
-        const textoEscapado = depoimento.texto.replace(/</g, "&lt;").replace(/>/g, "&gt;");
-        const autorEscapado = depoimento.autor.replace(/</g, "&lt;").replace(/>/g, "&gt;");
-
-        const newCardHTML = `
-            <div class="card-wrapper"> <div class="camada-fundo">
-                    <div class="card-fundo"></div>
-                    <div class="card-fundo"></div>
-                </div>
-                <div class="card-depoimento">
-                    <p>"${textoEscapado}"</p>
-                    <span>- ${autorEscapado}</span>
-                </div>
-            </div>
-        `;
-        
-        // Insere o novo card NO COMEÇO do container
-        containerDepoimentos.insertAdjacentHTML('afterbegin', newCardHTML);
-    }
-
-    // --- 5. INICIALIZAÇÃO (do seu código) ---
-    inicializarCarrossel();
 });

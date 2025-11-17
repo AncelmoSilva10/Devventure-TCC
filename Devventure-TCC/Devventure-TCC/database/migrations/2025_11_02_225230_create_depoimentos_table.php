@@ -12,7 +12,7 @@ return new class extends Migration
             $table->id();
             $table->string('autor');
             $table->text('texto');
-            $table->boolean('aprovado')->default(true); //utilizar para moderação de depoimentos
+            $table->boolean('aprovado')->default(false); //utilizar para moderação de depoimentos
             $table->timestamps();
         });
     }

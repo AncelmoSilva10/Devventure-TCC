@@ -23,7 +23,7 @@
                 <a href="{{ route('professor.turmas') }}" class="back-link"><i class='bx bx-chevron-left'></i> Voltar para Minhas Turmas</a>
                 <div class="header-info">
                     <h1>{{ $turma->nome_turma }}</h1>
-                    <p>Disciplina: {{ $turma->disciplina ?? 'Não especificada' }} | Turno: {{ ucfirst($turma->turno) }}</p>
+                    <p>Disciplina: Técnica de Programação e Algorítmo | Turno: {{ ucfirst($turma->turno) }}</p>
                 </div>
                 <div class="header-actions">
                     <button class="btn btn-secondary" id="btnAbrirModalAula"><i class='bx bx-video-plus'></i> Adicionar Aula</button>

@@ -20,15 +20,17 @@ body {
     font-family: 'Poppins', sans-serif;
 }
 
-/* Estilo Principal da Navbar */
+/* Estilo Principal da Navbar 
+  A MUDANÇA ESTÁ AQUI 
+*/
 .navbar {
-    background-color: transparent; 
+    background-color: var(--navbar-bg); /* <-- Alterado de 'transparent' */
     padding: 0 5%;
     top: 0;
     left: 0;
     width: 100%;
     z-index: 1000;
-    transition: background-color 0.4s ease, box-shadow 0.4s ease; /*  Adicionado transition para box-shadow */
+    transition: background-color 0.4s ease, box-shadow 0.4s ease; /* Adicionado transition para box-shadow */
 }
 
 /* Aplica a posição fixa APENAS na homepage */

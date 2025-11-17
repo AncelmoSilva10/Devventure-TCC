@@ -58,7 +58,7 @@
                         <h5>Sua Avaliação</h5>
                         <div class="form-grid">
                             <div class="form-group">
-                                <label for="conceito-{{ $resposta->id }}">Conceito</label>
+                                <label for="conceito-{{ $resposta->id }}">Nota</label>
                                 <select name="conceito" id="conceito-{{ $resposta->id }}" required>
                                     <option value="" disabled {{ !$resposta->conceito ? 'selected' : '' }}>Selecione</option>
                                     <option value="MB" {{ $resposta->conceito == 'MB' ? 'selected' : '' }}>MB (Muito Bom)</option>
@@ -68,7 +68,7 @@
                                 </select>
                             </div>
                             <div class="form-group">
-                                <label for="nota-{{ $resposta->id }}">Nota (0-100)</label>
+                                <label for="nota-{{ $resposta->id }}">Pontos (0-100)</label>
                                 <input type="number" name="nota" id="nota-{{ $resposta->id }}" value="{{ $resposta->nota }}" placeholder="Ex: 85" min="0" max="100" required>
                             </div>
                         </div>

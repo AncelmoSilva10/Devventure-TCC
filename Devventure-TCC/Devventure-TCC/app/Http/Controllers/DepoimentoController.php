@@ -20,15 +20,14 @@ class DepoimentoController extends Controller
         $depoimento = Depoimento::create([
             'texto' => $validated['texto'],
             'autor' => $validated['autor'],
-            'aprovado' => true, 
+            'aprovado' => false, // <-- MUDANÇA PRINCIPAL AQUI
         ]);
 
-        // Retorna o depoimento criado como JSON
-        // O JavaScript usará isso para adicionar o card na hora.
+        // Retorna uma resposta de sucesso para o JavaScript
+        // Removi o objeto 'depoimento' para que o JS não o adicione na tela.
         return response()->json([
             'success' => true,
-            'message' => 'Depoimento enviado com sucesso!',
-            'depoimento' => $depoimento
+            'message' => 'Depoimento enviado para aprovação!', 
         ]);
     }
 }

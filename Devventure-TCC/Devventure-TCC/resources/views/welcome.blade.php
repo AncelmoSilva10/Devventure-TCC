@@ -136,21 +136,24 @@
         <div class="carrossel-depoimentos">
             <div class="container-depoimentos" id="containerDepoimentos">
                 
-                {{-- 1. Exibe os depoimentos que vêm do banco --}}
-                @if(isset($depoimentos) && $depoimentos->count() > 0)
-                    @foreach($depoimentos as $depoimento)
-                        <div class="card-wrapper">
-                            <div class="camada-fundo">
-                                <div class="card-fundo"></div>
-                                <div class="card-fundo"></div>
-                            </div>
-                            <div class="card-depoimento">
-                                <p>"{{ $depoimento->texto }}"</p>
-                                <span>- {{ $depoimento->autor }}</span>
-                            </div>
-                        </div>
-                    @endforeach
-                @endif
+              {{-- 1. Exibe os depoimentos que vêm do banco --}}
+    @if(isset($depoimentos) && $depoimentos->count() > 0)
+        @foreach($depoimentos as $depoimento)
+        
+            @if($depoimento->aprovado)
+                <div class="card-wrapper">
+                    <div class="camada-fundo">
+                        <div class="card-fundo"></div>
+                        <div class="card-fundo"></div>
+                    </div>
+                    <div class="card-depoimento">
+                        <p>"{{ $depoimento->texto }}"</p>
+                        <span>- {{ $depoimento->autor }}</span>
+                    </div>
+                </div>
+            @endif
+            @endforeach
+    @endif
 
                 {{-- 2. Exibe o depoimento fixo (sempre) --}}
                 <div class="card-wrapper">
