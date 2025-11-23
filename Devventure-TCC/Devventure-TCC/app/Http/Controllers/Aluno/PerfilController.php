@@ -76,7 +76,7 @@ class PerfilController extends Controller
                 'string',
                 'email',
                 'max:255',
-                Rule::unique('alunos')->ignore($aluno->id),
+                Rule::unique('aluno')->ignore($aluno->id),
             ],
             'telefone' => 'nullable|string|max:20',
             'avatar' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
