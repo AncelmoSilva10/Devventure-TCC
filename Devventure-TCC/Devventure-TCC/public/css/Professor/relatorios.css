@@ -1,129 +1,324 @@
 /* =================================
-   CONFIGURAÇÕES GLOBAIS
+   RESET E CONFIGURAÇÕES GLOBAIS
    ================================= */
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap');
+
+* {
+    box-sizing: border-box; /* CRUCIAL: Impede que padding quebre o layout */
+}
 
 :root {
     --primary-color: #00796b;
     --primary-light: #e0f2f1;
-    --danger-color: #ef4444;
-    --light-gray: #f1f5f9;
-    --medium-gray: #e2e8f0;
-    --dark-gray: #475569;
-    --text-color: #1e293b;
-    --white-color: #ffffff;
+    --bg-color: #f8fafc;
+    --card-bg: #ffffff;
+    --text-primary: #334155;
+    --text-secondary: #64748b;
     --border-radius: 12px;
-    --box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+    --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
 }
 
 body {
     font-family: 'Poppins', sans-serif;
-    background-color: var(--light-gray);
-    color: var(--text-color);
+    background-color: var(--bg-color);
+    color: var(--text-primary);
     margin: 0;
+    padding: 0;
 }
 
 /* =================================
-   LAYOUT PRINCIPAL
+   WRAPPER PRINCIPAL
    ================================= */
 .reports-wrapper {
-    max-width: 1400px;
+    max-width: 1300px; /* Limita a largura para não esticar demais em telas 4k */
     margin: 0 auto;
     padding: 2rem;
 }
 
+/* =================================
+   HEADER (TÍTULO E BOTÕES)
+   ================================= */
 .reports-header {
     margin-bottom: 2rem;
 }
-.back-link {
-    display: inline-flex; align-items: center; gap: 0.5rem;
-    text-decoration: none; color: var(--dark-gray); font-weight: 600; margin-bottom: 1rem;
-}
-.header-info h1 {
-    font-size: 2.25rem; margin: 0; display: flex; align-items: center; gap: 1rem; color: var(--primary-color);
-}
-.header-info p { font-size: 1.2rem; color: #64748b; margin-top: 0.25rem; }
 
-.reports-grid {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    grid-template-rows: auto;
+.back-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    
+    /* Tamanho e Forma */
+    padding: 0.6rem 1.25rem;
+    background-color: var(--card-bg); /* Fundo branco */
+    border-radius: 50px; /* Formato Pílula */
+    margin-bottom: 2rem;
+    
+    /* Texto e Cores */
+    text-decoration: none;
+    color: var(--text-secondary);
+    font-weight: 600;
+    font-size: 0.9rem;
+    
+    /* Bordas e Sombras */
+    border: 1px solid transparent; /* Prepara para o hover */
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05); /* Sombra suave */
+    transition: all 0.2s ease;
+}
+
+.back-link i {
+    font-size: 1.2rem; /* Ícone um pouco maior */
+}
+
+/* Efeito ao passar o mouse */
+.back-link:hover {
+    color: var(--primary-color);
+    border-color: var(--primary-light);
+    background-color: #f0fdfa; /* Um verde muito suave (quase branco) */
+    transform: translateX(-4px); /* Move levemente para a esquerda */
+    box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1);
+}
+.header-content-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    flex-wrap: wrap; /* Permite quebrar linha no mobile */
     gap: 1.5rem;
 }
-@media (max-width: 1200px) { .reports-grid { grid-template-columns: repeat(2, 1fr); } }
-@media (max-width: 768px) { .reports-grid { grid-template-columns: 1fr; } }
+
+.header-info h1 {
+    font-size: 1.8rem; /* Reduzi um pouco para ficar mais proporcional */
+    margin: 0;
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+    color: var(--text-primary);
+}
+
+.header-info p {
+    margin: 0.2rem 0 0 0;
+    color: var(--text-secondary);
+    font-size: 1rem;
+}
+
+/* Botões de Exportação */
+.header-actions {
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+    background: white;
+    padding: 0.5rem 1rem;
+    border-radius: 10px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+}
+
+.export-label {
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: var(--text-secondary);
+    margin-right: 5px;
+}
+
+.btn-export {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.5rem 1rem;
+    border-radius: 6px;
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 0.85rem;
+    transition: transform 0.2s, background 0.2s;
+}
+
+.btn-export.pdf {
+    background-color: #fff1f2;
+    color: #e11d48;
+    border: 1px solid #fecdd3;
+}
+.btn-export.csv {
+    background-color: #f0fdf4;
+    color: #15803d;
+    border: 1px solid #bbf7d0;
+}
+.btn-export:hover { transform: translateY(-2px); }
+
+/* =================================
+   GRID DO DASHBOARD (AQUI ESTÁ A CORREÇÃO DOS CARDS COLADOS)
+   ================================= */
+.reports-grid {
+    display: grid;
+    /* Define 4 colunas de tamanho igual */
+    grid-template-columns: repeat(4, 1fr); 
+    /* Define o espaçamento entre os cards */
+    gap: 1.5rem; 
+    margin-top: 1rem;
+}
+
+/* Controle de Tamanho dos Cards */
+.card-media { grid-column: span 1; }
+.card-engajamento { grid-column: span 1; }
+.card-destaques { grid-column: span 2; }
+.card-atencao { grid-column: span 2; }
+/* O gráfico agora ocupa 2 colunas para não ficar esticado demais, 
+   ou use span 4 se quiser a linha toda */
+.card-grafico { grid-column: span 2; } 
 
 
 /* =================================
    ESTILO DOS CARDS
    ================================= */
 .card {
-    background-color: var(--white-color);
+    background-color: var(--card-bg);
     border-radius: var(--border-radius);
-    box-shadow: var(--box-shadow);
     padding: 1.5rem;
+    box-shadow: var(--shadow);
+    border: 1px solid #e2e8f0;
     display: flex;
     flex-direction: column;
+    height: 100%; /* Garante que preencham a altura da linha do grid */
 }
+
 .card-header {
     display: flex;
     justify-content: space-between;
-    align-items: flex-start;
+    align-items: center;
     margin-bottom: 1rem;
 }
+
 .card h3 {
     margin: 0;
-    font-size: 1.1rem;
+    font-size: 1rem;
     font-weight: 600;
-    display: flex; align-items: center; gap: 0.5rem;
-}
-.card-icon {
-    font-size: 1.75rem;
-    color: var(--primary-color);
-    opacity: 0.7;
+    color: var(--text-primary);
 }
 
-.card-body .main-metric {
-    font-size: 3rem;
-    font-weight: 700;
+.card-icon {
+    font-size: 1.4rem;
     color: var(--primary-color);
+    background: var(--primary-light);
+    padding: 8px;
+    border-radius: 8px;
 }
-.card-body small {
-    color: var(--dark-gray);
-}
-.card-media, .card-engajamento {
+
+/* Corpo dos Cards */
+.card-body {
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
     justify-content: center;
+}
+
+.card-media .card-body, .card-engajamento .card-body {
+    align-items: center;
     text-align: center;
 }
 
-/* --- Cards de Listas de Utilizadores --- */
+/* Métricas (Fonte ajustada para não ficar gigante) */
+.main-metric {
+    font-size: 2.5rem; /* Reduzido de 3.5rem */
+    font-weight: 700;
+    color: var(--primary-color);
+    line-height: 1.2;
+}
+
+.main-metric small {
+    font-size: 1rem;
+    color: var(--text-secondary);
+    font-weight: 500;
+}
+
+/* Listas de Alunos */
 .user-list {
-    list-style: none; padding: 0; margin: 0;
-    display: flex; flex-direction: column; gap: 1rem;
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.8rem;
 }
+
 .user-list a {
-    display: flex; align-items: center; gap: 1rem;
-    text-decoration: none; color: var(--text-color);
-    padding: 0.5rem; border-radius: 8px; transition: background-color 0.2s;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    text-decoration: none;
+    color: var(--text-primary);
+    padding: 0.6rem;
+    border-radius: 8px;
+    background-color: #f8fafc;
+    transition: background 0.2s;
 }
-.user-list a:hover { background-color: var(--light-gray); }
-.avatar { width: 40px; height: 40px; border-radius: 50%; object-fit: cover; }
-.user-name { font-weight: 500; flex-grow: 1; }
-.user-points { font-weight: 600; }
-.low-score { color: var(--danger-color); }
+.user-list a:hover { background-color: #f1f5f9; }
 
-.card-destaques { grid-column: span 2; }
-.card-atencao { grid-column: span 2; }
+.avatar {
+    width: 36px; height: 36px;
+    border-radius: 50%;
+    object-fit: cover;
+}
 
-/* --- Card do Gráfico --- */
+.user-name {
+    font-size: 0.9rem;
+    font-weight: 500;
+    flex-grow: 1;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.user-points {
+    font-size: 0.85rem;
+    font-weight: 700;
+    color: var(--primary-color);
+}
+.low-score {
+    color: #dc2626;
+    background: #fef2f2;
+    padding: 2px 8px;
+    border-radius: 4px;
+    font-size: 0.75rem;
+}
+
+
+/* =================================
+   CORREÇÃO DO GRÁFICO (IMPORTANTE)
+   ================================= */
 .card-grafico {
-    grid-column: 1 / -1; /* Ocupa a largura toda */
-    min-height: 400px;
+    /* Define uma altura mínima apenas para o card, não pro gráfico esticar */
+    min-height: auto; 
 }
+
 .chart-container {
     position: relative;
-    height: 100%;
     width: 100%;
+    /* AQUI ESTÁ O SEGREDO: Fixar a altura do container do gráfico */
+    height: 300px; 
 }
 
-.empty-message { text-align: center; color: var(--dark-gray); padding: 1rem; }
+
+/* =================================
+   RESPONSIVIDADE
+   ================================= */
+@media (max-width: 1200px) {
+    .reports-grid {
+        grid-template-columns: repeat(2, 1fr); /* 2 colunas em telas médias */
+    }
+    .card-media, .card-engajamento { grid-column: span 1; }
+    .card-destaques, .card-atencao, .card-grafico { grid-column: span 2; }
+}
+
+@media (max-width: 768px) {
+    .reports-wrapper { padding: 1rem; }
+    .reports-grid {
+        grid-template-columns: 1fr; /* 1 coluna no celular */
+        gap: 1rem;
+    }
+    .card-media, .card-engajamento, 
+    .card-destaques, .card-atencao, 
+    .card-grafico { grid-column: span 1; }
+    
+    .header-content-row {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+    .header-actions { width: 100%; justify-content: space-between; }
+}

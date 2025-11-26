@@ -15,15 +15,30 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body>
+<header class="reports-header">
+    <a href="{{ route('turmas.especificaID', $turma) }}" class="back-link">
+        <i class='bx bx-chevron-left'></i> Voltar para a Turma
+    </a>
 
-<div class="reports-wrapper">
-    <header class="reports-header">
-        <a href="{{ route('turmas.especificaID', $turma) }}" class="back-link"><i class='bx bx-chevron-left'></i> Voltar para a Turma</a>
+    <div class="header-content-row">
         <div class="header-info">
             <h1><i class='bx bxs-bar-chart-alt-2'></i> Relatórios de Desempenho</h1>
             <p>{{ $turma->nome_turma }}</p>
         </div>
-    </header>
+
+        <div class="header-actions">
+            <span class="export-label">Exportar:</span>
+            
+            <a href="{{ route('professor.relatorios.exportar', ['turma' => $turma->id, 'formato' => 'pdf']) }}" class="btn-export pdf" target="_blank">
+                <i class='bx bxs-file-pdf'></i> PDF
+            </a>
+            
+            <a href="{{ route('professor.relatorios.exportar', ['turma' => $turma->id, 'formato' => 'csv']) }}" class="btn-export csv">
+                <i class='bx bxs-spreadsheet'></i> Excel
+            </a>
+        </div>
+    </div>
+</header>
 
     <div class="reports-grid">
        

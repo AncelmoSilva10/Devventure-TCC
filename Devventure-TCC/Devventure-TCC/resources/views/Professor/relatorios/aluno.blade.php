@@ -18,12 +18,27 @@
 
     <div class="reports-wrapper">
         <header class="reports-header">
-            <a href="{{ route('turmas.especificaID', $turma) }}" class="back-link"><i class='bx bx-chevron-left'></i> Voltar para Turma</a>
-            <div class="header-info">
-                <h1>Relatório Individual</h1>
-                <p>{{ $aluno->nome }} - {{ $turma->nome_turma }}</p>
-            </div>
-        </header>
+    <a href="{{ route('turmas.especificaID', $turma) }}" class="back-link">
+        <i class='bx bx-chevron-left'></i> Voltar para Turma
+    </a>
+
+    <div class="header-content-row" style="display: flex; justify-content: space-between; align-items: flex-end; flex-grow: 1; margin-left: 20px;">
+        <div class="header-info">
+            <h1>Relatório Individual</h1>
+            <p>{{ $aluno->nome }} - {{ $turma->nome_turma }}</p>
+        </div>
+
+        <div class="header-actions" style="display: flex; gap: 10px;">
+            <a href="{{ route('professor.relatorios.exportarIndividual', ['turma' => $turma->id, 'aluno' => $aluno->id, 'formato' => 'pdf']) }}" class="btn-export pdf" target="_blank">
+                <i class='bx bxs-file-pdf'></i> PDF
+            </a>
+            
+            <a href="{{ route('professor.relatorios.exportarIndividual', ['turma' => $turma->id, 'aluno' => $aluno->id, 'formato' => 'csv']) }}" class="btn-export csv">
+                <i class='bx bxs-spreadsheet'></i> Excel
+            </a>
+        </div>
+    </div>
+</header>
 
         <main class="report-aluno-grid">
             <div class="report-main-content"> 

@@ -11,7 +11,9 @@ use App\Models\Prova;
 use App\Models\AlunoProvaTentativa;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-
+use Barryvdh\DomPDF\Facade\Pdf;
+use Illuminate\Support\Facades\Response;
+use Carbon\Carbon;
 class RelatorioController extends Controller
 {
     /**
@@ -115,4 +117,167 @@ class RelatorioController extends Controller
 
         return view('Professor.relatorios.aluno', compact('turma', 'aluno'));
     }
+
+    public function exportar(Request $request, Turma $turma)
+{
+    if ($turma->professor_id !== Auth::guard('professor')->id()) {
+        abort(403);
+    }
+
+    $formato = $request->query('formato');
+
+    
+    $exercicios = $turma->exercicios()->orderBy('created_at')->get();
+
+    
+    $alunos = $turma->alunos()
+        ->with(['respostasExercicios'])
+        ->orderBy('nome')
+        ->get();
+
+    $fileName = 'Relatorio_Geral_' . str_replace(' ', '_', $turma->nome_turma) . '_' . date('d-m-Y');
+
+    // --- LÓGICA PARA CSV (EXCEL) ---
+    if ($formato === 'csv') {
+        $headers = [
+            "Content-type"        => "text/csv",
+            "Content-Disposition" => "attachment; filename=$fileName.csv",
+            "Pragma"              => "no-cache",
+            "Cache-Control"       => "must-revalidate, post-check=0, pre-check=0",
+            "Expires"             => "0"
+        ];
+
+       
+        $columns = ['Nome do Aluno', 'Pontuação Geral'];
+        foreach ($exercicios as $ex) {
+            $columns[] = $ex->nome; 
+        }
+
+        $callback = function() use($alunos, $exercicios, $columns) {
+            $file = fopen('php://output', 'w');
+            
+            
+            fputs($file, "\xEF\xBB\xBF"); 
+
+            
+            fputcsv($file, $columns, ';'); 
+
+            foreach ($alunos as $aluno) {
+                $row = [
+                    $aluno->nome,
+                    $aluno->total_pontos
+                ];
+
+                foreach ($exercicios as $ex) {
+                   
+                    $resposta = $aluno->respostasExercicios->where('exercicio_id', $ex->id)->first();
+                    
+                    if ($resposta) {
+                        
+                        $row[] = number_format($resposta->nota, 1, ',', ''); 
+                    } else {
+                        $row[] = 'PENDENTE';
+                    }
+                }
+
+               
+                fputcsv($file, $row, ';');
+            }
+            fclose($file);
+        };
+
+        return Response::stream($callback, 200, $headers);
+    }
+
+    // --- LÓGICA PARA PDF ---
+    if ($formato === 'pdf') {
+        
+        $orientation = $exercicios->count() > 5 ? 'landscape' : 'portrait';
+
+        $pdf = Pdf::loadView('Professor.relatorios.pdf_export', [
+            'turma' => $turma,
+            'alunos' => $alunos,
+            'exercicios' => $exercicios
+        ])->setPaper('a4', $orientation);
+
+        return $pdf->download($fileName . '.pdf');
+    }
+
+    return back();
+}
+
+public function exportarIndividual(Request $request, Turma $turma, Aluno $aluno)
+{
+    if ($turma->professor_id !== Auth::guard('professor')->id()) {
+        abort(403);
+    }
+
+    $formato = $request->query('formato'); // 'pdf' ou 'csv'
+
+    // 1. Pega TODOS os exercícios da turma (ordenados por data)
+    $exercicios = $turma->exercicios()->orderBy('created_at')->get();
+
+    // 2. Carrega as respostas desse aluno
+    $aluno->load('respostasExercicios');
+
+    // 3. Monta o array de dados combinados (Exercício + Status)
+    $dadosRelatorio = $exercicios->map(function($exercicio) use ($aluno) {
+        // Tenta encontrar a resposta do aluno para este exercício
+        $resposta = $aluno->respostasExercicios->where('exercicio_id', $exercicio->id)->first();
+
+        return [
+            'titulo' => $exercicio->nome, // Ou $exercicio->titulo
+            'data_envio' => $resposta ? $resposta->created_at->format('d/m/Y H:i') : '-',
+            'nota' => $resposta ? number_format($resposta->nota, 1, ',', '') : '-',
+            'status' => $resposta ? 'Entregue' : 'PENDENTE',
+            'conceito' => $resposta && $resposta->conceito ? $resposta->conceito : '-'
+        ];
+    });
+
+    $fileName = 'Relatorio_' . str_replace(' ', '_', $aluno->nome) . '_' . date('d-m-Y');
+
+    // --- LÓGICA EXCEL (CSV) ---
+    if ($formato === 'csv') {
+        $headers = [
+            "Content-type" => "text/csv",
+            "Content-Disposition" => "attachment; filename=$fileName.csv",
+            "Pragma" => "no-cache",
+            "Expires" => "0"
+        ];
+
+        $columns = ['Exercício', 'Status', 'Data de Envio', 'Nota', 'Conceito'];
+
+        $callback = function() use($dadosRelatorio, $columns) {
+            $file = fopen('php://output', 'w');
+            fputs($file, "\xEF\xBB\xBF"); // BOM para acentos
+            fputcsv($file, $columns, ';'); // Cabeçalho
+
+            foreach ($dadosRelatorio as $row) {
+                fputcsv($file, [
+                    $row['titulo'],
+                    $row['status'],
+                    $row['data_envio'],
+                    $row['nota'],
+                    $row['conceito']
+                ], ';');
+            }
+            fclose($file);
+        };
+
+        return Response::stream($callback, 200, $headers);
+    }
+
+    // --- LÓGICA PDF ---
+    if ($formato === 'pdf') {
+        $pdf = Pdf::loadView('Professor.relatorios.pdf_aluno_individual', [
+            'turma' => $turma,
+            'aluno' => $aluno,
+            'dados' => $dadosRelatorio
+        ]);
+
+        return $pdf->download($fileName . '.pdf');
+    }
+
+    return back();
+}
 }

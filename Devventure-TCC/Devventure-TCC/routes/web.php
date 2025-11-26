@@ -21,6 +21,7 @@ use App\Http\Controllers\Aluno\ExercicioAlunoController;
 use App\Http\Controllers\Professor\AvisoController;
 use App\Http\Controllers\DepoimentoController;
 use App\Models\Depoimento;
+use App\Http\Controllers\Professor\RelatorioController;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -167,6 +168,11 @@ Route::middleware(['auth:professor'])->group(function () {
     Route::get('/professor/avisos/criar', [AvisoController::class, 'create'])->name('professor.avisos.create');
     Route::post('/professor/avisos', [AvisoController::class, 'store'])->name('professor.avisos.store');
 
+    Route::get('/professor/turma/{turma}/relatorios/exportar', [RelatorioController::class, 'exportar'])
+    ->name('professor.relatorios.exportar');
+
+    Route::get('/professor/turma/{turma}/aluno/{aluno}/relatorio/exportar', [RelatorioController::class, 'exportarIndividual'])
+    ->name('professor.relatorios.exportarIndividual');
 });
 
 

@@ -261,3 +261,78 @@ main { margin-bottom: 3rem; }
     color: #dc3545;
     font-weight: 600;
 }
+
+.header-actions {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem; /* Espaço entre os botões */
+}
+
+/* Estilo Base do Botão */
+.btn-export {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem; /* Espaço entre ícone e texto */
+    
+    padding: 0.6rem 1.2rem;
+    border-radius: 8px; /* Bordas arredondadas modernas */
+    
+    font-weight: 600;
+    font-size: 0.9rem;
+    text-decoration: none;
+    line-height: 1;
+    
+    border: 1px solid transparent;
+    transition: all 0.2s ease;
+    box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+}
+
+.btn-export i {
+    font-size: 1.2rem; /* Tamanho do ícone */
+}
+
+/* --- Botão PDF (Vermelho) --- */
+.btn-export.pdf {
+    background-color: #fee2e2; /* Fundo Vermelho Claro */
+    color: #991b1b;           /* Texto Vermelho Escuro */
+    border-color: #fecaca;    /* Borda sutil */
+}
+
+.btn-export.pdf:hover {
+    background-color: #fecaca;
+    transform: translateY(-2px); /* Efeito de subir */
+    box-shadow: 0 4px 6px -1px rgba(153, 27, 27, 0.15);
+}
+
+/* --- Botão Excel/CSV (Verde) --- */
+.btn-export.csv {
+    background-color: #dcfce7; /* Fundo Verde Claro */
+    color: #166534;           /* Texto Verde Escuro */
+    border-color: #bbf7d0;
+}
+
+.btn-export.csv:hover {
+    background-color: #bbf7d0;
+    transform: translateY(-2px); /* Efeito de subir */
+    box-shadow: 0 4px 6px -1px rgba(22, 101, 52, 0.15);
+}
+
+/* Responsividade para Mobile */
+@media (max-width: 768px) {
+    .header-content-row {
+        flex-direction: column;
+        align-items: flex-start !important;
+        gap: 1rem;
+    }
+    
+    .header-actions {
+        width: 100%;
+        display: grid;
+        grid-template-columns: 1fr 1fr; /* Divide em 2 colunas iguais */
+    }
+    
+    .btn-export {
+        width: 100%; /* Botão ocupa largura total da coluna */
+    }
+}
