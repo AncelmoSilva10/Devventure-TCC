@@ -27,52 +27,64 @@ class ProvasController extends Controller
     }
 
 
-    public function store(Request $request)
-    {
-        // request de validação básica
-        $request->validate([
-            'turma_id' => 'required|exists:turmas,id', 
-            'titulo' => 'required|string|max:255',
-            'instrucoes' => 'nullable|string',
-            'data_abertura' => 'required|date',
-            'data_fechamento' => 'required|date|after:data_abertura',
-            'duracao_minutos' => 'required|integer|min:1',
-            'questoes' => 'required|array|min:1',
-        ]);
+   public function store(Request $request)
+{
+    
+    $request->validate([
+        'turma_id' => 'required|exists:turmas,id', 
+        'titulo' => 'required|string|max:255',
+        'instrucoes' => 'nullable|string',
+        'data_abertura' => 'required|date',
+        'data_fechamento' => 'required|date|after:data_abertura',
+        'duracao_minutos' => 'required|integer|min:1',
+        'questoes' => 'required|array|min:1',
+        
+        // Validação específica para cada imagem dentro do array de questões
+        'questoes.*.imagem' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:5120', // Máx 5MB
+    ]);
 
-        // criacao da prova
-        $prova = Prova::create([
-            'turma_id' => $request->turma_id,
-            'titulo' => $request->titulo,
-            'instrucoes' => $request->instrucoes,
-            'data_abertura' => $request->data_abertura,
-            'data_fechamento' => $request->data_fechamento,
-            'duracao_minutos' => $request->duracao_minutos,
-        ]);
+    $prova = Prova::create([
+        'turma_id' => $request->turma_id,
+        'titulo' => $request->titulo,
+        'instrucoes' => $request->instrucoes,
+        'data_abertura' => $request->data_abertura,
+        'data_fechamento' => $request->data_fechamento,
+        'duracao_minutos' => $request->duracao_minutos,
+    ]);
 
-        //  looping para criar as questoes
-        foreach ($request->questoes as $questaoData) {
-            $questao = $prova->questoes()->create([
-                'enunciado' => $questaoData['enunciado'],
-                'tipo_questao' => $questaoData['tipo_questao'],
-                'pontuacao' => $questaoData['pontuacao'] ?? 1.0,
-            ]);
+    
+    foreach ($request->questoes as $index => $questaoData) {
+        
+        $caminhoImagem = null;
 
-            // caso for multipla escolha, cria as alternativas
-            if ($questaoData['tipo_questao'] == 'multipla_escolha' && isset($questaoData['alternativas'])) {
-                foreach ($questaoData['alternativas'] as $index => $alternativaData) {
-                    $questao->alternativas()->create([
-                        'texto_alternativa' => $alternativaData['texto'],
-                        'correta' => (isset($questaoData['alternativa_correta']) && $index == $questaoData['alternativa_correta']), 
-                    ]);
-                }
-            }
+       
+        if ($request->hasFile("questoes.$index.imagem")) {
+     
+            $caminhoImagem = $request->file("questoes.$index.imagem")->store('questoes_apoio', 'public');
         }
 
-        return redirect()->route('professorDashboard')
-                         ->with('sweet_success', 'Prova criada com sucesso!');
+        $questao = $prova->questoes()->create([
+            'enunciado' => $questaoData['enunciado'],
+            'imagem_apoio' => $caminhoImagem, 
+            'tipo_questao' => $questaoData['tipo_questao'],
+            'pontuacao' => $questaoData['pontuacao'] ?? 1.0,
+        ]);
+
+      
+        if ($questaoData['tipo_questao'] == 'multipla_escolha' && isset($questaoData['alternativas'])) {
+            foreach ($questaoData['alternativas'] as $idxAlt => $alternativaData) {
+                $questao->alternativas()->create([
+                    'texto_alternativa' => $alternativaData['texto'],
+                   
+                    'correta' => (isset($questaoData['alternativa_correta']) && $idxAlt == $questaoData['alternativa_correta']), 
+                ]);
+            }
+        }
     }
-    
+
+    return redirect()->route('professorDashboard')
+                     ->with('sweet_success', 'Prova criada com sucesso!');
+}
 
     public function resultados(Turma $turma, Prova $prova) 
     {

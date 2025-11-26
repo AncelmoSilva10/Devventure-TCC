@@ -14,6 +14,7 @@ class ProvaQuestao extends Model
     protected $fillable = [
         'prova_id',
         'enunciado',
+        'imagem_apoio',
         'tipo_questao',
         'pontuacao'
     ];

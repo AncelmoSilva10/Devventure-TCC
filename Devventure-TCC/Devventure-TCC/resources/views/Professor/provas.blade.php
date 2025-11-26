@@ -17,7 +17,7 @@
 <body>
 
     <div class="container">
-        <form action="{{ route('professor.provas.store') }}" method="POST">
+        <form action="{{ route('professor.provas.store') }}" method="POST" enctype="multipart/form-data">
             @csrf
             
             <div class="content-grid">
@@ -131,17 +131,26 @@
                 const questaoDiv = document.createElement('div');
                 questaoDiv.className = 'card mb-4';
                 questaoDiv.innerHTML = `
-                    <div class="card-header d-flex justify-content-between align-items-center">
-                        Questão #${currentQuestaoIndex + 1}
-                        <button type="button" class="btn btn-danger-custom btn-sm remove-questao-btn">&times;</button>
-                    </div>
-                    <div class="card-body">
-                        <div class="mb-3">
-                            <label class="form-label">Enunciado da Questão *</label>
-                            <textarea name="questoes[${currentQuestaoIndex}][enunciado]" class="form-control" rows="3" required>${initialData.enunciado || ''}</textarea>
-                        </div>
-                        <div class="row">
-                            <div class="col-md-6 mb-3">
+    <div class="card-header d-flex justify-content-between align-items-center">
+        Questão #${currentQuestaoIndex + 1}
+        <button type="button" class="btn btn-danger-custom btn-sm remove-questao-btn">&times;</button>
+    </div>
+    <div class="card-body">
+        <div class="mb-3">
+            <label class="form-label">Enunciado da Questão *</label>
+            <textarea name="questoes[${currentQuestaoIndex}][enunciado]" class="form-control" rows="3" required>${initialData.enunciado || ''}</textarea>
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label"><i class='bx bx-image-add'></i> Imagem de Apoio (Opcional)</label>
+            <input type="file" name="questoes[${currentQuestaoIndex}][imagem]" class="form-control" accept="image/*" onchange="previewImage(this, ${currentQuestaoIndex})">
+            <div id="preview-container-${currentQuestaoIndex}" class="mt-2" style="display:none;">
+                <img id="preview-img-${currentQuestaoIndex}" src="" alt="Pré-visualização" style="max-height: 200px; border-radius: 8px; border: 1px solid #ddd;">
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-6 mb-3">
                                 <label class="form-label">Tipo de Questão *</label>
                                 <select name="questoes[${currentQuestaoIndex}][tipo_questao]" class="form-select tipo-questao-select" data-index="${currentQuestaoIndex}" required>
                                     <option value="multipla_escolha" ${initialData.tipo_questao === 'multipla_escolha' ? 'selected' : ''}>Múltipla Escolha</option>
@@ -236,6 +245,22 @@
                 addQuestao();
             }
         });
+        function previewImage(input, index) {
+    const previewContainer = document.getElementById(`preview-container-${index}`);
+    const previewImg = document.getElementById(`preview-img-${index}`);
+
+    if (input.files && input.files[0]) {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            previewImg.src = e.target.result;
+            previewContainer.style.display = 'block';
+        }
+        reader.readAsDataURL(input.files[0]);
+    } else {
+        previewImg.src = '';
+        previewContainer.style.display = 'none';
+    }
+}
     </script>
 
     @if (session('sweet_success'))

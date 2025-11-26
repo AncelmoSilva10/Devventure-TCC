@@ -38,35 +38,48 @@
                 
                 @foreach($prova->questoes as $index => $questao)
                     <div class="card-questao">
-                        <h4>Questão {{ $index + 1 }}: ({{ $questao->pontuacao }} pts)</h4>
-                        <p>{!! nl2br(e($questao->enunciado)) !!}</p>
-                        
-                        @if($questao->tipo_questao == 'multipla_escolha')
-                            
-                            @foreach($questao->alternativas as $alternativa)
-                                <div>
-                                    <input type="radio" 
-                                           name="respostas[{{ $questao->id }}]" 
-                                           value="{{ $alternativa->id }}" 
-                                           id="alt-{{ $alternativa->id }}-{{ $tentativa->id }}"
-                                           {{ (isset($respostasSalvas[$questao->id]) && $respostasSalvas[$questao->id] == $alternativa->id) ? 'checked' : '' }}
-                                           >
+    <h4>Questão {{ $index + 1 }}: ({{ $questao->pontuacao }} pts)</h4>
+    
+    {{-- Enunciado --}}
+    <p>{!! nl2br(e($questao->enunciado)) !!}</p>
+    
+    {{-- === CÓDIGO NOVO: EXIBIÇÃO DA IMAGEM === --}}
+    @if($questao->imagem_apoio)
+        <div style="margin: 15px 0; text-align: center;">
+            <img src="{{ asset('storage/' . $questao->imagem_apoio) }}" 
+                 alt="Imagem de apoio" 
+                 class="img-fluid"
+                 style="max-width: 100%; max-height: 400px; border-radius: 8px; border: 1px solid #e0e0e0;">
+        </div>
+    @endif
+    
+    @if($questao->tipo_questao == 'multipla_escolha')
+        
+        @foreach($questao->alternativas as $alternativa)
+            <div>
+                <input type="radio" 
+                       name="respostas[{{ $questao->id }}]" 
+                       value="{{ $alternativa->id }}" 
+                       id="alt-{{ $alternativa->id }}-{{ $tentativa->id }}"
+                       {{ (isset($respostasSalvas[$questao->id]) && $respostasSalvas[$questao->id] == $alternativa->id) ? 'checked' : '' }}
+                >
 
-                                    <label for="alt-{{ $alternativa->id }}-{{ $tentativa->id }}">
-                                        {{ $alternativa->texto_alternativa }}
-                                    </label>
-                                </div>
-                            @endforeach
+                <label for="alt-{{ $alternativa->id }}-{{ $tentativa->id }}">
+                    {{ $alternativa->texto_alternativa }}
+                </label>
+            </div>
+        @endforeach
 
-                        @elseif($questao->tipo_questao == 'texto')
-                            
-                            <textarea name="respostas[{{ $questao->id }}]" 
-                                      rows="5" 
-                                      placeholder="Digite sua resposta aqui..."
-                                      >{{ $respostasTextoSalvas[$questao->id] ?? '' }}</textarea>
-                        
-                        @endif
-                    </div>
+    @elseif($questao->tipo_questao == 'texto')
+        
+        <textarea name="respostas[{{ $questao->id }}]" 
+                  rows="5" 
+                  class="form-control" 
+                  placeholder="Digite sua resposta aqui..."
+                  >{{ $respostasTextoSalvas[$questao->id] ?? '' }}</textarea>
+    
+    @endif
+</div>
                 @endforeach
                 
                 <button type="submit" class="btn-submit">Entregar Prova</button>
