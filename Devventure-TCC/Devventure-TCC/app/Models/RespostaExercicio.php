@@ -45,4 +45,10 @@ class RespostaExercicio extends Model
     {
         return $this->belongsTo(Aluno::class);
     }
+
+    public function respostasExercicios()
+{
+    
+    return $this->hasMany(RespostaExercicio::class, 'aluno_id');
+}
 }
