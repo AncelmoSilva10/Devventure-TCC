@@ -4,7 +4,7 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     
-    <link href="{{ asset('css/Aluno/aluno.css') }}" rel="stylesheet">
+    <link href="{{ asset('css/Auth/verify.css') }}" rel="stylesheet">
     <title>Verificar Código</title>
 </head>
 <body>

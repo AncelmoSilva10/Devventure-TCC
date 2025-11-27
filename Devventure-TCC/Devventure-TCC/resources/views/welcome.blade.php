@@ -34,20 +34,37 @@
                     </div>
                 </div>
                 <div class="hero-carousel">
-                    <figure class="icon-cards mt-3">
-                        <div class="icon-cards__content">
-                            <div class="icon-cards__item d-flex align-items-center justify-content-center">
-                                <span class="h1"><img src="{{ asset('images/TelaAluno.jpeg') }}" alt="Tela do Aluno"></span>
-                            </div>
-                            <div class="icon-cards__item d-flex align-items-center justify-content-center">
-                                <span class="h1"><img src="{{ asset('images/TelaAula.jpeg') }}" alt="Tela de Aula"></span>
-                            </div>
-                            <div class="icon-cards__item d-flex align-items-center justify-content-center">
-                                <span class="h1"><img src="{{ asset('images/TelaVideo.jpeg') }}" alt="Tela de Vídeo"></span>
-                            </div>
-                        </div>
-                    </figure>
-                </div>
+    <figure class="icon-cards mt-3">
+        <div class="icon-cards__content">
+            <div class="icon-cards__item d-flex align-items-center justify-content-center">
+                <span class="h1">
+                    <video autoplay muted loop playsinline style="width: 100%; height: 100%; object-fit: cover; border-radius: inherit;">
+                        <source src="{{ asset('videos/video1.mp4') }}" type="video/mp4">
+                        Seu navegador não suporta vídeos.
+                    </video>
+                </span>
+            </div>
+
+            <div class="icon-cards__item d-flex align-items-center justify-content-center">
+                <span class="h1">
+                    <video autoplay muted loop playsinline style="width: 100%; height: 100%; object-fit: cover; border-radius: inherit;">
+                        <source src="{{ asset('videos/video1.mp4') }}" type="video/mp4">
+                        Seu navegador não suporta vídeos.
+                    </video>
+                </span>
+            </div>
+
+            <div class="icon-cards__item d-flex align-items-center justify-content-center">
+                <span class="h1">
+                    <video autoplay muted loop playsinline style="width: 100%; height: 100%; object-fit: cover; border-radius: inherit;">
+                        <source src="{{ asset('videos/video1.mp4') }}" type="video/mp4">
+                        Seu navegador não suporta vídeos.
+                    </video>
+                </span>
+            </div>
+        </div>
+    </figure>
+</div>
             </div>
         </section>
 
@@ -76,12 +93,12 @@
                     <p>Aulas dinâmicas para facilitar seu aprendizado.</p>
                 </div>
                 <div class="modulo-card darkblue">
-                    <div class="icon-area-modulo">
-                       <div class="icon"> <i class='bx bxs-conversation'></i></div>
-                    </div>
-                    <h3>Fórum Interativo</h3>
-                    <p>Tire suas dúvidas e interaja com a comunidade.</p>
-                </div>
+    <div class="icon-area-modulo">
+        <div class="icon"> <i class='bx bxs-rocket'></i></div>
+    </div>
+    <h3>Aprendizagem Dinâmica</h3>
+    <p>Evolua no seu ritmo com trilhas interativas e desafios práticos.</p>
+</div>
             </div>
         </section>
 

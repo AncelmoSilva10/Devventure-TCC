@@ -192,3 +192,46 @@ body {
     box-shadow: 0 8px 20px rgba(37, 99, 235, 0.4);
 }
 .btn-ranking i { font-size: 1.5rem; }
+
+/* =========================================
+   NOTIFICAÇÃO (BOLINHA VERMELHA)
+   ========================================= */
+
+/* Garante que a bolinha se posicione relativa ao botão */
+.tab-link {
+    position: relative; 
+}
+
+/* A bolinha vermelha */
+.notification-badge {
+    position: absolute;
+    top: 8px;        /* Ajuste fino da altura */
+    right: 15px;     /* Ajuste fino da lateral */
+    width: 10px;
+    height: 10px;
+    background-color: #ef4444; /* Vermelho alerta */
+    border-radius: 50%;
+    border: 2px solid #fff;    /* Borda branca para destacar do fundo */
+    z-index: 10;
+    
+    /* Animação pulsante */
+    animation: pulse-red 2s infinite;
+}
+
+/* Classe extra para pintar o sino de vermelho (opcional) */
+.icon-alert {
+    color: #ef4444 !important;
+}
+
+/* Animação do pulso */
+@keyframes pulse-red {
+    0% {
+        box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.7);
+    }
+    70% {
+        box-shadow: 0 0 0 6px rgba(239, 68, 68, 0);
+    }
+    100% {
+        box-shadow: 0 0 0 0 rgba(239, 68, 68, 0);
+    }
+}

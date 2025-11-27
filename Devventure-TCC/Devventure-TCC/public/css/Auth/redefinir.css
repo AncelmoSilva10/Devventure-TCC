@@ -1,0 +1,179 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Inter', sans-serif;
+}
+
+body {
+    background-color: #f8fafc; /* Fundo cinza bem clarinho (Slate-50) */
+    color: #1f2937;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+/* Centraliza o Card na tela */
+main.container {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 1.5rem;
+    width: 100%;
+}
+
+/* === O CARD GRANDE === */
+.card {
+    background-color: #ffffff;
+    width: 100%;
+    
+    /* AQUI ESTÁ O TRUQUE PARA FICAR "MAIORZINHO" */
+    max-width: 540px; 
+    
+    padding: 3rem; /* Bastante espaço interno */
+    border-radius: 16px; /* Bordas mais arredondadas */
+    
+    /* Sombra suave e difusa para parecer flutuando */
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.05), 
+                0 4px 6px -2px rgba(0, 0, 0, 0.025);
+    border: 1px solid #f1f5f9;
+}
+
+/* Ícone do Topo (Cadeado) */
+.header-icon {
+    display: inline-flex;
+    padding: 12px;
+    background-color: #eff6ff; /* Fundo azul bem claro */
+    color: #2563eb; /* Ícone azul */
+    border-radius: 12px;
+    margin-bottom: 1.5rem;
+}
+
+/* Títulos alinhados à esquerda igual ao print */
+.card h1 {
+    font-size: 1.75rem;
+    font-weight: 700;
+    color: #111827;
+    margin-bottom: 0.75rem;
+    line-height: 1.2;
+}
+
+.card .subtitle {
+    color: #6b7280;
+    font-size: 1rem;
+    line-height: 1.5;
+    margin-bottom: 2.5rem;
+}
+
+/* === FORMULÁRIO === */
+.form-group {
+    margin-bottom: 1.5rem;
+}
+
+.form-group label {
+    display: block;
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: #374151;
+    margin-bottom: 0.5rem;
+}
+
+/* Wrapper para colocar o ícone dentro do input */
+.input-wrapper {
+    position: relative;
+}
+
+.input-icon {
+    position: absolute;
+    left: 14px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #9ca3af; /* Cinza do ícone desativado */
+    pointer-events: none;
+}
+
+.form-group input {
+    width: 100%;
+    /* Padding esquerdo maior (44px) para não bater no ícone */
+    padding: 0.875rem 1rem 0.875rem 44px; 
+    border: 1px solid #e2e8f0;
+    border-radius: 8px;
+    font-size: 1rem;
+    transition: all 0.2s;
+    background-color: #ffffff;
+}
+
+.form-group input:focus {
+    outline: none;
+    border-color: #2563eb;
+    box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.1);
+}
+
+.error-msg {
+    color: #ef4444;
+    font-size: 0.875rem;
+    margin-top: 0.5rem;
+    display: block;
+}
+
+/* === BOTÃO === */
+.btn-primary {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 1rem;
+    background-color: #2563eb; /* Azul forte */
+    color: white;
+    font-weight: 600;
+    font-size: 1rem;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.2s, transform 0.1s;
+    margin-top: 0.5rem;
+}
+
+.btn-primary:hover {
+    background-color: #1d4ed8;
+}
+
+.btn-primary:active {
+    transform: scale(0.99);
+}
+
+/* === LINK VOLTAR === */
+.footer-links {
+    margin-top: 2rem;
+    text-align: center;
+}
+
+.back-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    color: #64748b;
+    text-decoration: none;
+    font-weight: 500;
+    font-size: 0.95rem;
+    transition: color 0.2s;
+}
+
+.back-link:hover {
+    color: #0f172a;
+}
+
+/* Responsividade para telas pequenas */
+@media (max-width: 640px) {
+    .card {
+        padding: 1.5rem;
+    }
+    
+    .card h1 {
+        font-size: 1.5rem;
+    }
+}

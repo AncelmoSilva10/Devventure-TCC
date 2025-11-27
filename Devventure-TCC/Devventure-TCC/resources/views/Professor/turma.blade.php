@@ -62,7 +62,7 @@
 
                 <div class="card-actions">
                     <a href="{{ route('professor.relatorios.index', $turma) }}" class="card-action-btn btn-report">
-                        <i class='bx bx-line-chart'></i> Relatórios
+                        <i class='bx bx-line-chart'></i> Relatório
                     </a>
                     <a href="{{ route('turmas.especificaID', $turma) }}" class="card-action-btn btn-manage">
                         <i class='bx bx-cog'></i> Gerenciar

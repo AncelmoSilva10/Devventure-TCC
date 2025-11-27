@@ -31,13 +31,13 @@
             </a>
             <a href="{{ route('professor.exercicios.index') }}" class="card-acao">
                 <i class='bx bxs-spreadsheet'></i>
-                <h3>Criar Exercício</h3>
+                <h3>Exercícios</h3>
                 <p>Elabore e atribua novos exercícios.</p>
             </a>
 
             <a href="{{ route('professor.provas.create') }}" class="card-acao">
                 <i class='bx bxs-file'></i>
-                <h3>Criar Prova</h3>
+                <h3>Provas</h3>
                 <p>Acompanhe o rendimento da jornada dos alunos.</p>
             </a>
           
@@ -116,7 +116,10 @@
                         <span class="numero">{{ $totalAulas }}</span>
                         <span class="descricao">Aulas Criadas</span>
                     </div>
-                 
+                    <div class="item-estatistica">
+                        <span class="numero">{{ $totalTurmas  }}</span>
+                        <span class="descricao">Turmas Criadas</span>
+                    </div>
                 </div>
             </div>
         </div>

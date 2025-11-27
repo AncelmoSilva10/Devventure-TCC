@@ -15,7 +15,8 @@ class DashboardController extends Controller
      public function dashboard()
     {
         $professor = Auth::guard('professor')->user();
-
+        
+        $totalTurmas = $professor->turmas()->count();
         
         $turmas = $professor->turmas()->withCount('alunos')->latest()->get(); 
 
@@ -41,6 +42,7 @@ class DashboardController extends Controller
             'totalAlunos' => $totalAlunos,
             'totalAulas' => $totalAulas,
             'convitesPendentes' => $convitesPendentes,
+            'totalTurmas' => $totalTurmas,
         ]);
     }
 

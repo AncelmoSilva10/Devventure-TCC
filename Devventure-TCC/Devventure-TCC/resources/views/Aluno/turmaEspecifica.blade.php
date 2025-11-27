@@ -36,11 +36,54 @@
         <main class="page-body">
             <div class="main-content">
                 <div class="tabs-navigation">
-                    <button class="tab-link {{ request('tab', 'exercicios') == 'exercicios' ? 'active' : '' }}" data-tab="exercicios"><i class='bx bxs-pencil'></i> Exercícios</button>
-                    <button class="tab-link {{ request('tab') == 'aulas' ? 'active' : '' }}" data-tab="aulas"><i class='bx bxs-videos'></i> Aulas</button>
-                    <button class="tab-link {{ request('tab') == 'avisos' ? 'active' : '' }}" data-tab="avisos"><i class='bx bxs-bell'></i> Mural de Avisos</button>
-                    <button class="tab-link {{ request('tab') == 'provas' ? 'active' : '' }}" data-tab="provas"><i class='bx bxs-file-blank'></i> Provas</button>
-                </div>
+    {{-- Botão Exercícios --}}
+    <button class="tab-link {{ request('tab', 'exercicios') == 'exercicios' ? 'active' : '' }}" data-tab="exercicios">
+        <i class='bx bxs-pencil'></i> Exercícios
+    </button>
+
+    {{-- Botão Aulas --}}
+    <button class="tab-link {{ request('tab') == 'aulas' ? 'active' : '' }}" data-tab="aulas">
+        <i class='bx bxs-videos'></i> Aulas
+    </button>
+
+    {{-- Lógica PHP para verificar aviso recente --}}
+@php
+    $temAvisoNovo = false;
+    $ultimoId = 0;
+    
+    if(isset($avisos) && $avisos->count() > 0) {
+        $ultimoAviso = $avisos->first();
+        $ultimoId = $ultimoAviso->id; // Guarda o ID do aviso para o JS usar
+        
+        // Se foi criado há menos de 3 dias
+        if($ultimoAviso->created_at > now()->subDays(3)) {
+            $temAvisoNovo = true;
+        }
+    }
+@endphp
+
+{{-- Botão com ID e evento onclick --}}
+<button class="tab-link {{ request('tab') == 'avisos' ? 'active' : '' }}" 
+        data-tab="avisos" 
+        id="btn-avisos"
+        data-latest-id="{{ $ultimoId }}"
+        onclick="marcarComoLido()">
+    
+    {{-- A bolinha vermelha --}}
+    @if($temAvisoNovo)
+        <span class="notification-badge" id="badge-aviso"></span>
+    @endif
+    
+    {{-- Ícone (adicionei um ID para remover a cor vermelha via JS também) --}}
+    <i class='bx bxs-bell {{ $temAvisoNovo ? 'icon-alert' : '' }}' id="icon-aviso"></i> 
+    Mural de Avisos
+</button>
+
+    {{-- Botão Provas --}}
+    <button class="tab-link {{ request('tab') == 'provas' ? 'active' : '' }}" data-tab="provas">
+        <i class='bx bxs-file-blank'></i> Provas
+    </button>
+</div>
 
                 <div class="tabs-content">
                     <div class="tab-pane {{ request('tab', 'exercicios') == 'exercicios' ? 'active' : '' }}" id="exercicios">
@@ -235,8 +278,7 @@
         </main>
     </div>
     
-    <script>
-        // Lógica para alternar entre as abas (não precisa de alteração)
+   <script>
         const tabLinks = document.querySelectorAll('.tab-link');
         const tabPanes = document.querySelectorAll('.tab-pane');
 
@@ -253,16 +295,59 @@
         });
     </script>
 
-    @if (session('sweet_success'))
     <script>
-        Swal.fire({
-            title: 'Parabéns!',
-            text: "{{ session('sweet_success') }}",
-            icon: 'success',
-            confirmButtonColor: '#4f46e5',
-            confirmButtonText: 'Ótimo!'
+        document.addEventListener("DOMContentLoaded", function() {
+            const btnAvisos = document.getElementById('btn-avisos');
+            // Verificação de segurança caso o botão não exista
+            if(!btnAvisos) return; 
+
+            const badge = document.getElementById('badge-aviso');
+            const icon = document.getElementById('icon-aviso');
+            
+            // 1. Pega o ID do aviso mais recente vindo do PHP
+            const latestId = btnAvisos.getAttribute('data-latest-id');
+            
+            // 2. Verifica no navegador qual foi o último aviso que o aluno clicou
+            const lidoId = localStorage.getItem('ultimo_aviso_lido_turma_{{ $turma->id }}');
+
+            // 3. Se o aluno já viu este aviso específico, esconde o alerta IMEDIATAMENTE
+            if (latestId && lidoId == latestId) {
+                if(badge) badge.style.display = 'none';
+                if(icon) icon.classList.remove('icon-alert');
+            }
         });
+
+        // Função chamada quando clica na aba
+        function marcarComoLido() {
+            const btnAvisos = document.getElementById('btn-avisos');
+            if(!btnAvisos) return;
+
+            const badge = document.getElementById('badge-aviso');
+            const icon = document.getElementById('icon-aviso');
+            const latestId = btnAvisos.getAttribute('data-latest-id');
+
+            // 1. Esconde visualmente na hora
+            if(badge) badge.style.display = 'none';
+            if(icon) icon.classList.remove('icon-alert');
+
+            // 2. Salva no navegador que este aviso (ID X) já foi visto nesta turma
+            if (latestId) {
+                localStorage.setItem('ultimo_aviso_lido_turma_{{ $turma->id }}', latestId);
+            }
+        }
     </script>
+
+    <!-- 2. Script do SweetAlert (SÓ RODA SE TIVER SUCESSO) -->
+    @if (session('sweet_success'))
+        <script>
+            Swal.fire({
+                title: 'Parabéns!',
+                text: "{{ session('sweet_success') }}",
+                icon: 'success',
+                confirmButtonColor: '#4f46e5',
+                confirmButtonText: 'Ótimo!'
+            });
+        </script>
     @endif
 </body>
 </html>

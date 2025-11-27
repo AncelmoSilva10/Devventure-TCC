@@ -146,7 +146,7 @@ canvas {
     height: 100%;
     transform-style: preserve-3d;
     transform: translateZ(-260px) rotateY(0);
-    animation: carousel 12s infinite cubic-bezier(0.77, 0, 0.175, 1);
+     animation: carousel 30s infinite cubic-bezier(0.77, 0, 0.175, 1);
 }
 
 .icon-cards__item {
