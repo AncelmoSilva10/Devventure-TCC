@@ -3,8 +3,7 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-    <title>Gerenciador de Exercicios</title>
-    
+    <title>Gerenciador de Exercícios</title>
     <link href='https://cdn.boxicons.com/fonts/basic/boxicons.min.css' rel='stylesheet'>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <link href="{{ asset('css/Professor/exercicioProfessor.css') }}" rel="stylesheet">
@@ -15,142 +14,205 @@
 
     <main>
         <section class="intro">
-            <a href="/professorDashboard" class="btn-voltar">
-                <i class='bx bx-chevron-left'></i>
-                Voltar
-            </a>
-            <h1>Exercicios</h1>
-            <p>Crie e gerencie Exercicios com total facilidade</p>
-            <div class="add-exercicio">
-                <button>Adicionar Exercicio</button>
+            <div>
+                <a href="/professorDashboard" class="btn-voltar">
+                    <i class='bx bx-arrow-back'></i> Voltar ao Painel
+                </a>
+                <h1>Meus Exercícios</h1>
+                <p>Gerencie as atividades curriculares das suas turmas.</p>
+            </div>
+            <button class="btn-novo" onclick="document.getElementById('modal').style.display='flex'">
+                <i class='bx bx-plus-circle'></i> Criar Exercício
+            </button>
+        </section>
+
+        <section class="stats-bar">
+            <div class="stat-card">
+                <div class="stat-info">
+                    <span>Total Listado</span>
+                    <strong>{{ $exercicios->count() }}</strong>
+                </div>
+                <i class='bx bx-list-ul stat-icon'></i>
+            </div>
+            <div class="stat-card">
+                <div class="stat-info">
+                    <span>Status Visualização</span>
+                    <strong>{{ ucfirst($status ?? 'Geral') }}</strong>
+                </div>
+                <i class='bx bx-filter-alt stat-icon'></i>
+            </div>
+            <div class="stat-card">
+                <div class="stat-info">
+                    <span>Data de Hoje</span>
+                    <strong style="font-size: 1.2rem;">{{ date('d/m/Y') }}</strong>
+                </div>
+                <i class='bx bx-calendar stat-icon'></i>
             </div>
         </section>
 
-        <section class="exercicios">
-            <div class="exercicios-header">
-                <div>
-                    <h2>Meus Exercicios</h2>
-                    <p>Clique em um exercicio para gerenciá-lo</p>
-                    <div class="toggle-buttons">
-                        <a href="{{ url('/professorExercicios', ['status' => 'disponiveis']) }}" class="toggle-button {{ $status == 'disponiveis' ? 'ativo' : 'inativo' }}">
-                            Disponíveis
-                        </a>
-                        <a href="{{ url('/professorExercicios', ['status' => 'concluidas']) }}" class="toggle-button {{ $status == 'concluidas' ? 'ativo' : 'inativo' }}">
-                            Concluídas
-                        </a>
+       <section class="toolbar">
+    <div class="toggle-group">
+        <a href="{{ url('/professorExercicios') }}?status=disponiveis" 
+           class="toggle-btn {{ request('status') == 'disponiveis' ? 'active' : '' }}">
+            Em Aberto
+        </a>
+
+        <a href="{{ url('/professorExercicios') }}?status=concluidas" 
+           class="toggle-btn {{ request('status') == 'concluidas' ? 'active' : '' }}">
+            Concluídas
+        </a>
+
+        <a href="{{ url('/professorExercicios') }}?status=todos" 
+           class="toggle-btn {{ !request('status') || request('status') == 'todos' ? 'active' : '' }}">
+            Todas
+        </a>
+    </div>
+
+    <form action="{{ url('/professorExercicios') }}" method="GET" class="search-box">
+        <input type="hidden" name="status" value="{{ request('status') }}">
+        <input type="text" name="search" placeholder="Pesquisar por título ou turma..." value="{{ request('search') }}">
+        <button type="submit"><i class='bx bx-search'></i></button>
+    </form>
+</section>
+
+        <section class="grid-cards">
+            @forelse ($exercicios as $exercicio)
+                @php
+                    // Lógica visual simples no Blade para determinar status
+                    $agora = \Carbon\Carbon::now();
+                    $fechamento = \Carbon\Carbon::parse($exercicio->data_fechamento);
+                    $aberto = $agora->lt($fechamento);
+                    $statusClass = $aberto ? 'status-aberto' : 'status-fechado';
+                    $statusTexto = $aberto ? 'Aberto' : 'Encerrado';
+                    $corTexto = $aberto ? '#10b981' : '#ef4444';
+                @endphp
+
+                <div class="card-exercicio {{ $statusClass }}" onclick="window.location='{{ route('professor.exercicios.respostas', $exercicio) }}'">
+                    <div class="card-status-bar"></div>
+
+                    <div class="card-header">
+                        <span class="turma-tag">{{ $exercicio->turma->nome_turma }} • {{ ucfirst($exercicio->turma->turno) }}</span>
+                        <div class="pontos-badge">
+                            <i class='bx bxs-star'></i> {{ $exercicio->pontos ?? 0 }} pts
+                        </div>
+                    </div>
+
+                    <div class="card-body">
+                        <i class='bx bx-file-blank card-icon-bg'></i>
+
+                        <h3 class="card-title">{{ $exercicio->nome }}</h3>
+
+                        <div class="dates-grid">
+                            <div class="date-item">
+                                <span class="date-label">Publicação</span>
+                                <span class="date-value">
+                                    <i class='bx bx-calendar-check'></i> 
+                                    {{ \Carbon\Carbon::parse($exercicio->data_publicacao)->format('d/m H:i') }}
+                                </span>
+                            </div>
+                            <div class="date-item">
+                                <span class="date-label">Entrega</span>
+                                <span class="date-value" style="color: {{ $corTexto }}">
+                                    <i class='bx bx-time-five'></i> 
+                                    {{ $fechamento->format('d/m H:i') }}
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card-footer">
+                        <div class="anexos-count">
+                            @if($exercicio->imagensApoio->count() > 0 || $exercicio->arquivosApoio->count() > 0)
+                                <i class='bx bx-paperclip'></i> 
+                                {{ $exercicio->imagensApoio->count() + $exercicio->arquivosApoio->count() }} Anexos
+                            @else
+                                <span style="opacity: 0.5;">Sem anexos</span>
+                            @endif
+                        </div>
+                        <span class="btn-detalhes">
+                            Gerenciar <i class='bx bx-chevron-right'></i>
+                        </span>
                     </div>
                 </div>
-                <form action="{{ url('/professorExercicios') }}" method="GET" class="search">
-                    <input type="hidden" name="status" value="{{ $status }}">
-                    <input type="text" name="search" placeholder="Pesquisar exercício..." value="{{ request('search') }}">
-                    <button type="submit"><i class='bx bx-search'></i></button>
-                </form>
-            </div>
-
-           <div class="exercicios-grid">
-    @forelse ($exercicios as $exercicio)
-        <div class="card" data-url="{{ route('professor.exercicios.respostas', $exercicio) }}">
-            <h3>{{ $exercicio->turma->nome_turma }}</h3>
-
-            <div class="tags">
-                <span class="tag">{{ ucfirst($exercicio->turma->turno) }}</span>
-                <span class="tag">{{ $exercicio->nome }}</span>
-            </div>
-
-            <p class="info">Abre em: {{ \Carbon\Carbon::parse($exercicio->data_publicacao)->format('d/m/Y H:i') }}</p>
-            <p class="info">Fecha em: {{ \Carbon\Carbon::parse($exercicio->data_fechamento)->format('d/m/Y H:i') }}</p>
-            <p class="info card-points"><strong>Pontos:</strong> {{ $exercicio->pontos ?? 0 }}</p>
-
-            <div class="anexos-card">
-                @foreach($exercicio->imagensApoio as $imagem)
-                    <img src="{{ asset('storage/' . $imagem->imagem_path) }}" alt="Imagem de apoio" class="imagem-apoio-preview">
-                @endforeach
-                @foreach($exercicio->arquivosApoio as $arquivo)
-                    <a href="{{ asset('storage/' . $arquivo->arquivo_path) }}" class="link-arquivo" download>
-                        <i class='bx bxs-file-blank'></i>
-                        <span>{{ $arquivo->nome_original }}</span>
-                    </a>
-                @endforeach
-            </div>
-        </div>
-    @empty
-        <p class="sem-exercicios">Nenhum exercício encontrado.</p>
-    @endforelse
-</div>
-</div>
-
+            @empty
+                <div style="grid-column: 1 / -1; text-align: center; padding: 4rem; background: white; border-radius: 16px; border: 2px dashed #cbd5e1;">
+                    <i class='bx bx-ghost' style="font-size: 4rem; color: #cbd5e1; margin-bottom: 1rem;"></i>
+                    <h3 style="color: #64748b; margin-bottom: 0.5rem;">Nenhum exercício encontrado</h3>
+                    <p style="color: #94a3b8;">Tente mudar os filtros ou crie uma nova atividade.</p>
+                </div>
+            @endforelse
         </section>
     </main>
 
     <div class="modal-overlay" id="modal">
         <div class="modal-content">
-
-            
             @if ($errors->any())
-                <div style="background-color: #f8d7da; color: #721c24; padding: 1rem; border-radius: 8px; margin-bottom: 1.5rem;">
-                    <strong>Ops! Ocorreram alguns erros:</strong>
+                <div style="background: #fee2e2; color: #b91c1c; padding: 1rem; border-radius: 8px; margin-bottom: 1.5rem;">
+                    <strong>Erro ao criar:</strong>
                     <ul style="margin-top: 0.5rem; padding-left: 1.5rem;">
-                        @foreach ($errors->all() as $error)
-                            <li>{{ $error }}</li>
-                        @endforeach
+                        @foreach ($errors->all() as $error) <li>{{ $error }}</li> @endforeach
                     </ul>
                 </div>
             @endif
 
             <form action="{{ route('professor.exercicios.store') }}" method="POST" enctype="multipart/form-data">
                 @csrf
-                <h2>Criar Exercício</h2>
+                <h2>Novo Exercício</h2>
 
                 <div class="form-group">
-                    <label for="nome">Nome do Exercício</label>
-                    <input id="nome" name="nome" type="text" placeholder="Ex: Atividade sobre Funções" required />
+                    <label>Título da Atividade</label>
+                    <input name="nome" type="text" class="form-control" placeholder="Ex: Lista de Exercícios 01 - Lógica" required />
                 </div>
+
+                <div style="display: grid; grid-template-columns: 2fr 1fr; gap: 1rem;">
+                    <div class="form-group">
+                        <label>Turma</label>
+                        <select name="turma_id" class="form-control" required>
+                            <option value="" disabled selected>Selecione a turma...</option>
+                            @foreach ($turmas as $turma)
+                                <option value="{{ $turma->id }}">{{ $turma->nome_turma }}</option>
+                            @endforeach
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Pontos</label>
+                        <input name="pontos" type="number" class="form-control" value="10" min="0" required />
+                    </div>
+                </div>
+
                 <div class="form-group">
-                    <label for="turma_id">Turma</label>
-                    <select id="turma_id" name="turma_id" required>
-                        <option value="" disabled selected>Escolha uma Turma</option>
-                        @foreach ($turmas as $turma)
-                            <option value="{{ $turma->id }}">{{ $turma->nome_turma }}</option>
-                        @endforeach
-                    </select>
+                    <label>Descrição</label>
+                    <textarea name="descricao" class="form-control" rows="3" placeholder="Instruções para o aluno..."></textarea>
                 </div>
-                <div class="form-group">
-                    <label for="descricao">Descrição (Opcional)</label>
-                    <textarea id="descricao" name="descricao" placeholder="Instruções sobre o exercício..." rows="3"></textarea>
-                </div>
-                <div class="form-group">
-                    <label for="pontos">Pontos do Exercício</label>
-                    <input id="pontos" name="pontos" type="number" placeholder="Ex: 25" value="10" required min="0" />
-                </div>
-                <div class="form-grid">
+
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
                     <div class="form-group">
-                        <label for="data_publicacao">Data de Publicação</label>
-                        <input id="data_publicacao" name="data_publicacao" type="datetime-local" required />
+                        <label>Data de Abertura</label>
+                        <input name="data_publicacao" type="datetime-local" class="form-control" required />
                     </div>
                     <div class="form-group">
-                        <label for="data_fechamento">Data de Fechamento</label>
-                        <input id="data_fechamento" name="data_fechamento" type="datetime-local" required />
-                    </div>
-                    <div class="form-group">
-                        <label for="arquivos_apoio" class="upload-label">
-                            <i class='bx bx-upload'></i> 
-                            <span>Escolher arquivo(s)</span>
-                        </label>
-                        <input name="arquivos_apoio[]" type="file" id="arquivos_apoio" class="input-file" multiple />
-                        <span id="nomeArquivos" class="nomeArquivo">Nenhum arquivo</span>
-                    </div>
-                    <div class="form-group">
-                        <label for="imagens_apoio" class="upload-label">
-                            <i class='bx bx-image-add'></i> 
-                            <span>Imagem(ns) de apoio</span>
-                        </label>
-                        <input name="imagens_apoio[]" type="file" id="imagens_apoio" class="input-file" accept="image/*" multiple />
-                        <span id="nomeImagens" class="nomeArquivo">Nenhuma imagem</span>
+                        <label>Data de Entrega</label>
+                        <input name="data_fechamento" type="datetime-local" class="form-control" required />
                     </div>
                 </div>
-                <div class="modal-buttons">
-                    <button type="button" id="cancelar">Cancelar</button>
-                    <button type="submit" class="criar">Criar Exercício</button>
+
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-top: 1rem;">
+                    <label class="upload-box" for="arquivos_apoio">
+                        <i class='bx bx-file'></i>
+                        <p id="txt-arquivos">Adicionar Arquivos</p>
+                        <input type="file" name="arquivos_apoio[]" id="arquivos_apoio" multiple style="display:none" onchange="updateLabel(this, 'txt-arquivos', 'arquivos')">
+                    </label>
+
+                    <label class="upload-box" for="imagens_apoio">
+                        <i class='bx bx-image'></i>
+                        <p id="txt-imagens">Adicionar Imagens</p>
+                        <input type="file" name="imagens_apoio[]" id="imagens_apoio" accept="image/*" multiple style="display:none" onchange="updateLabel(this, 'txt-imagens', 'imagens')">
+                    </label>
+                </div>
+
+                <div class="modal-actions">
+                    <button type="button" class="btn-cancel" onclick="document.getElementById('modal').style.display='none'">Cancelar</button>
+                    <button type="submit" class="btn-confirm">Criar Atividade</button>
                 </div>
             </form>
         </div>
@@ -159,31 +221,30 @@
     @include('layouts.footer')
 
     <script src="{{ asset('js/Professor/exercicioProfessor.js') }}"></script>
-
-    <!-- ========================================================== -->
-    <!-- ===== SCRIPT PARA REABRIR O MODAL SE HOUVER ERROS ===== -->
-    <!-- ========================================================== -->
-    @if ($errors->any())
-        <script>
-            // Pega o modal e o exibe imediatamente
-            const modal = document.getElementById('modal');
-            if (modal) {
-                modal.style.display = 'flex';
-            }
-        </script>
-    @endif
-
-    
-
-    @if (session('sweet_success'))
     <script>
-        Swal.fire({
-            title: "Sucesso!",
-            text: "{{ session('sweet_success') }}",
-            icon: "success",
-            confirmButtonText: "Ok"
-        });
+        function updateLabel(input, labelId, type) {
+            const label = document.getElementById(labelId);
+            if(input.files.length > 0) {
+                label.innerText = input.files.length + (type === 'imagens' ? " imagem(ns)" : " arquivo(s)");
+                label.style.fontWeight = "bold";
+                label.style.color = "#00796B";
+            } else {
+                label.innerText = type === 'imagens' ? "Adicionar Imagens" : "Adicionar Arquivos";
+            }
+        }
+
+        @if ($errors->any())
+            document.getElementById('modal').style.display = 'flex';
+        @endif
+
+        @if (session('sweet_success'))
+            Swal.fire({
+                title: "Sucesso!",
+                text: "{{ session('sweet_success') }}",
+                icon: "success",
+                confirmButtonColor: "#00796B"
+            });
+        @endif
     </script>
-    @endif
 </body>
 </html>

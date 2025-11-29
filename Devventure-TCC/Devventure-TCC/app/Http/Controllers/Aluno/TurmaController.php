@@ -71,23 +71,51 @@ class TurmaController extends Controller
     ]);
 }
 
-    public function mostrarRanking(Turma $turma)
+public function mostrarRanking(Turma $turma)
 {
-    
     if (!Auth::guard('aluno')->user()->turmas->contains($turma->id)) {
         abort(403, 'Acesso não autorizado a este ranking.');
     }
 
-  
-    $alunosRanking = $turma->alunos()
-                           ->orderBy('total_pontos', 'desc') // Ordena por pontos (mais alto primeiro)
-                           ->orderBy('updated_at', 'asc')    // Desempate: quem chegou lá primeiro
-                           ->get();
+    $totalExercicios = $turma->exercicios()->count();
+    $totalAulas = $turma->aulas()->count();
+
+    $alunos = $turma->alunos()
+                    ->orderBy('total_pontos', 'desc')
+                    ->orderBy('updated_at', 'asc')
+                    ->get();
+
+    $alunosRanking = $alunos->map(function ($aluno) use ($totalExercicios, $totalAulas, $turma) {
+        
+        $exerciciosConcluidos = $aluno->respostas()
+            ->whereHas('exercicio', function($q) use ($turma) {
+                $q->where('turma_id', $turma->id);
+            })
+            ->count();
+
+        $aulasConcluidas = $aluno->aulas()
+            ->where('turma_id', $turma->id)
+            ->wherePivot('status', 'concluido')
+            ->count();
+
+        $frequenciaPorc = 0;
+        if ($totalAulas > 0) {
+            $frequenciaPorc = ($aulasConcluidas / $totalAulas) * 100;
+        } elseif ($totalAulas == 0) {
+            $frequenciaPorc = 100;
+        }
+
+        $aluno->exercicios_concluidos = $exerciciosConcluidos;
+        $aluno->total_exercicios_turma = $totalExercicios;
+        $aluno->frequencia_formatada = round($frequenciaPorc) . '%';
+
+        return $aluno;
+    });
 
     return view('Aluno.ranking', [
-    'turma' => $turma,
-    'alunosRanking' => $alunosRanking,
-    'backRoute' => route('turmas.especifica', $turma->id) 
-]);
+        'turma' => $turma,
+        'alunosRanking' => $alunosRanking,
+        'backRoute' => route('turmas.especifica', $turma->id) 
+    ]);
 }
 }
