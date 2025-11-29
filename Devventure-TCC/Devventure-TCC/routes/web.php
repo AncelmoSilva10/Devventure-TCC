@@ -18,6 +18,7 @@ use App\Http\Controllers\Professor\ProvasController ;
 use App\Http\Controllers\Auth\ForgotPasswordController;
 use App\Http\Controllers\Auth\ResetPasswordController;
 use App\Http\Controllers\Aluno\ExercicioAlunoController;
+use App\Http\Controllers\Professor\ExercicioController;
 use App\Http\Controllers\Professor\AvisoController;
 use App\Http\Controllers\DepoimentoController;
 use App\Models\Depoimento;
@@ -161,7 +162,8 @@ Route::middleware(['auth:professor'])->group(function () {
     Route::post('/professorCriarExercicios', [App\Http\Controllers\Professor\ExercicioController::class, 'CriarExercicios'])->name('professor.exercicios.store');
     Route::get('/professor/exercicios/{exercicio}/respostas', [App\Http\Controllers\Professor\ExercicioController::class, 'mostrarRespostas'])->name('professor.exercicios.respostas');
     Route::post('/professor/respostas/{resposta}/avaliar', [App\Http\Controllers\Professor\ExercicioController::class, 'avaliarResposta'])->name('professor.respostas.avaliar');
-    
+    Route::delete('/professor/exercicios/{exercicio}', [ExercicioController::class, 'destroy'])->name('professor.exercicios.destroy');
+
     Route::get('/professor/aulas/{aula}/formulario/create', [App\Http\Controllers\Professor\FormularioController::class, 'create'])->name('formularios.create');
     Route::post('/professor/aulas/{aula}/formulario', [App\Http\Controllers\Professor\FormularioController::class, 'store'])->name('formularios.store');
 

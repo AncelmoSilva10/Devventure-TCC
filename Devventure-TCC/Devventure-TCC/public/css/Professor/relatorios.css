@@ -1,15 +1,14 @@
 /* =================================
-   RESET E CONFIGURAÇÕES GLOBAIS
+   RESET & GLOBAL CONFIG
    ================================= */
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap');
 
-* {
-    box-sizing: border-box; /* CRUCIAL: Impede que padding quebre o layout */
-}
+* { box-sizing: border-box; }
 
 :root {
-    --primary-color: #00796b;
-    --primary-light: #e0f2f1;
+    --primary-color: #00796b;       /* Green requested */
+    --primary-light: #e0f2f1;       /* Light Green background */
+    --primary-hover: #004d40;       /* Dark Green hover */
     --bg-color: #f8fafc;
     --card-bg: #ffffff;
     --text-primary: #334155;
@@ -27,145 +26,127 @@ body {
 }
 
 /* =================================
-   WRAPPER PRINCIPAL
-   ================================= */
-.reports-wrapper {
-    max-width: 1300px; /* Limita a largura para não esticar demais em telas 4k */
-    margin: 0 auto;
-    padding: 2rem;
-}
-
-/* =================================
-   HEADER (TÍTULO E BOTÕES)
+   HEADER (NAVBAR STYLE)
    ================================= */
 .reports-header {
+    background-color: var(--primary-color);
+    color: white;
+    padding: 1.5rem 2rem;
     margin-bottom: 2rem;
+    border-radius: 0 0 20px 20px;
+    box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1);
 }
 
+.header-container {
+    max-width: 1200px; /* Limits width to centralize */
+    margin: 0 auto;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.header-left {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+/* Back Button Style */
 .back-link {
     display: inline-flex;
     align-items: center;
     gap: 0.5rem;
-    
-    /* Tamanho e Forma */
-    padding: 0.6rem 1.25rem;
-    background-color: var(--card-bg); /* Fundo branco */
-    border-radius: 50px; /* Formato Pílula */
-    margin-bottom: 2rem;
-    
-    /* Texto e Cores */
+    color: white; /* White text on green background */
+    background-color: rgba(255, 255, 255, 0.2); /* Semi-transparent white */
+    padding: 0.5rem 1rem;
+    border-radius: 6px;
     text-decoration: none;
-    color: var(--text-secondary);
-    font-weight: 600;
+    font-weight: 500;
     font-size: 0.9rem;
-    
-    /* Bordas e Sombras */
-    border: 1px solid transparent; /* Prepara para o hover */
-    box-shadow: 0 2px 4px rgba(0,0,0,0.05); /* Sombra suave */
-    transition: all 0.2s ease;
+    width: fit-content;
+    transition: background-color 0.2s;
 }
 
-.back-link i {
-    font-size: 1.2rem; /* Ícone um pouco maior */
-}
-
-/* Efeito ao passar o mouse */
 .back-link:hover {
-    color: var(--primary-color);
-    border-color: var(--primary-light);
-    background-color: #f0fdfa; /* Um verde muito suave (quase branco) */
-    transform: translateX(-4px); /* Move levemente para a esquerda */
-    box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1);
-}
-.header-content-row {
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-end;
-    flex-wrap: wrap; /* Permite quebrar linha no mobile */
-    gap: 1.5rem;
+    background-color: rgba(255, 255, 255, 0.3);
 }
 
-.header-info h1 {
-    font-size: 1.8rem; /* Reduzi um pouco para ficar mais proporcional */
+.back-link i { font-size: 1.2rem; }
+
+.header-title h1 {
     margin: 0;
+    font-size: 1.8rem;
+    font-weight: 700;
     display: flex;
     align-items: center;
-    gap: 0.8rem;
-    color: var(--text-primary);
+    gap: 0.5rem;
 }
 
-.header-info p {
-    margin: 0.2rem 0 0 0;
-    color: var(--text-secondary);
+.header-title p {
+    margin: 0;
     font-size: 1rem;
+    opacity: 0.9;
+    font-weight: 400;
 }
 
-/* Botões de Exportação */
+/* Header Actions (Export Buttons) */
 .header-actions {
     display: flex;
+    gap: 1rem;
     align-items: center;
-    gap: 0.8rem;
-    background: white;
-    padding: 0.5rem 1rem;
-    border-radius: 10px;
-    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
 }
 
 .export-label {
-    font-size: 0.85rem;
+    font-size: 0.9rem;
     font-weight: 600;
-    color: var(--text-secondary);
-    margin-right: 5px;
+    color: rgba(255,255,255,0.9);
 }
 
 .btn-export {
     display: inline-flex;
     align-items: center;
     gap: 0.5rem;
-    padding: 0.5rem 1rem;
+    padding: 0.6rem 1rem;
     border-radius: 6px;
     text-decoration: none;
     font-weight: 600;
-    font-size: 0.85rem;
+    font-size: 0.9rem;
     transition: transform 0.2s, background 0.2s;
+    background-color: white; /* White buttons */
+    color: var(--primary-color);
 }
 
-.btn-export.pdf {
-    background-color: #fff1f2;
-    color: #e11d48;
-    border: 1px solid #fecdd3;
-}
-.btn-export.csv {
-    background-color: #f0fdf4;
-    color: #15803d;
-    border: 1px solid #bbf7d0;
-}
-.btn-export:hover { transform: translateY(-2px); }
+.btn-export:hover { transform: translateY(-2px); background-color: #f1f5f9; }
+
 
 /* =================================
-   GRID DO DASHBOARD (AQUI ESTÁ A CORREÇÃO DOS CARDS COLADOS)
+   MAIN CONTENT WRAPPER
+   ================================= */
+.reports-wrapper {
+    max-width: 1200px; /* Limits width to centralize content */
+    margin: 0 auto;    /* Centers the wrapper horizontally */
+    padding: 0 2rem 2rem 2rem;
+}
+
+/* =================================
+   GRID DASHBOARD
    ================================= */
 .reports-grid {
     display: grid;
-    /* Define 4 colunas de tamanho igual */
-    grid-template-columns: repeat(4, 1fr); 
-    /* Define o espaçamento entre os cards */
-    gap: 1.5rem; 
-    margin-top: 1rem;
+    grid-template-columns: repeat(4, 1fr); /* 4 equal columns */
+    gap: 1.5rem;
 }
 
-/* Controle de Tamanho dos Cards */
+/* Card Sizing */
 .card-media { grid-column: span 1; }
 .card-engajamento { grid-column: span 1; }
-.card-destaques { grid-column: span 2; }
-.card-atencao { grid-column: span 2; }
-/* O gráfico agora ocupa 2 colunas para não ficar esticado demais, 
-   ou use span 4 se quiser a linha toda */
-.card-grafico { grid-column: span 2; } 
+.card-destaques { grid-column: span 1; } /* Adjusted to fit row */
+.card-atencao { grid-column: span 1; } /* Adjusted to fit row */
+.card-grafico { grid-column: span 4; } /* Full width chart */
 
 
 /* =================================
-   ESTILO DOS CARDS
+   CARD STYLES
    ================================= */
 .card {
     background-color: var(--card-bg);
@@ -175,7 +156,7 @@ body {
     border: 1px solid #e2e8f0;
     display: flex;
     flex-direction: column;
-    height: 100%; /* Garante que preencham a altura da linha do grid */
+    height: 100%;
 }
 
 .card-header {
@@ -200,22 +181,18 @@ body {
     border-radius: 8px;
 }
 
-/* Corpo dos Cards */
+/* Card Body Content */
 .card-body {
     flex-grow: 1;
     display: flex;
     flex-direction: column;
     justify-content: center;
-}
-
-.card-media .card-body, .card-engajamento .card-body {
-    align-items: center;
+    align-items: center; /* Center alignment */
     text-align: center;
 }
 
-/* Métricas (Fonte ajustada para não ficar gigante) */
 .main-metric {
-    font-size: 2.5rem; /* Reduzido de 3.5rem */
+    font-size: 2.5rem;
     font-weight: 700;
     color: var(--primary-color);
     line-height: 1.2;
@@ -227,7 +204,7 @@ body {
     font-weight: 500;
 }
 
-/* Listas de Alunos */
+/* User Lists */
 .user-list {
     list-style: none;
     padding: 0;
@@ -235,15 +212,16 @@ body {
     display: flex;
     flex-direction: column;
     gap: 0.8rem;
+    width: 100%;
 }
 
 .user-list a {
     display: flex;
     align-items: center;
-    gap: 1rem;
+    gap: 0.8rem;
     text-decoration: none;
     color: var(--text-primary);
-    padding: 0.6rem;
+    padding: 0.5rem;
     border-radius: 8px;
     background-color: #f8fafc;
     transition: background 0.2s;
@@ -251,13 +229,13 @@ body {
 .user-list a:hover { background-color: #f1f5f9; }
 
 .avatar {
-    width: 36px; height: 36px;
+    width: 32px; height: 32px;
     border-radius: 50%;
     object-fit: cover;
 }
 
 .user-name {
-    font-size: 0.9rem;
+    font-size: 0.85rem;
     font-weight: 500;
     flex-grow: 1;
     white-space: nowrap;
@@ -266,59 +244,58 @@ body {
 }
 
 .user-points {
-    font-size: 0.85rem;
+    font-size: 0.8rem;
     font-weight: 700;
     color: var(--primary-color);
 }
+
 .low-score {
     color: #dc2626;
     background: #fef2f2;
-    padding: 2px 8px;
+    padding: 2px 6px;
     border-radius: 4px;
-    font-size: 0.75rem;
+    font-size: 0.7rem;
 }
 
-
-/* =================================
-   CORREÇÃO DO GRÁFICO (IMPORTANTE)
-   ================================= */
-.card-grafico {
-    /* Define uma altura mínima apenas para o card, não pro gráfico esticar */
-    min-height: auto; 
+.empty-message {
+    color: var(--text-secondary);
+    font-size: 0.9rem;
+    text-align: center;
+    margin-top: 1rem;
 }
 
+/* Chart Container */
 .chart-container {
     position: relative;
     width: 100%;
-    /* AQUI ESTÁ O SEGREDO: Fixar a altura do container do gráfico */
-    height: 300px; 
+    height: 300px;
 }
 
-
 /* =================================
-   RESPONSIVIDADE
+   RESPONSIVENESS
    ================================= */
 @media (max-width: 1200px) {
     .reports-grid {
-        grid-template-columns: repeat(2, 1fr); /* 2 colunas em telas médias */
+        grid-template-columns: repeat(2, 1fr); /* 2x2 grid */
     }
-    .card-media, .card-engajamento { grid-column: span 1; }
-    .card-destaques, .card-atencao, .card-grafico { grid-column: span 2; }
+    .card-media, .card-engajamento, .card-destaques, .card-atencao {
+        grid-column: span 1;
+    }
+    .card-grafico { grid-column: span 2; }
 }
 
 @media (max-width: 768px) {
-    .reports-wrapper { padding: 1rem; }
-    .reports-grid {
-        grid-template-columns: 1fr; /* 1 coluna no celular */
-        gap: 1rem;
-    }
-    .card-media, .card-engajamento, 
-    .card-destaques, .card-atencao, 
-    .card-grafico { grid-column: span 1; }
-    
-    .header-content-row {
+    .header-container {
         flex-direction: column;
         align-items: flex-start;
+        gap: 1rem;
     }
     .header-actions { width: 100%; justify-content: space-between; }
+    
+    .reports-grid {
+        grid-template-columns: 1fr; /* 1 column stack */
+    }
+    .card-media, .card-engajamento, .card-destaques, .card-atencao, .card-grafico {
+        grid-column: span 1;
+    }
 }

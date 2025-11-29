@@ -1,230 +1,184 @@
-/* =================================================================== */
-/* CSS PARA A PÁGINA DE LISTAGEM DE TURMAS - TEMA AZUL         */
-/* =================================================================== */
+/* Importando Fontes */
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700&display=swap');
 
-/* --- Variáveis de Cor (PALETA AZUL) --- */
 :root {
-    /* Tons de Azul */
-    --cor-primaria: #2563eb;          
-    --cor-primaria-hover: #1d4ed8;  
+    /* --- PALETA AZUL (ALUNO) --- */
+    --primary-color: #1a62ff;       /* Azul Principal */
+    --primary-hover: #1550d1;       /* Azul Escuro */
+    --primary-light: #eff6ff;       /* Azul Claro (Fundos) */
     
-    /* Cores para Tags e Destaques Secundários */
-    --cor-fundo-tag: #dbeafe; /* Fundo azul bem claro */
-    --cor-texto-tag: #1e40af; /* Texto azul escuro para contraste */
-
-    /* Cores Neutras */
-    --cor-fundo: #f4f7f9;
-    --cor-card: #ffffff;
-    --cor-texto-principal: #333;
-    --cor-texto-secundario: #555;
-    --cor-borda: #dee2e6;
-    
-    /* Cores de Feedback */
-    --cor-aviso: #dc3545;
-    
-    /* Sombras */
-    --sombra-card: 0 4px 12px rgba(0, 0, 0, 0.08);
-    --sombra-card-hover: 0 8px 20px rgba(0, 0, 0, 0.15);
-    --sombra-azul: 0 4px 15px rgba(37, 99, 235, 0.3); /* Nova sombra azulada */
+    --bg-color: #f8f9fa;
+    --card-bg: #ffffff;
+    --text-dark: #111827;
+    --text-gray: #6b7280;
+    --border-color: #e5e7eb;
 }
 
-/* --- Estilos Base --- */
+* { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; }
+
 body {
-    font-family: 'Poppins', sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
-    background-color: var(--cor-fundo);
-    color: var(--cor-texto-principal);
-    margin: 0;
-    line-height: 1.6;
+    background-color: var(--bg-color);
+    color: var(--text-dark);
+    min-height: 100vh;
 }
 
-/* --- Ajuste para a main tag para compensar a navbar fixa --- */
-.page-minhas-turmas {
-    margin-top: 70px; /* Altura da sua navbar */
-    padding-top: 2rem;
-    padding-bottom: 2rem;
-    min-height: calc(100vh - 70px - 200px);
-    display: flex;
-    flex-direction: column;
-}
-
-/* --- Container Principal --- */
-.page-minhas-turmas .container {
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 0 2rem;
-    flex-grow: 1;
-}
-
-/* --- Cabeçalho da Página --- */
-.page-minhas-turmas .page-header {
-    background-color: var(--cor-card);
+/* --- HEADER AZUL (Estilo Nav Completa) --- */
+.turma-header {
+    position: relative;
+    background: linear-gradient(135deg, var(--primary-color), var(--primary-hover));
     padding: 2rem;
-    border-radius: 12px;
-    margin-bottom: 2.5rem;
-    box-shadow: var(--sombra-card);
-    text-align: center;
-}
-
-.page-minhas-turmas .page-header h1 {
-    font-size: 2.8rem;
-    color: var(--cor-primaria);
-    margin: 0 0 0.8rem 0;
-    text-shadow: 1px 1px 2px rgba(0,0,0,0.05);
-}
-
-.page-minhas-turmas .page-header p {
-    font-size: 1.2rem;
-    color: var(--cor-texto-secundario);
+    border-radius: 0 0 20px 20px;
+    color: #fff;
+    box-shadow: 0 6px 20px rgba(26, 98, 255, 0.2);
     margin-bottom: 2rem;
-    max-width: 700px;
-    margin-left: auto;
-    margin-right: auto;
 }
 
-/* --- Botão "Voltar para o Painel" --- */
-.page-minhas-turmas .back-dashboard-link {
+.header-content {
+    max-width: 1100px;
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1.5rem;
+    flex-wrap: wrap;
+}
+
+/* Botão Voltar */
+.back-link {
     display: inline-flex;
     align-items: center;
-    gap: 0.75rem;
-    padding: 0.8rem 1.5rem;
-    background-color: var(--cor-primaria);
-    color: var(--cor-card);
-    text-decoration: none;
-    border-radius: 50px;
+    gap: 0.5rem;
+    padding: 0.5rem 1rem;
+    background: rgba(255, 255, 255, 0.15);
+    color: #fff;
+    border-radius: 8px;
     font-weight: 600;
-    font-size: 1rem;
-    transition: all 0.3s ease;
-    box-shadow: var(--sombra-azul);
-}
-
-.page-minhas-turmas .back-dashboard-link:hover {
-    background-color: var(--cor-primaria-hover);
-    transform: translateY(-3px);
-    box-shadow: 0 6px 16px rgba(37, 99, 235, 0.4);
-}
-
-.page-minhas-turmas .back-dashboard-link i {
-    font-size: 1.2rem;
-}
-
-/* --- Grid das Turmas --- */
-.page-minhas-turmas .turmas-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-    gap: 2rem;
-}
-
-/* --- Card Link --- */
-.page-minhas-turmas .card-link {
     text-decoration: none;
-    color: inherit;
-    display: block;
+    transition: all 0.2s ease;
+    font-size: 0.9rem;
+    margin-bottom: 1rem;
+    backdrop-filter: blur(4px);
+    width: fit-content;
+}
+.back-link:hover {
+    background: rgba(255, 255, 255, 0.25);
+    transform: translateX(-4px);
 }
 
-/* --- Card da Turma --- */
-.page-minhas-turmas .card {
-    background: var(--cor-card);
-    border-radius: 15px;
-    padding: 2rem;
-    box-shadow: var(--sombra-card);
-    transition: all 0.3s ease;
-    border: 1px solid var(--cor-borda);
-    height: 100%;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-}
-
-.page-minhas-turmas .card:hover {
-    transform: translateY(-8px);
-    box-shadow: var(--sombra-card-hover);
-    border-color: var(--cor-primaria);
-}
-
-.page-minhas-turmas .card h3 {
-    font-size: 1.6rem;
-    color: var(--cor-primaria);
-    margin-bottom: 0.75rem;
-}
-
-.page-minhas-turmas .card .professor-nome {
-    font-size: 1rem;
-    color: var(--cor-texto-secundario);
-    margin-bottom: 1.5rem;
-    font-style: italic;
-    font-weight: 500;
-}
-
-.page-minhas-turmas .tags {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0.75rem;
-    margin-top: 1rem;
-}
-
-.page-minhas-turmas .tag {
-    background-color: var(--cor-fundo-tag); /* Usa a nova variável azul */
-    color: var(--cor-texto-tag); /* Usa a nova variável azul */
-    font-size: 0.85rem;
+.header-info h1 {
+    font-family: 'Poppins', sans-serif;
+    font-size: 2rem;
     font-weight: 700;
-    padding: 0.35rem 1rem;
-    border-radius: 50px;
-    border: 1px solid #a5b4fc; /* Borda azul sutil */
+    margin: 0;
+    line-height: 1.2;
+}
+.header-info p {
+    margin: 0.4rem 0 0;
+    color: rgba(255, 255, 255, 0.9);
+    font-weight: 500;
+    font-size: 1rem;
 }
 
-/* --- Mensagem de "Sem Turmas" --- */
-.page-minhas-turmas .empty-message {
-    grid-column: 1 / -1;
-    text-align: center;
-    padding: 3rem;
-    font-size: 1.3rem;
-    color: var(--cor-texto-secundario);
-    font-style: italic;
-    background-color: var(--cor-card);
+.header-actions {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+}
+
+/* Badge de Total */
+.header-badge {
+    background: rgba(255, 255, 255, 0.2);
+    color: #fff;
+    padding: 0.6rem 1.2rem;
+    border-radius: 8px;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+}
+
+/* --- CONTEÚDO PRINCIPAL --- */
+.main-content {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 0 1.5rem 2rem 1.5rem;
+}
+
+/* Card Container da Lista */
+.card-container {
+    background: var(--card-bg);
+    border-radius: 16px;
+    padding: 2rem;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.03);
+    border: 1px solid rgba(0,0,0,0.03);
+    min-height: 400px;
+}
+
+.section-header {
+    margin-bottom: 2rem;
+}
+.section-title h2 { font-size: 1.3rem; font-weight: 700; color: var(--text-dark); margin-bottom: 2px; }
+.section-title p { color: var(--text-gray); font-size: 0.9rem; }
+
+
+/* --- LISTA DE TURMAS (Estilo Vertical) --- */
+.class-list { display: flex; flex-direction: column; gap: 1rem; }
+
+.class-item {
+    border: 1px solid var(--border-color);
     border-radius: 12px;
-    box-shadow: var(--sombra-card);
-    margin-top: 2rem;
-    border: 1px dashed var(--cor-borda);
+    padding: 1.5rem 2rem;
+    display: flex; align-items: center; justify-content: space-between;
+    background: white;
+    position: relative;
+    overflow: hidden;
+    text-decoration: none; color: inherit;
+    /* Borda lateral começa transparente */
+    border-left: 4px solid transparent;
+    transition: all 0.2s ease-in-out;
 }
 
-/* --- Responsividade --- */
+/* Hover Azul */
+.class-item:hover {
+    border-color: #bfdbfe; /* Azul claro na borda */
+    border-left-color: var(--primary-color);
+    padding-left: calc(2rem + 4px);
+    transform: translateX(4px);
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+    background-color: #eff6ff; /* Fundo azul bem suave */
+}
+
+.class-info-group { display: flex; align-items: center; gap: 1rem; flex: 2; }
+.class-details h3 { font-size: 1.1rem; font-weight: 700; color: var(--text-dark); margin-bottom: 4px; }
+.class-details span { font-size: 0.9rem; color: var(--text-gray); display: block; }
+.class-details small { color: var(--primary-color); font-weight: 600; font-size: 0.85rem; }
+
+/* Stats Group (Para alinhar info do professor) */
+.class-stats-group { display: flex; gap: 3rem; flex: 1; justify-content: flex-end; margin-right: 2rem; }
+.stat-col { display: flex; flex-direction: column; align-items: flex-end; gap: 2px; }
+.stat-label { font-size: 0.8rem; color: var(--text-gray); font-weight: 500; }
+.stat-value { font-size: 0.95rem; font-weight: 600; color: var(--text-dark); }
+
+.btn-enter {
+    padding: 0.6rem 1rem; background-color: #f3f4f6; color: var(--text-dark);
+    border: none; border-radius: 8px; font-weight: 600; font-size: 0.9rem;
+    display: flex; align-items: center; gap: 8px; transition: all 0.2s;
+}
+.class-item:hover .btn-enter {
+    background-color: var(--primary-color); color: white;
+}
+
+/* --- ESTADO VAZIO --- */
+.empty-state {
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    height: 300px; border: 2px dashed #e5e7eb; border-radius: 12px; color: var(--text-gray); text-align: center;
+}
+.empty-state i { font-size: 3rem; margin-bottom: 10px; opacity: 0.5; }
+
 @media (max-width: 768px) {
-    .page-minhas-turmas {
-        padding-top: 1.5rem;
-    }
-    .page-minhas-turmas .container {
-        padding: 0 1rem;
-    }
-    .page-minhas-turmas .page-header {
-        padding: 1.5rem;
-        margin-bottom: 2rem;
-    }
-    .page-minhas-turmas .page-header h1 {
-        font-size: 2rem;
-    }
-    .page-minhas-turmas .page-header p {
-        font-size: 1rem;
-        margin-bottom: 1.5rem;
-    }
-    .page-minhas-turmas .back-dashboard-link {
-        padding: 0.6rem 1.2rem;
-        font-size: 0.9rem;
-    }
-    .page-minhas-turmas .turmas-grid {
-        grid-template-columns: 1fr;
-        gap: 1.5rem;
-    }
-    .page-minhas-turmas .card {
-        padding: 1.5rem;
-    }
-    .page-minhas-turmas .card h3 {
-        font-size: 1.3rem;
-    }
-    .page-minhas-turmas .card .professor-nome {
-        font-size: 0.9rem;
-    }
-    .page-minhas-turmas .empty-message {
-        padding: 2rem;
-        font-size: 1.1rem;
-    }
+    .class-item { flex-direction: column; align-items: flex-start; gap: 1.5rem; }
+    .class-stats-group { width: 100%; justify-content: space-between; margin-right: 0; align-items: flex-start; }
+    .stat-col { align-items: flex-start; }
+    .header-content { flex-direction: column; align-items: flex-start; }
 }

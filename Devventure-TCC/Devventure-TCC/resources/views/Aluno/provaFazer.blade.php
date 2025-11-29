@@ -3,151 +3,145 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-    <title>Gerenciador de Provas - Fazendo Prova</title>
+    <title>Prova: {{ $prova->titulo }}</title>
     
     <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-    
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
     
-    <link href="{{ asset('css/aluno/realizandoProva.css') }}" rel="stylesheet"> 
-
+    <link href="{{ asset('css/Aluno/realizandoProva.css') }}" rel="stylesheet"> 
 </head>
 <body>
 
-    <div class="main-content">
-        <div class="container">
-            <div id="timer" class="timer-display">
-                --:--
-            </div>
-
+    <header class="exam-header">
+        <div class="exam-info">
             <h1>{{ $prova->titulo }}</h1>
-            <p class="mb-3">Tempo restante: <span id="timer-text">--:--</span></p>
-
-            @if (session('error'))
-                <div class="alert alert-danger"><i class='bx bx-error-alt'></i> {{ session('error') }}</div>
-            @endif
-            @if (session('warning'))
-                <div class="alert alert-warning"><i class='bx bx-error'></i> {{ session('warning') }}</div>
-            @endif
-
-            <form id="prova-form" action="{{ route('aluno.provas.submeter', $tentativa) }}" method="POST">
-                @csrf
-                
-                @foreach($prova->questoes as $index => $questao)
-                    <div class="card-questao">
-    <h4>Questão {{ $index + 1 }}: ({{ $questao->pontuacao }} pts)</h4>
-    
-    {{-- Enunciado --}}
-    <p>{!! nl2br(e($questao->enunciado)) !!}</p>
-    
-    {{-- === CÓDIGO NOVO: EXIBIÇÃO DA IMAGEM === --}}
-    @if($questao->imagem_apoio)
-        <div style="margin: 15px 0; text-align: center;">
-            <img src="{{ asset('storage/' . $questao->imagem_apoio) }}" 
-                 alt="Imagem de apoio" 
-                 class="img-fluid"
-                 style="max-width: 100%; max-height: 400px; border-radius: 8px; border: 1px solid #e0e0e0;">
+            <p>Questões: {{ $prova->questoes->count() }} • Duração: {{ $prova->duracao_minutos }} min</p>
         </div>
-    @endif
-    
-    @if($questao->tipo_questao == 'multipla_escolha')
         
-        @foreach($questao->alternativas as $alternativa)
-            <div>
-                <input type="radio" 
-                       name="respostas[{{ $questao->id }}]" 
-                       value="{{ $alternativa->id }}" 
-                       id="alt-{{ $alternativa->id }}-{{ $tentativa->id }}"
-                       {{ (isset($respostasSalvas[$questao->id]) && $respostasSalvas[$questao->id] == $alternativa->id) ? 'checked' : '' }}
-                >
+        <div id="timer" class="timer-box">
+            <i class='bx bx-time-five'></i> <span id="timer-text">--:--</span>
+        </div>
+    </header>
 
-                <label for="alt-{{ $alternativa->id }}-{{ $tentativa->id }}">
-                    {{ $alternativa->texto_alternativa }}
-                </label>
+    <div class="container">
+        
+        @if (session('error')) 
+            <div class="alert alert-danger" style="background:#fee2e2; color:#b91c1c; padding:1rem; border-radius:8px; margin-bottom:2rem;">
+                {{ session('error') }}
+            </div> 
+        @endif
+
+        <form id="prova-form" action="{{ route('aluno.provas.submeter', $tentativa) }}" method="POST">
+            @csrf
+            
+            @foreach($prova->questoes as $index => $questao)
+                <div class="card-questao">
+                    <div class="questao-header">
+                        <h4>Questão {{ $index + 1 }}</h4>
+                        <span class="badge-pontos">{{ $questao->pontuacao }} pontos</span>
+                    </div>
+                    
+                    <div class="enunciado">
+                        {!! nl2br(e($questao->enunciado)) !!}
+                    </div>
+                    
+                    @if($questao->imagem_apoio)
+                        <img src="{{ asset('storage/' . $questao->imagem_apoio) }}" class="img-apoio" alt="Imagem de Apoio">
+                    @endif
+                    
+                    @if($questao->tipo_questao == 'multipla_escolha')
+                        <div class="alternativas-list">
+                            @foreach($questao->alternativas as $alternativa)
+                                <div class="opcao-radio">
+                                    <input type="radio" 
+                                           name="respostas[{{ $questao->id }}]" 
+                                           value="{{ $alternativa->id }}" 
+                                           id="alt-{{ $alternativa->id }}"
+                                           {{ (isset($respostasSalvas[$questao->id]) && $respostasSalvas[$questao->id] == $alternativa->id) ? 'checked' : '' }}>
+                                    <label for="alt-{{ $alternativa->id }}">
+                                        {{ $alternativa->texto_alternativa }}
+                                    </label>
+                                </div>
+                            @endforeach
+                        </div>
+                    @elseif($questao->tipo_questao == 'texto')
+                        <textarea name="respostas[{{ $questao->id }}]" 
+                                  rows="6" 
+                                  class="form-control" 
+                                  placeholder="Digite sua resposta aqui...">{{ $respostasTextoSalvas[$questao->id] ?? '' }}</textarea>
+                    @endif
+                </div>
+            @endforeach
+            
+            <div class="footer-actions">
+                <button type="button" class="btn-submit" onclick="confirmarEntrega()">
+                    Finalizar e Entregar <i class='bx bx-check-circle'></i>
+                </button>
             </div>
-        @endforeach
-
-    @elseif($questao->tipo_questao == 'texto')
-        
-        <textarea name="respostas[{{ $questao->id }}]" 
-                  rows="5" 
-                  class="form-control" 
-                  placeholder="Digite sua resposta aqui..."
-                  >{{ $respostasTextoSalvas[$questao->id] ?? '' }}</textarea>
-    
-    @endif
-</div>
-                @endforeach
-                
-                <button type="submit" class="btn-submit">Entregar Prova</button>
-            </form>
-        </div>
+        </form>
     </div>
 
-    
     <script>
+        // Confirmação com estilo Azul
+        function confirmarEntrega() {
+            Swal.fire({
+                title: 'Finalizar Prova?',
+                text: "Você revisou todas as suas respostas?",
+                icon: 'question',
+                showCancelButton: true,
+                confirmButtonColor: '#22c55e', // Verde para confirmar (sucesso)
+                cancelButtonColor: '#64748b',
+                confirmButtonText: 'Sim, entregar!',
+                cancelButtonText: 'Revisar'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    document.getElementById('prova-form').submit();
+                }
+            });
+        }
+
         document.addEventListener('DOMContentLoaded', function() {
             const horaLimite = new Date('{{ $horaLimiteISO }}');
             const timerElement = document.getElementById('timer');
-            const timerTextElement = document.getElementById('timer-text');
+            const timerText = document.getElementById('timer-text');
             const formElement = document.getElementById('prova-form');
-
-            const duracaoTotalSegundos = {{ $prova->duracao_minutos }} * 60;
             
-            const warningThresholdSegundos = duracaoTotalSegundos * 0.10;
+            const duracaoTotal = {{ $prova->duracao_minutos }} * 60;
+            const warningThreshold = duracaoTotal * 0.10; // 10% restante
 
             function updateTimer() {
                 const agora = new Date();
-                const diffMilissegundos = horaLimite - agora;
+                const diff = horaLimite - agora;
 
-                if (diffMilissegundos <= 0) {
+                if (diff <= 0) {
                     clearInterval(intervalo);
-                    timerElement.innerHTML = "00:00:00";
-                    timerTextElement.innerHTML = "Tempo Esgotado!";
-                    timerElement.classList.add('timer-danger'); // Fica vermelho ao esgotar
+                    timerText.innerText = "00:00:00";
+                    timerElement.classList.add('danger');
                     
                     Swal.fire({
-                        icon: 'error',
+                        icon: 'warning',
                         title: 'Tempo Esgotado!',
-                        text: 'Sua prova será submetida automaticamente.',
+                        text: 'Sua prova será enviada automaticamente.',
                         allowOutsideClick: false,
                         showConfirmButton: false,
                         timer: 3000
-                    }).then(() => {
-                        formElement.submit();
-                    });
+                    }).then(() => formElement.submit());
                     return;
                 }
 
-                const totalSegundos = Math.floor(diffMilissegundos / 1000);
-                const horas = Math.floor(totalSegundos / 3600);
-                const minutos = Math.floor((totalSegundos % 3600) / 60);
-                const segundos = totalSegundos % 60;
+                const totalSeg = Math.floor(diff / 1000);
+                const h = Math.floor(totalSeg / 3600);
+                const m = Math.floor((totalSeg % 3600) / 60);
+                const s = totalSeg % 60;
 
-                const formattedTime = 
-                    String(horas).padStart(2, '0') + ':' + 
-                    String(minutos).padStart(2, '0') + ':' + 
-                    String(segundos).padStart(2, '0');
-                
-                timerElement.innerHTML = formattedTime;
-                timerTextElement.innerHTML = formattedTime;
+                timerText.innerText = 
+                    String(h).padStart(2, '0') + ':' + 
+                    String(m).padStart(2, '0') + ':' + 
+                    String(s).padStart(2, '0');
 
-                if (totalSegundos <= warningThresholdSegundos) {
-                    timerElement.classList.add('timer-danger');
-                }
-
-                // Alerta de 1 minuto
-                if (totalSegundos === 300) { 
-                    Swal.fire({
-                        icon: 'warning',
-                        title: 'Atenção!',
-                        text: 'Faltam apenas 1 minutos para o término da prova!',
-                        timer: 1000,
-                        timerProgressBar: true
-                    });
+                if (totalSeg <= warningThreshold) {
+                    timerElement.classList.add('danger');
                 }
             }
 

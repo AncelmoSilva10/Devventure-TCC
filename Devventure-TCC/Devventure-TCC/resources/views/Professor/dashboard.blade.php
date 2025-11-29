@@ -41,10 +41,10 @@
                 <p>Acompanhe o rendimento da jornada dos alunos.</p>
             </a>
           
-            <a href="{{ route('professor.avisos.create') }}" class="card-acao">
-                <i class='bx bxs-bell'></i>
-                <h3>Enviar Aviso</h3>
-                <p>Mande comunicados para uma ou mais turmas.</p>
+            <a href="{{ route('professor.turmas', ['contexto' => 'relatorios']) }}" class="card-acao">
+                <i class='bx bxs-bar-chart-square'></i>
+                <h3>Desempenho</h3>
+                <p>Acompanhe o progresso de suas turmas.</p>
             </a>
         </section>
 

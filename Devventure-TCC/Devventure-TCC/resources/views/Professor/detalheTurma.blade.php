@@ -7,40 +7,45 @@
     
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11.10.0/dist/sweetalert2.min.css">
     <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
     
     <link href="{{ asset('css/Professor/detalheTurma.css') }}" rel="stylesheet">
 </head>
 <body>
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.10.0/dist/sweetalert2.all.min.js"></script>
-
+    
     <div class="turma-wrapper">
+        
         <header class="turma-header">
-            <div class="header-overlay"></div>
-            <div class="header-content">
-                <a href="{{ route('professor.turmas') }}" class="back-link"><i class='bx bx-chevron-left'></i> Voltar para Minhas Turmas</a>
-                <div class="header-info">
-                    <h1>{{ $turma->nome_turma }}</h1>
-                    <p>Disciplina: Técnica de Programação e Algorítmo | Turno: {{ ucfirst($turma->turno) }}</p>
-                </div>
-                <div class="header-actions">
-                    <button class="btn btn-secondary" id="btnAbrirModalAula"><i class='bx bx-video-plus'></i> Adicionar Aula</button>
-                    <button class="btn btn-secondary" id="btnAbrirModalAluno"><i class='bx bx-user-plus'></i> Convidar Aluno</button>
-                    <a href="{{ route('professor.turma.ranking', $turma) }}" class="btn btn-primary btn-ranking">
-                        <i class='bx bxs-bar-chart-alt-2'></i> Ver Ranking
-                    </a>
+            <div style="width: 100%; max-width: 1300px; margin: 0 auto;">
+                <a href="{{ route('professor.turmas') }}" class="back-link">
+                    <i class='bx bx-chevron-left'></i> Voltar para Minhas Turmas
+                </a>
+                <div class="header-content">
+                    <div class="header-info">
+                        <h1>{{ $turma->nome_turma }}</h1>
+                        <p>Turno: {{ ucfirst($turma->turno) }} | {{ $turma->ano_turma ?? date('Y') }}</p>
+                    </div>
+                    <div class="header-actions">
+                        <button class="btn-header btn-glass" id="btnAbrirModalAula"><i class='bx bx-video-plus'></i> Nova Aula</button>
+                        <button class="btn-header btn-glass" id="btnAbrirModalAluno"><i class='bx bx-user-plus'></i> Convidar</button>
+                        <button class="btn-header btn-white" id="btnAbrirModalAviso"><i class='bx bx-paper-plane'></i> Enviar Aviso</button>
+                    </div>
                 </div>
             </div>
         </header>
 
         <main class="page-body">
+            
             <div class="main-content">
-                <div class="card">
+                <div class="card" style="height: 100%;">
                     <div class="card-header">
-                        <h2><i class='bx bxs-group'></i> Alunos Matriculados ({{ $alunos->total() }})</h2>
+                        <h2><i class='bx bxs-group'></i> Alunos ({{ $alunos->total() }})</h2>
+                        <a href="{{ route('professor.turma.ranking', $turma) }}" class="btn-ranking-mini">
+                            <i class='bx bxs-bar-chart-alt-2'></i> Ver Ranking
+                        </a>
                     </div>
+                    
                     <ul class="student-list">
                         @forelse($alunos as $aluno)
                             <a href="{{ route('professor.relatorios.aluno', ['turma' => $turma, 'aluno' => $aluno]) }}" class="student-item">
@@ -56,7 +61,7 @@
                                 </div>
                             </a>
                         @empty
-                            <li class="empty-message">Nenhum aluno na turma.</li>
+                            <li class="empty-message">Nenhum aluno matriculado.</li>
                         @endforelse
                     </ul>
 
@@ -64,198 +69,156 @@
                         {{ $alunos->appends(request()->except('alunosPage'))->links() }}
                     </div>
                 </div>
-
-                <div class="card">
-                    <div class="card-header">
-                        <h2><i class='bx bxs-bell'></i> Mural de Avisos ({{ $avisos->total() }})</h2>
-                    </div>
-                    <ul class="avisos-list">
-                        @forelse ($avisos as $aviso)
-                            <li class="aviso-item">
-                                <div class="aviso-header">
-                                    <h3 class="aviso-title">{{ $aviso->titulo }}</h3>
-                                    <small class="aviso-date">{{ $aviso->created_at->diffForHumans() }}</small>
-                                </div>
-                                <div class="aviso-content">
-                                    <p>{!! nl2br(e($aviso->conteudo)) !!}</p>
-                                </div>
-                            </li>
-                        @empty
-                            <li class="empty-message">Nenhum aviso enviado para esta turma.</li>
-                        @endforelse
-                    </ul>
-                    
-                    <div class="pagination">
-                        {{ $avisos->appends(request()->except('avisosPage'))->links() }}
-                    </div>
-                </div>
-
-                <div class="card">
-                    <div class="card-header">
-                        <h2><i class='bx bxs-time-five'></i> Histórico da Turma ({{ $historico->total() }})</h2>
-                    </div>
-                    <ul class="timeline">
-                        @forelse ($historico as $item)
-                            @php
-                                $icon = 'bxs-spreadsheet'; 
-                                if ($item['tipo'] == 'aula') {
-                                    $icon = 'bxs-videos';
-                                } elseif ($item['tipo'] == 'prova') {
-                                    $icon = 'bxs-file-find'; 
-                                }
-                            @endphp
-
-                            <li class="timeline-item timeline-item--{{ $item['tipo'] }}">
-                                <div class="timeline-marker">
-                                    <div class="timeline-icon">
-                                        <i class='bx {{ $icon }}'></i>
-                                    </div>
-                                </div>
-
-                                @if ($item['link'])
-                                    <a href="{{ $item['link'] }}" class="timeline-content timeline-content--linkable">
-                                        <span class="timeline-date">
-                                            {{ \Carbon\Carbon::parse($item['data'])->setTimezone('America/Sao_Paulo')->format('d/m \à\s H:i') }}
-                                        </span>
-                                        <h3 class="timeline-title">{{ $item['titulo'] }}</h3>
-                                        <p class="timeline-detail">{{ $item['detalhe'] }}</p>
-                                        <span class="timeline-link-indicator"><i class='bx bx-link-external'></i> Ver resultados</span>
-                                    </a>
-                                @else
-                                    <div class="timeline-content">
-                                        <span class="timeline-date">
-                                            {{ \Carbon\Carbon::parse($item['data'])->setTimezone('America/Sao_Paulo')->format('d/m \à\s H:i') }}
-                                        </span>
-                                        <h3 class="timeline-title">{{ $item['titulo'] }}</h3>
-                                        <p class="timeline-detail">{{ $item['detalhe'] }}</p>
-                                    </div>
-                                @endif
-                            </li>
-                        @empty
-                            <li class="empty-message">Nenhuma atividade registrada.</li>
-                        @endforelse
-                    </ul>
-                    
-                    <div class="pagination">
-                        {{ $historico->appends(request()->except('historicoPage'))->links() }}
-                    </div>
-                </div>
             </div>
 
             <div class="sidebar-column">
-                <aside class="sidebar">
-                    <div class="card">
-                        <div class="card-header">
-                            <h2><i class='bx bxs-spreadsheet'></i> Exercícios ({{ $exercicios->total() }})</h2>
-                        </div>
-                        <ul class="content-list">
-                            @forelse ($exercicios as $exercicio)
-                                <li class="content-item">
-                                    <span>{{ $exercicio->nome }}</span>
-                                    <small>Até {{ \Carbon\Carbon::parse($exercicio->data_fechamento)->setTimezone('America/Sao_Paulo')->format('d/m/Y') }}</small>
-                                </li>
-                            @empty
-                                <li class="empty-message">Nenhum exercício cadastrado.</li>
-                            @endforelse
-                        </ul>
-                        
-                        <div class="pagination">
-                            {{ $exercicios->appends(request()->except('exerciciosPage'))->links() }}
-                        </div>
-                    </div>
+                
+                <aside class="card">
+                    <div class="card-header"><h2><i class='bx bxs-spreadsheet'></i> Exercícios</h2></div>
+                    <ul class="content-list">
+                        @forelse ($exercicios as $exercicio)
+                            <a href="{{ route('professor.exercicios.respostas', $exercicio) }}" class="content-item">
+                                <div class="content-item-flex" style="width: 100%;">
+                                    <span>{{ Str::limit($exercicio->nome, 20) }}</span>
+                                    <small>{{ \Carbon\Carbon::parse($exercicio->data_fechamento)->format('d/m') }}</small>
+                                </div>
+                            </a>
+                        @empty
+                            <li class="empty-message">Vazio.</li>
+                        @endforelse
+                    </ul>
+                    <div class="pagination">{{ $exercicios->appends(request()->except('exerciciosPage'))->links() }}</div>
                 </aside>
 
-                <aside class="sidebar">
-                    <div class="card">
-                        <div class="card-header">
-                            <h2><i class='bx bxs-file-blank'></i> Provas ({{ $provas->total() }})</h2>
-                        </div>
-                        <ul class="content-list">
-                            @forelse ($provas as $prova)
-                                <li class="content-item">
-                                    <span>{{ $prova->titulo }}</span>
-                                    <small>Até {{ \Carbon\Carbon::parse($prova->data_fechamento)->setTimezone('America/Sao_Paulo')->format('d/m/Y') }}</small>
-                                </li>
-                            @empty
-                                <li class="empty-message">Nenhuma prova cadastrada.</li>
-                            @endforelse
-                        </ul>
-
-                        <div class="pagination">
-                            {{ $provas->appends(request()->except('provasPage'))->links() }}
-                        </div>
-                    </div>
+                <aside class="card">
+                    <div class="card-header"><h2><i class='bx bxs-file-blank'></i> Provas</h2></div>
+                    <ul class="content-list">
+                        @forelse ($provas as $prova)
+                            <a href="{{ route('Professor.relatorios.provaResultado', ['turma' => $turma->id, 'prova' => $prova->id]) }}" class="content-item">
+                                <div class="content-item-flex" style="width: 100%;">
+                                    <span>{{ Str::limit($prova->titulo, 20) }}</span>
+                                    <small>{{ \Carbon\Carbon::parse($prova->data_fechamento)->format('d/m') }}</small>
+                                </div>
+                            </a>
+                        @empty
+                            <li class="empty-message">Vazio.</li>
+                        @endforelse
+                    </ul>
+                    <div class="pagination">{{ $provas->appends(request()->except('provasPage'))->links() }}</div>
                 </aside>
+
+                <aside class="card">
+                    <div class="card-header"><h2><i class='bx bxs-bell'></i> Mural de Avisos</h2></div>
+                    <ul class="avisos-list">
+                        @forelse ($avisos as $aviso)
+                            <li class="aviso-item">
+                                <div class="aviso-title">{{ $aviso->titulo }}</div>
+                                <span class="aviso-date">{{ $aviso->created_at->diffForHumans() }}</span>
+                                <div class="aviso-content">{!! nl2br(e(Str::limit($aviso->conteudo, 100))) !!}</div>
+                            </li>
+                        @empty
+                            <li class="empty-message">Nenhum aviso.</li>
+                        @endforelse
+                    </ul>
+                    <div class="pagination">{{ $avisos->appends(request()->except('avisosPage'))->links() }}</div>
+                </aside>
+
+                <aside class="card">
+                    <div class="card-header"><h2><i class='bx bxs-time-five'></i> Histórico</h2></div>
+                    <ul class="timeline">
+                        @forelse ($historico as $item)
+                            <li class="timeline-item">
+                                <div class="timeline-icon"><i class='bx {{ $item['tipo'] == 'aula' ? 'bx-video' : 'bx-file' }}'></i></div>
+                                <div class="timeline-content">
+                                    <span class="timeline-date">{{ \Carbon\Carbon::parse($item['data'])->format('d/m H:i') }}</span>
+                                    <h3>{{ Str::limit($item['titulo'], 25) }}</h3>
+                                    </div>
+                            </li>
+                        @empty
+                            <li class="empty-message">Vazio.</li>
+                        @endforelse
+                    </ul>
+                    <div class="pagination">{{ $historico->appends(request()->except('historicoPage'))->links() }}</div>
+                </aside>
+
             </div>
         </main>
     </div>
 
-    <div class="modal-overlay" id="modalConvidarAluno">
-        <div class="modal-content">
-            <form action="{{ route('turmas.convidar', $turma) }}" method="POST">
-                @csrf
-                <button type="button" class="modal-close"><i class='bx bx-x'></i></button>
-                <h2><i class='bx bx-user-plus'></i> Convidar Aluno para a Turma</h2>
-                <p>Digite o Registro do Aluno (RA/RM) para enviar um convite para <strong>{{ $turma->nome_turma }}</strong>.</p>
-                <div class="form-group com-icone">
-                    <i class='bx bx-id-card'></i>
-                    <input type="text" name="ra" placeholder="Digite o RA/RM do aluno" required autocomplete="off">
-                </div>
-                <div class="modal-buttons">
-                    <button type="button" class="btn-cancelar">Cancelar</button>
-                    <button type="submit" class="btn-confirmar">Enviar Convite</button>
-                </div>
-            </form>
-        </div>
-    </div>
-
     <div class="modal-overlay" id="modalAdicionarAula">
         <div class="modal-content">
+            <button type="button" class="modal-close"><i class='bx bx-x'></i></button>
+            <h2>Nova Aula</h2>
             <form action="{{ route('turmas.aulas.formsAula', $turma) }}" method="POST">
                 @csrf
-                <button type="button" class="modal-close"><i class='bx bx-x'></i></button>
-                <h2><i class='bx bx-video-plus'></i> Adicionar Nova Aula</h2>
-                <p>Preencha os dados abaixo para cadastrar uma nova aula.</p>
-                
-                <div class="form-group">
-                    <label for="titulo">Título da Aula</label>
-                    <input type="text" id="titulo" name="titulo" required>
-                </div>
-                
-                <div class="form-group">
-                    <label for="video_url">Link do Vídeo (YouTube)</label>
-                    <input type="url" id="video_url" name="video_url" required>
-                </div>
-
-                <div class="form-group">
-                    <label for="duracao_texto">Duração (Ex: 3,44 para 3m e 44s)</label>
-                    <input type="text" id="duracao_texto" name="duracao_texto" placeholder="Minutos,Segundos" required>
-                </div>
-
-                <div class="form-group">
-                    <label for="pontos_aula">Pontos da Aula</label>
-                    <input type="number" id="pontos_aula" name="pontos" value="5" required min="0">
-                </div>
-
-                <div class="modal-buttons">
-                    <button type="button" class="btn-cancelar">Cancelar</button>
-                    <button type="submit" class="btn-confirmar">Adicionar Aula</button>
-                </div>
+                <div class="form-group"><label>Título</label><input type="text" name="titulo" required></div>
+                <div class="form-group"><label>Link YouTube</label><input type="url" name="video_url" required></div>
+                <div class="form-group"><label>Duração (Min,Seg)</label><input type="text" name="duracao_texto" placeholder="ex: 5,30" required></div>
+                <div class="form-group"><label>Pontos</label><input type="number" name="pontos" value="5" required></div>
+                <div class="modal-buttons"><button type="button" class="btn-cancelar">Cancelar</button><button type="submit" class="btn-confirmar">Salvar</button></div>
             </form>
         </div>
     </div>
-    
+
+    <div class="modal-overlay" id="modalConvidarAluno">
+        <div class="modal-content">
+            <button type="button" class="modal-close"><i class='bx bx-x'></i></button>
+            <h2>Convidar Aluno</h2>
+            <form action="{{ route('turmas.convidar', $turma) }}" method="POST">
+                @csrf
+                <div class="form-group"><label>RA do Aluno</label><input type="text" name="ra" required></div>
+                <div class="modal-buttons"><button type="button" class="btn-cancelar">Cancelar</button><button type="submit" class="btn-confirmar">Enviar</button></div>
+            </form>
+        </div>
+    </div>
+
+    <div class="modal-overlay" id="modalEnviarAviso">
+        <div class="modal-content">
+            <button type="button" class="modal-close"><i class='bx bx-x'></i></button>
+            <h2>Novo Aviso</h2>
+            <form action="{{ route('professor.avisos.store') }}" method="POST">
+                @csrf
+                <input type="hidden" name="turma_id" value="{{ $turma->id }}">
+                <div class="form-group"><label>Título</label><input type="text" name="titulo" required></div>
+                <div class="form-group"><label>Mensagem</label><textarea name="conteudo" rows="4" required></textarea></div>
+                <div class="form-group">
+                    <label>Destinatários:</label>
+                    <div class="recipient-toggle">
+                        <label class="toggle-option active" id="tab-all">
+                            <input type="radio" name="alcance" value="todos" checked onchange="toggleRecipient('all')"> Toda a Turma
+                        </label>
+                        <label class="toggle-option" id="tab-select">
+                            <input type="radio" name="alcance" value="selecionados" onchange="toggleRecipient('select')"> Selecionar Alunos
+                        </label>
+                    </div>
+                    <div id="student-list-container" class="student-selection-container">
+                        <div class="student-checkbox-list">
+                            <div class="checkbox-item" style="background:#f0f0f0;">
+                                <input type="checkbox" id="selectAllStudents"> <label for="selectAllStudents"><strong>Todos</strong></label>
+                            </div>
+                            @foreach($alunos as $aluno)
+                                <div class="checkbox-item">
+                                    <input type="checkbox" name="alunos[]" value="{{ $aluno->id }}" class="student-checkbox" id="aluno_{{$aluno->id}}">
+                                    <label for="aluno_{{$aluno->id}}">{{ $aluno->nome }}</label>
+                                </div>
+                            @endforeach
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-buttons"><button type="button" class="btn-cancelar">Cancelar</button><button type="submit" class="btn-confirmar">Enviar</button></div>
+            </form>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.10.0/dist/sweetalert2.all.min.js"></script>
     <script>
         window.flashMessages = {
             sweetSuccessConvite: "{{ session('sweet_success_convite') }}",
             sweetErrorConvite: "{{ session('sweet_error_convite') }}",
-            sweetErrorAula: "{{ session('sweet_error_aula') ?? '' }}"
+            sweetErrorAula: "{{ session('sweet_error_aula') }}"
         };
-        @if (session('aula_criada_feedback'))
-            const aulaCriadaFeedback = @json(session('aula_criada_feedback'));
-        @endif
-        @if (session('formulario_criado_success'))
-            const formularioCriadoSuccess = @json(session('formulario_criado_success'));
+        @if (session('sweet_success'))
+            Swal.fire({ title: 'Sucesso!', text: "{{ session('sweet_success') }}", icon: 'success', confirmButtonColor: '#1a62ff' });
         @endif
     </script>
     <script src="{{ asset('js/Professor/detalheTurmaProfessor.js') }}"></script>
