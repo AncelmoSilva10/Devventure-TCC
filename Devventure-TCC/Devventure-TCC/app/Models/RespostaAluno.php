@@ -14,7 +14,7 @@ class RespostaAluno extends Model
      *
      * @var string
      */
-    protected $table = 'resposta_alunos'; 
+    protected $table = 'respostas_exercicios'; 
 
     /**
      * Os atributos que podem ser atribuídos em massa.
@@ -27,7 +27,6 @@ class RespostaAluno extends Model
         'resposta',
     ];
 
-    
     public function aluno()
     {
         return $this->belongsTo(Aluno::class);
@@ -37,5 +36,10 @@ class RespostaAluno extends Model
     public function pergunta()
     {
         return $this->belongsTo(Pergunta::class);
+    }
+
+    public function exercicio()
+    {
+        return $this->belongsTo(Exercicio::class, 'exercicio_id');
     }
 }
