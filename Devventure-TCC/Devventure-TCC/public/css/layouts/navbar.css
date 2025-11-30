@@ -3,7 +3,7 @@
 
 /* Variáveis de Cor */
 :root {
-    --navbar-bg: #1e293b; /* Azul ardósia escuro */
+    --navbar-bg: #17245D; /* Azul ardósia escuro */
     --navbar-text: #e2e8f0; /* Cinza claro */
     --navbar-text-hover: #ffffff;
     --navbar-highlight: #38bdf8; /* Azul claro para destaque */
@@ -20,16 +20,16 @@ body {
     font-family: 'Poppins', sans-serif;
 }
 
-/* Estilo Principal da Navbar 
-  A MUDANÇA ESTÁ AQUI 
-*/
 .navbar {
     background-color: var(--navbar-bg); /* <-- Alterado de 'transparent' */
     padding: 0 5%;
     top: 0;
-    left: 0;
-    width: 100%;
+    left: 1%;
+    margin: 8px auto;  /* Espaçamento no topo e laterais */
+    width: 98%;     
+    border-radius: 50px;
     z-index: 1000;
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.18);
     transition: background-color 0.4s ease, box-shadow 0.4s ease; /* Adicionado transition para box-shadow */
 }
 
@@ -48,20 +48,22 @@ body {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    height: 80px;
+    height: 90px;
     max-width: 1400px;
     margin: 0 auto;
 }
 
 /* Logo */
 .navbar-logo img {
-    height: 70px;
+    height: 90px;
+    object-fit: contain;
     width: auto;
     transition: transform 0.3s ease;
 }
 .navbar-logo img:hover {
-    transform: scale(1.05);
+    transform: scale(1.09);
 }
+
 
 /* Links da Navbar */
 .navbar-links {
@@ -72,7 +74,7 @@ body {
 .navbar-links a {
     color: var(--navbar-text);
     text-decoration: none;
-    font-size: 16px;
+    font-size: 18px;
     font-weight: 500;
     padding: 8px 12px;
     border-radius: 6px;
@@ -184,7 +186,7 @@ body {
     width: 100%;
     padding: 0.6rem 1rem;
     font-size: 0.95rem;
-    color: #333;
+    color: #333333;
     background: none;
     border: none;
     cursor: pointer;
@@ -259,4 +261,5 @@ body {
     .profile-button {
         padding: 5px;
     }
+    
 }

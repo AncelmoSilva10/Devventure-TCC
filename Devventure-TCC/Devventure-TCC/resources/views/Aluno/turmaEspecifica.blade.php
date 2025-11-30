@@ -13,8 +13,43 @@
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
 
     <link href="{{ asset('css/Aluno/alunoTurmaEspecifica.css') }}" rel="stylesheet">
+
+    <style>
+        /* Classe para quando tem notificação */
+        .tab-link.notification-active {
+            background-color: #ff9f43 !important; /* Laranja */
+            color: #fff !important;
+            border-color: #ff9f43 !important;
+            position: relative;
+            animation: pulse-orange 2s infinite;
+            font-weight: 600;
+        }
+
+        .tab-link.notification-active i {
+            animation: ring-bell 2s infinite ease-in-out;
+        }
+
+        /* Animação de Pulsar */
+        @keyframes pulse-orange {
+            0% { box-shadow: 0 0 0 0 rgba(255, 159, 67, 0.7); }
+            70% { box-shadow: 0 0 0 10px rgba(255, 159, 67, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(255, 159, 67, 0); }
+        }
+
+        /* Animação do Sininho */
+        @keyframes ring-bell {
+            0% { transform: rotate(0); }
+            10% { transform: rotate(15deg); }
+            20% { transform: rotate(-15deg); }
+            30% { transform: rotate(10deg); }
+            40% { transform: rotate(-10deg); }
+            50% { transform: rotate(0); }
+            100% { transform: rotate(0); }
+        }
+    </style>
 </head>
 <body>
+    
     <div class="turma-wrapper">
         <header class="turma-header">
             <div class="header-overlay"></div>
@@ -38,7 +73,22 @@
                 <div class="tabs-navigation">
                     <button class="tab-link {{ request('tab', 'exercicios') == 'exercicios' ? 'active' : '' }}" data-tab="exercicios"><i class='bx bxs-pencil'></i> Exercícios</button>
                     <button class="tab-link {{ request('tab') == 'aulas' ? 'active' : '' }}" data-tab="aulas"><i class='bx bxs-videos'></i> Aulas</button>
-                    <button class="tab-link {{ request('tab') == 'avisos' ? 'active' : '' }}" data-tab="avisos"><i class='bx bxs-bell'></i> Mural de Avisos</button>
+                    
+                    @php
+                        // Pega a data do aviso mais recente (se houver) para comparar no JavaScript
+                        // Assumindo que $avisos vem ordenado do mais recente para o mais antigo
+                        $ultimoAviso = $avisos->first();
+                        $timestampUltimoAviso = $ultimoAviso ? $ultimoAviso->created_at->timestamp : 0;
+                    @endphp
+
+                    <button id="btnTabAvisos" 
+                            class="tab-link {{ request('tab') == 'avisos' ? 'active' : '' }}" 
+                            data-tab="avisos"
+                            data-latest-aviso="{{ $timestampUltimoAviso }}"
+                            data-turma-id="{{ $turma->id }}">
+                        <i class='bx bxs-bell'></i> Mural de Avisos
+                    </button>
+
                     <button class="tab-link {{ request('tab') == 'provas' ? 'active' : '' }}" data-tab="provas"><i class='bx bxs-file-blank'></i> Provas</button>
                 </div>
 
@@ -84,35 +134,35 @@
                                 {{ $exercicios->appends(['tab' => 'exercicios'])->appends(request()->except('exerciciosPage'))->links() }}
                             </div>
                         </div>
+
                         <div class="tab-pane {{ request('tab') == 'provas' ? 'active' : '' }}" id="provas">
                             <div class="content-grid">
                                 @forelse($provas as $provaItem)
                                     @php
                                         $statusClass = 'status-pending';
                                         $statusText = 'Pendente';
-                                        $linkRoute = route('aluno.provas.show', $provaItem->id); // Rota padrão para ver detalhes da prova
+                                        $linkRoute = route('aluno.provas.show', $provaItem->id); 
     
-                                        // Verifica se o aluno já tem uma tentativa para esta prova
                                         $tentativaAluno = $provaItem->tentativas->first();
     
                                         if ($tentativaAluno) {
                                             if ($tentativaAluno->hora_fim !== null) {
-                                                $statusClass = 'status-delivered'; // Concluída
+                                                $statusClass = 'status-delivered';
                                                 $statusText = 'Concluída';
                                                 $linkRoute = route('aluno.provas.resultado', $tentativaAluno->id);
                                             } else {
-                                                $statusClass = 'status-in-progress'; // Em Andamento
+                                                $statusClass = 'status-in-progress';
                                                 $statusText = 'Em Andamento';
                                                 $linkRoute = route('aluno.provas.fazer', $tentativaAluno->id);
                                             }
                                         } elseif (now()->isBefore($provaItem->data_abertura)) {
-                                            $statusClass = 'status-upcoming'; // Em Breve
+                                            $statusClass = 'status-upcoming';
                                             $statusText = 'Em Breve';
-                                            $linkRoute = '#'; // Não clicável ou leva para info
+                                            $linkRoute = '#';
                                         } elseif (now()->isAfter($provaItem->data_fechamento)) {
-                                            $statusClass = 'status-late'; // Prazo Encerrado
+                                            $statusClass = 'status-late';
                                             $statusText = 'Prazo Encerrado';
-                                            $linkRoute = '#'; // Não clicável ou leva para info
+                                            $linkRoute = '#';
                                         }
                                     @endphp
                                     <a href="{{ $linkRoute }}" class="exercise-card {{ $statusClass }}">
@@ -202,7 +252,6 @@
                         </div>
                     </div>
 
-
                 </div>
             </div>
 
@@ -236,7 +285,7 @@
     </div>
     
     <script>
-        // Lógica para alternar entre as abas (não precisa de alteração)
+        // --- 1. Lógica das Abas ---
         const tabLinks = document.querySelectorAll('.tab-link');
         const tabPanes = document.querySelectorAll('.tab-pane');
 
@@ -249,6 +298,49 @@
 
                 link.classList.add('active');
                 document.getElementById(tab).classList.add('active');
+            });
+        });
+
+        // --- 2. Lógica de Notificação (Inteligente) ---
+        document.addEventListener('DOMContentLoaded', function() {
+            const btnAvisos = document.getElementById('btnTabAvisos');
+            const iconAvisos = btnAvisos.querySelector('i');
+            
+            // Pega o timestamp (data) do último aviso enviado pelo PHP
+            const serverLatest = parseInt(btnAvisos.getAttribute('data-latest-aviso'));
+            const turmaId = btnAvisos.getAttribute('data-turma-id');
+            const storageKey = 'ultimo_aviso_visto_turma_' + turmaId;
+
+            // Pega o que está salvo no navegador do aluno
+            const localLatest = localStorage.getItem(storageKey);
+
+            // SE a data do servidor for maior que a do local (tem aviso novo) 
+            // E a data não for 0 (tem algum aviso)
+            // E a aba atual não for 'avisos'
+            const currentTab = "{{ request('tab') }}"; // Pega a aba atual do PHP para o primeiro load
+            
+            if (serverLatest > 0 && (!localLatest || serverLatest > localLatest)) {
+                
+                // Se ele já carregou na aba de avisos, atualiza direto e não mostra laranja
+                if (currentTab === 'avisos') {
+                    localStorage.setItem(storageKey, serverLatest);
+                } else {
+                    // Senão, ativa o modo laranja
+                    btnAvisos.classList.add('notification-active');
+                    iconAvisos.classList.remove('bxs-bell');
+                    iconAvisos.classList.add('bxs-bell-ring');
+                }
+            }
+
+            // Quando clica no botão para ver
+            btnAvisos.addEventListener('click', function() {
+                // Remove a cor laranja
+                this.classList.remove('notification-active');
+                iconAvisos.classList.remove('bxs-bell-ring');
+                iconAvisos.classList.add('bxs-bell');
+
+                // Salva no navegador que ele já viu esse aviso
+                localStorage.setItem(storageKey, serverLatest);
             });
         });
     </script>

@@ -3,269 +3,201 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
- 
-  <link href="{{ asset('css/Professor/loginProfessor.css') }}" rel="stylesheet">
-
-  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  <title>Área do Professor - Login</title>
   
-  <title>Área do Professor</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link href="{{ asset('css/Professor/loginProfessor.css') }}" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </head>
 <body>
+
   @include('layouts.navbar')
 
-  <main class="container">
-    <div class="card">
-      <h2 id="form-title">Entrar como Professor</h2>
-      
-      <form 
-        method="POST" 
-        id="professor-form" 
-        enctype="multipart/form-data"
-        action="{{ route('professor.login.action') }}" 
-        data-login-url="{{ route('professor.login.action') }}"
-        data-cadastro-url="{{ route('professor.cadastro.action') }}"
-      >
-        @csrf
-
-        <div class="icon" id="avatar-wrapper" title="Clique para adicionar uma foto de perfil">
-            <span id="avatar-preview">
-    <svg width="50px" height="50px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <path d="M16 8.99991C16 11.2091 14.2091 12.9999 12 12.9999C9.79086 12.9999 8 11.2091 8 8.99991C8 6.79077 9.79086 4.99991 12 4.99991C14.2091 4.99991 16 6.79077 16 8.99991Z" stroke="#888" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-        <path d="M12 15.9999C8.13401 15.9999 5 18.2385 5 20.9999" stroke="#888" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-        <path d="M18 11.5V17.5" stroke="#888" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-        <path d="M21 14.5H15" stroke="#888" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-    </svg>
-</span>
-            <input type="file" id="avatar" name="avatar" accept="image/*" style="display: none;">
+  <main class="split-screen-container">
+    
+    <div class="left-panel">
+        <div class="professor-icon-large">
+            <img 
+                src="{{ asset('images/professor.png') }}" 
+                alt="Ícone Professor" 
+                class="professor-img-custom"
+                onerror="this.style.display='none'; this.parentNode.innerHTML='<svg viewBox=\'0 0 24 24\' fill=\'none\' stroke=\'white\' stroke-width=\'2\' stroke-linecap=\'round\' stroke-linejoin=\'round\' style=\'width:100px;height:100px;\'><path d=\'M22 10v6M2 10l10-5 10 5-10 5z\'/><path d=\'M6 12v5c3 3 9 3 12 0v-5\'/></svg>'" 
+            >
         </div>
+        <h2>Portal do Professor</h2>
+        <p>Acesse suas ferramentas de ensino, gerencie turmas e acompanhe o desempenho dos alunos.</p>
+    </div>
 
-        <div id="cadastro-fields" style="display: none;">
-          <div class="form-group">
-            <label for="nome">Nome completo *</label>
-            <input type="text" id="nome" name="nome" placeholder="Digite seu nome completo" maxlength="50">
-          </div>
+    <div class="right-panel">
+        <div class="form-content-wrapper">
+            
+            <div class="form-header">
+                <h3 id="form-title">Login</h3>
+                <p id="form-subtitle" style="color: #666; font-size: 0.9rem; margin-top: 5px;">Bem-vindo de volta, professor!</p>
+            </div>
 
-          <div class="form-group">
-            <label for="cpf">CPF *</label>
-            <input type="text" id="cpf" name="cpf" placeholder="000.000.000-00" maxlength="14">
-            <small id="cpf-feedback"></small>
-          </div>
+            <div id="stepper-indicators" class="stepper" style="display: none;">
+                <div class="step-dot active" data-step="1">1</div>
+                <div class="step-line"></div>
+                <div class="step-dot" data-step="2">2</div>
+                <div class="step-line"></div>
+                <div class="step-dot" data-step="3">3</div>
+            </div>
 
-          <div class="form-group">
-            <label for="area">Área de Ensino *</label>
-            <input type="text" id="area" name="area" placeholder="Ex: Matemática, Programação, etc.">
-          </div>
+            <form method="POST" id="professor-form" enctype="multipart/form-data"
+                action="{{ route('professor.login.action') }}" 
+                data-login-url="{{ route('professor.login.action') }}"
+                data-cadastro-url="{{ route('professor.cadastro.action') }}">
+                @csrf
 
-          <div class="form-group">
-            <label for="formacao">Formação acadêmica *</label>
-            <textarea id="formacao" name="formacao" placeholder="Descreva sua formação e experiência" rows="4"></textarea>
-          </div>
+                <input type="hidden" name="form_tipo" id="form_tipo" value="{{ old('form_tipo', 'login') }}">
 
-          <div class="form-group">
-            <label for="telefone">Telefone (opcional)</label>
-            <input type="text" id="telefone" name="telefone" placeholder="(11) 99999-9999" maxlength="15">
-          </div>
+                <div id="login-section">
+                    <div class="form-group">
+                        <label for="email-login">E-mail Institucional</label>
+                        <input type="email" id="email-login" name="email" placeholder="professor@escola.com" value="{{ old('email') }}">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="password-login">Senha</label>
+                        <div class="senha-wrapper">
+                            <input type="password" id="password-login" name="password" placeholder="Sua senha">
+                            <button type="button" class="toggle-password" onclick="togglePassword('password-login', this)" tabindex="-1">
+                                <svg class="icon-eye" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>
+                                <svg class="icon-eye-off" style="display:none;" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"></path><line x1="1" y1="1" x2="23" y2="23"></line></svg>
+                            </button>
+                        </div>
+                        <div style="text-align: right; margin-top: 8px;">
+                            <a href="/esqueceu-senha" style="font-size: 0.85rem; color: #555; text-decoration: none;">Esqueceu a senha?</a>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="cadastro-section" style="display: none;">
+                    
+                    <div class="step-content" data-step="1">
+                        <div style="text-align: center; margin-bottom: 25px;">
+                            <div class="avatar-circle" id="avatar-wrapper" title="Adicionar Foto">
+                                <span id="avatar-preview">
+                                    <svg width="40px" height="40px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                        <path d="M16 8.99991C16 11.2091 14.2091 12.9999 12 12.9999C9.79086 12.9999 8 11.2091 8 8.99991C8 6.79077 9.79086 4.99991 12 4.99991C14.2091 4.99991 16 6.79077 16 8.99991Z" stroke="#888" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                                        <path d="M12 15.9999C8.13401 15.9999 5 18.2385 5 20.9999" stroke="#888" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                                        <path d="M18 11.5V17.5" stroke="#888" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                                        <path d="M21 14.5H15" stroke="#888" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                                    </svg>
+                                </span>
+                                <input type="file" id="avatar" name="avatar" accept="image/*" style="display: none;">
+                            </div>
+                            <small style="color: #666; font-size: 0.8rem; margin-top: 5px; display: block;">Adicionar Foto</small>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="nome">Nome Completo *</label>
+                            <input type="text" id="nome" name="nome" value="{{ old('nome') }}">
+                        </div>
+                        <div class="form-group">
+                            <label for="cpf">CPF *</label>
+                            <input type="text" id="cpf" name="cpf" placeholder="000.000.000-00" maxlength="14" value="{{ old('cpf') }}">
+                            <small id="cpf-feedback" style="display: block; height: 18px; font-size: 0.8rem; margin-top: 2px;"></small>
+                        </div>
+                    </div>
+
+                    <div class="step-content" data-step="2" style="display: none;">
+                        <div class="form-group">
+                            <label for="area">Área de Ensino *</label>
+                            <input type="text" id="area" name="area" placeholder="Ex: Matemática" value="{{ old('area') }}">
+                        </div>
+                        <div class="form-group">
+                            <label for="formacao">Formação *</label>
+                            <textarea id="formacao" name="formacao" rows="3">{{ old('formacao') }}</textarea>
+                        </div>
+                        <div class="form-group">
+                            <label for="telefone">Celular</label>
+                            <input type="text" id="telefone" name="telefone" placeholder="(11) 99999-9999" value="{{ old('telefone') }}">
+                        </div>
+                    </div>
+
+                    <div class="step-content" data-step="3" style="display: none;">
+                        <div class="form-group">
+                            <label for="email-cadastro">E-mail *</label>
+                            <input type="email" id="email-cadastro" name="email" value="{{ old('email') }}">
+                        </div>
+                        <div class="form-group">
+                            <label for="password-cadastro">Senha *</label>
+                            <div class="senha-wrapper">
+                                <input type="password" id="password-cadastro" name="password">
+                                <button type="button" class="toggle-password" onclick="togglePassword('password-cadastro', this)" tabindex="-1">
+                                    <svg class="icon-eye" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>
+                                    <svg class="icon-eye-off" style="display:none;" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"></path><line x1="1" y1="1" x2="23" y2="23"></line></svg>
+                                </button>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="confirm_password">Confirmar Senha *</label>
+                            <div class="senha-wrapper">
+                                <input type="password" id="confirm_password" name="password_confirmation">
+                                <button type="button" class="toggle-password" onclick="togglePassword('confirm_password', this)" tabindex="-1">
+                                    <svg class="icon-eye" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>
+                                    <svg class="icon-eye-off" style="display:none;" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"></path><line x1="1" y1="1" x2="23" y2="23"></line></svg>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="buttons-row">
+                    <button type="button" id="btn-prev" class="btn-secondary btn-block" style="display: none;">Voltar</button>
+                    <button type="submit" id="btn-submit" class="btn-primary btn-block">Entrar</button>
+                    <button type="button" id="btn-next" class="btn-primary btn-block" style="display: none;">Próximo</button>
+                </div>
+
+            </form>
+
+            <div style="text-align: center; margin-top: 25px;">
+                <span id="toggle-text" style="color: #666; font-size: 0.95rem;">Ainda não tem conta?</span>
+                <button type="button" id="toggle-btn" style="background: none; border: none; color: var(--primary); font-weight: 700; cursor: pointer; text-decoration: underline; margin-left: 5px; font-size: 0.95rem;">Cadastre-se</button>
+            </div>
+
         </div>
-        
-        <div class="form-group">
-          <label for="email">Email *</label>
-          <input type="email" id="email" name="email" placeholder="Digite seu email" required>
-        </div>
-        
-        <div class="form-group">
-          <label for="password">Senha *</label>
-          <small id="password-feedback" class="password-feedback"></small>
-          <div class="senha-wrapper">
-            <input type="password" id="password" name="password" placeholder="Digite sua senha" required>
-            <span class="toggle-password" onclick="togglePassword('password', this)">
-              <svg class="icon-eye" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>
-              <svg class="icon-eye-off d-none" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"></path><line x1="1" y1="1" x2="23" y2="23"></line></svg>
-            </span>
-          </div>
-        </div>
-
-        <div class="form-group" id="confirm-password-wrapper" style="display: none;">
-          <label for="confirm_password">Confirmar senha *</label>
-          <div class="senha-wrapper">
-            <input type="password" id="confirm_password" name="password_confirmation" placeholder="Confirme sua senha">
-            <span class="toggle-password" onclick="togglePassword('confirm_password', this)">
-                <svg class="icon-eye" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>
-                <svg class="icon-eye-off d-none" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"></path><line x1="1" y1="1" x2="23" y2="23"></line></svg>
-            </span>
-          </div>
-        </div>
-
-        <button type="submit" id="submit-btn">Entrar</button>
-      </form>
-
-      <div class="links">
-        <button type="button" id="toggle-btn">Não tem conta? <strong>Cadastre-se</strong></button>
-        <a href="/esqueceu-senha">Esqueceu a senha?</a>
-      </div>
     </div>
   </main>
 
-  <script src="{{ asset('js/Professor/loginProfessor.js') }}"></script> 
-
+  <script src="{{ asset('js/Professor/loginProfessor.js') }}"></script>
+  
   <script>
-    document.addEventListener('DOMContentLoaded', function () {
-    
-        const errors = @json($errors->toArray());
-        const oldInput = @json(session()->getOldInput() ?? []);
+    document.addEventListener('DOMContentLoaded', function() {
+        @if ($errors->any())
+            const errorFields = @json($errors->keys());
+            if (errorFields.length > 0) {
+                // Marca os campos com erro
+                errorFields.forEach(function(field) {
+                    const input = document.getElementsByName(field)[0];
+                    if (input) input.classList.add('is-invalid');
+                    // Se o erro for no email/senha do cadastro, marca os IDs específicos também para garantir
+                    if(field === 'email') {
+                         let emailCad = document.getElementById('email-cadastro');
+                         if(emailCad && !emailCad.disabled) emailCad.classList.add('is-invalid');
+                    }
+                });
 
-        // Limpa erros JS antigos
-        document.querySelectorAll('.error-feedback-js').forEach(e => e.remove());
-
-        // Verifica se há erros de validação (e não é um erro de login 'msg')
-        if (Object.keys(errors).length > 0 && errors.msg === undefined) {
-            
-            // Força a exibição dos campos de cadastro
-            const toggleBtn = document.getElementById('toggle-btn');
-            if (toggleBtn && (toggleBtn.textContent.includes('Cadastre-se') || toggleBtn.innerText.includes('Cadastre-se'))) {
-                toggleBtn.click();
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Atenção',
+                    html: '<ul style="text-align: left;">@foreach ($errors->all() as $error)<li>{{ $error }}</li>@endforeach</ul>',
+                    confirmButtonColor: '#00796B'
+                });
             }
-
-            const form = document.getElementById('professor-form');
-            form.querySelectorAll('input, textarea, select').forEach(field => {
-                const fieldName = field.name;
-                if (fieldName === '_token') return;
-
-                let existingError = field.parentNode.querySelector('.error-feedback-js');
-                if (existingError) existingError.remove();
-
-                // Verifica se este campo tem um erro
-                if (errors[fieldName]) {
-                    const errorElement = document.createElement('small');
-                    errorElement.className = 'error-feedback-js';
-                    errorElement.innerText = errors[fieldName][0];
-                    field.classList.add('is-invalid'); 
-
-                    if (fieldName === 'avatar') {
-                        const wrapper = document.getElementById('avatar-wrapper');
-                        wrapper.classList.add('is-invalid'); 
-                        wrapper.parentNode.insertBefore(errorElement, wrapper.nextSibling);
-                    } else if (field.parentNode.classList.contains('senha-wrapper')) {
-                        field.parentNode.parentNode.appendChild(errorElement);
-                    } else {
-                        field.parentNode.appendChild(errorElement);
-                    }
-                } else if (oldInput[fieldName]) {
-                    if (fieldName !== 'avatar') {
-                        field.value = oldInput[fieldName];
-                    }
-                }
-            });
-
-            // Limpa as senhas por segurança
-            const passwordField = document.getElementById('password');
-            const confirmField = document.getElementById('confirm_password');
-            if (passwordField) passwordField.value = '';
-            if (confirmField) confirmField.value = '';
-        }
-
-        // --- SEÇÃO DE SWEETALERTS ---
-
-        // Exibe erro de LOGIN (ex: "E-mail ou senha inválidos")
-        @if ($errors->has('msg'))
-            Swal.fire({
-                icon: 'error',
-                title: 'Oops... Algo deu errado',
-                text: '{{ $errors->first('msg') }}',
-                confirmButtonColor: '#d33'
-            });
         @endif
 
-        // Exibe pop-up de VERIFICAÇÃO PENDENTE
-        @if (session('needs_verification'))
-            Swal.fire({
-                icon: 'warning',
-                title: 'Verificação Necessária',
-                text: "{{ session('needs_verification') }}",
-                showCancelButton: true,
-                confirmButtonText: 'Reenviar E-mail de Verificação',
-                cancelButtonText: 'Cancelar',
-                confirmButtonColor: '#3085d6',
-                cancelButtonColor: '#aaa',
-            }).then((result) => { 
-                if (result.isConfirmed) {
-                    let form = document.createElement('form');
-                    form.method = 'POST';
-                    form.action = "{{ route('verification.resend') }}";
-                    let csrfToken = document.createElement('input');
-                    csrfToken.type = 'hidden';
-                    csrfToken.name = '_token';
-                    csrfToken.value = '{{ csrf_token() }}';
-                    form.appendChild(csrfToken);
-                    document.body.appendChild(form);
-                    form.submit();
-                }
-            });
-        @endif
-
-        // --- CORREÇÃO DO ALERTA DE SUCESSO ---
-        // Seu TwoFactorController envia 'status'. 
-        // Este script agora 'escuta' por 'status'.
         @if (session('status'))
-            Swal.fire({
+             Swal.fire({
                 icon: 'success',
-                title: 'Sucesso!',
+                title: 'Sucesso',
                 text: "{{ session('status') }}",
-                confirmButtonColor: '#3085d6'
+                confirmButtonColor: '#00796B'
             });
         @endif
-
-        // --- CÓDIGO DO CPF MOVIDO PARA DENTRO DO DOMCONTENTLOADED ---
-        const cpfInput = document.getElementById('cpf');
-        const cpfFeedback = document.getElementById('cpf-feedback');
-
-        // Só roda o script do CPF se os campos existirem
-        if (cpfInput && cpfFeedback) { 
-            
-            function validarCPF(cpf) {
-                cpf = cpf.replace(/[^\d]+/g, '');
-                if (cpf.length !== 11 || /^(\d)\1+$/.test(cpf)) return false;
-                let soma = 0;
-                for (let i = 0; i < 9; i++) soma += parseInt(cpf.charAt(i)) * (10 - i);
-                let resto = 11 - (soma % 11);
-                if (resto === 10 || resto === 11) resto = 0;
-                if (resto !== parseInt(cpf.charAt(9))) return false;
-                soma = 0;
-                for (let i = 0; i < 10; i++) soma += parseInt(cpf.charAt(i)) * (11 - i);
-                resto = 11 - (soma % 11);
-                if (resto === 10 || resto === 11) resto = 0;
-                if (resto !== parseInt(cpf.charAt(10))) return false;
-                return true;
-            }
-
-            cpfInput.addEventListener('input', function (e) {
-                let value = e.target.value.replace(/\D/g, '');
-                if (value.length > 3 && value.length <= 6)
-                    value = value.replace(/(\d{3})(\d+)/, '$1.$2');
-                else if (value.length > 6 && value.length <= 9)
-                    value = value.replace(/(\d{3})(\d{3})(\d+)/, '$1.$2.$3');
-                else if (value.length > 9)
-                    value = value.replace(/(\d{3})(\d{3})(\d{3})(\d+)/, '$1.$2.$3-$4');
-                e.target.value = value.substring(0, 14);
-            });
-
-            cpfInput.addEventListener('blur', function () {
-                const cpf = cpfInput.value.trim();
-                if (!cpf) {
-                    cpfFeedback.textContent = '';
-                    return;
-                }
-                if (!validarCPF(cpf)) {
-                    cpfFeedback.textContent = '❌ CPF inválido';
-                    cpfFeedback.style.color = '#e74c3c';
-                } else {
-                    cpfFeedback.textContent = '✅ CPF válido';
-                    cpfFeedback.style.color = '#2ecc71';
-                }
-            });
-        } // --- Fim do 'if (cpfInput)'
-        
-    }); // <-- FIM DO 'DOMContentLoaded'
-    </script>
-
+    });
+  </script>
 </body>
 </html>

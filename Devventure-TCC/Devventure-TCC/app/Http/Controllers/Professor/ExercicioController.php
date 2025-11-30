@@ -11,6 +11,7 @@ use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator; 
+use Illuminate\Support\Facades\Storage;
 use App\Models\RespostaExercicio;   
 
 class ExercicioController extends Controller
@@ -133,7 +134,7 @@ public function avaliarResposta(Request $request, RespostaExercicio $resposta)
         'feedback' => 'nullable|string',
     ]);
 
-    
+
     DB::transaction(function () use ($request, $resposta) {
         
         
@@ -161,5 +162,48 @@ public function avaliarResposta(Request $request, RespostaExercicio $resposta)
 
     return redirect()->back()->with('sweet_success', 'Avaliação guardada com sucesso e pontuação do aluno atualizada!');
 }
+
+    public function destroy(Exercicio $exercicio)
+    {
+        // 1. Segurança
+        if ($exercicio->turma->professor_id !== Auth::guard('professor')->id()) {
+            abort(403, 'Ação não autorizada.');
+        }
+
+        // 2. Apagar arquivos de Resposta dos Alunos
+        foreach ($exercicio->respostas as $resposta) {
+            foreach ($resposta->arquivos as $arqAluno) {
+                // Ajuste 'arquivo_path' conforme o nome da sua coluna no banco
+                if (Storage::exists('public/' . $arqAluno->arquivo_path)) {
+                    Storage::delete('public/' . $arqAluno->arquivo_path);
+                }
+            }
+        }
+
+        // 3. Apagar Imagens de Apoio (Do Professor)
+        // Certifique-se que o relacionamento 'imagensApoio' existe no Model Exercicio
+        foreach ($exercicio->imagensApoio as $img) {
+            // Ajuste 'path' conforme o nome da coluna na tabela de imagens
+            if (Storage::exists('public/' . $img->path)) {
+                Storage::delete('public/' . $img->path);
+            }
+        }
+
+        // 4. Apagar Arquivos de Apoio (Do Professor)
+        // Certifique-se que o relacionamento 'arquivosApoio' existe no Model Exercicio
+        foreach ($exercicio->arquivosApoio as $arq) {
+            // Ajuste 'path' conforme o nome da coluna na tabela de arquivos
+            if (Storage::exists('public/' . $arq->path)) {
+                Storage::delete('public/' . $arq->path);
+            }
+        }
+
+        // 5. Apagar o registro do banco
+        // O banco apagará as linhas das tabelas filhas via Cascade (se configurado nas migrations)
+        $exercicio->delete();
+
+        return redirect()->route('professor.exercicios.index')
+                         ->with('sweet_success', 'Exercício e arquivos excluídos com sucesso!');
+    }
 }
 

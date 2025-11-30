@@ -25,18 +25,35 @@
         </button>
 
         {{-- LINKS PRINCIPAIS --}}
-        <div class="navbar-links" id="navbar-links">
-            <a href="/"><i class="fa fa-home"></i><span>Home</span></a>
+     <div class="navbar-links" id="navbar-links">
+    <a href="/"><i class="fa fa-home"></i><span>Home</span></a>
 
-            {{-- Exibir apenas se NENHUM usuário estiver autenticado --}}
-            @if(!Auth::guard('aluno')->check() && !Auth::guard('professor')->check())
-                <a href="{{ route('login.aluno') }}"><i class="fa fa-graduation-cap"></i><span>Login Aluno</span></a>
-                <a href="{{ route('login.professor') }}"><i class="fa fa-user"></i><span>Login Professor</span></a>
-            @endif
-        </div>
+    {{-- Se for aluno logado --}}
+    @auth('aluno')
+        <a href="{{ route('aluno.dashboard') }}">
+            <i class="fa fa-home"></i><span>Painel Aluno</span>
+        </a>
+
+        <a href="{{ route('aluno.turma') }}">
+            <i class="fa fa-users"></i><span>Turmas</span>
+        </a>
+    @endauth
+
+    {{-- Exibir apenas se NENHUM usuário estiver autenticado --}}
+    @if(!Auth::guard('aluno')->check() && !Auth::guard('professor')->check())
+        <a href="{{ route('login.aluno') }}">
+            <i class="fa fa-graduation-cap"></i><span>Login Aluno</span>
+        </a>
+
+        <a href="{{ route('login.professor') }}">
+            <i class="fa fa-user"></i><span>Login Professor</span>
+        </a>
+    @endif
+</div>
 
         {{-- PERFIL DO ALUNO --}}
         @auth('aluno')
+
             <div class="navbar-profile">
                 <button id="profile-dropdown-btn-aluno" class="profile-button">
                     <img src="{{ Auth::guard('aluno')->user()->avatar ? asset('storage/' . Auth::guard('aluno')->user()->avatar) : asset('images/default-avatar.png') }}" 
@@ -45,6 +62,7 @@
                     <i class='bx bx-chevron-down'></i>
                 </button>
 
+             
                 <div id="profile-dropdown-aluno" class="profile-dropdown-content">
                     <a href="{{ route('aluno.perfil.edit') }}" class="dropdown-item">
                         <i class='bx bxs-edit'></i>
@@ -64,6 +82,14 @@
 
         {{-- PERFIL DO PROFESSOR --}}
         @auth('professor')
+             <div class="navbar-links" id="navbar-links">
+
+           <a href="{{ route('professorDashboard') }}">
+            <i class="fa fa-home"></i><span>Painel Professor</span>
+        </a>
+
+            </div>
+        
             <div class="navbar-profile">
                 <button id="profile-dropdown-btn-professor" class="profile-button">
                     <img src="{{ Auth::guard('professor')->user()->avatar ? asset('storage/' . Auth::guard('professor')->user()->avatar) : asset('images/default-avatar.png') }}" 

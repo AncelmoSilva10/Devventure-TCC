@@ -16,32 +16,39 @@
 </head>
 <body>
 
+
+    <header class="reports-header">
+        <div class="header-container">
+            <div class="header-left">
+                <a href="{{ route('turmas.especificaID', $turma) }}" class="back-link">
+                    <i class='bx bx-chevron-left'></i> Voltar para Turma
+                </a>
+                
+                <div class="header-info">
+                    <h1>Relatório Individual</h1>
+                    <p>{{ $aluno->nome }} - {{ $turma->nome_turma }}</p>
+                </div>
+            </div>
+
+            <div class="header-actions">
+                <span class="export-label" style="color: rgba(255,255,255,0.9); font-weight: 600; font-size: 0.9rem;">Exportar:</span>
+                
+                <a href="{{ route('professor.relatorios.exportarIndividual', ['turma' => $turma->id, 'aluno' => $aluno->id, 'formato' => 'pdf']) }}" class="btn-export pdf" target="_blank">
+                    <i class='bx bxs-file-pdf'></i> PDF
+                </a>
+                
+                <a href="{{ route('professor.relatorios.exportarIndividual', ['turma' => $turma->id, 'aluno' => $aluno->id, 'formato' => 'csv']) }}" class="btn-export csv">
+                    <i class='bx bxs-spreadsheet'></i> Excel
+                </a>
+            </div>
+        </div>
+    </header>
+
     <div class="reports-wrapper">
-        <header class="reports-header">
-    <a href="{{ route('turmas.especificaID', $turma) }}" class="back-link">
-        <i class='bx bx-chevron-left'></i> Voltar para Turma
-    </a>
-
-    <div class="header-content-row" style="display: flex; justify-content: space-between; align-items: flex-end; flex-grow: 1; margin-left: 20px;">
-        <div class="header-info">
-            <h1>Relatório Individual</h1>
-            <p>{{ $aluno->nome }} - {{ $turma->nome_turma }}</p>
-        </div>
-
-        <div class="header-actions" style="display: flex; gap: 10px;">
-            <a href="{{ route('professor.relatorios.exportarIndividual', ['turma' => $turma->id, 'aluno' => $aluno->id, 'formato' => 'pdf']) }}" class="btn-export pdf" target="_blank">
-                <i class='bx bxs-file-pdf'></i> PDF
-            </a>
-            
-            <a href="{{ route('professor.relatorios.exportarIndividual', ['turma' => $turma->id, 'aluno' => $aluno->id, 'formato' => 'csv']) }}" class="btn-export csv">
-                <i class='bx bxs-spreadsheet'></i> Excel
-            </a>
-        </div>
-    </div>
-</header>
-
         <main class="report-aluno-grid">
+            
             <div class="report-main-content"> 
+                
                 <div class="card">
                     <div class="card-header">
                         <i class='bx bxs-spreadsheet'></i> 
@@ -67,7 +74,7 @@
                                             @if($resposta->conceito)
                                                 <span class="conceito-tag conceito-{{ strtolower($resposta->conceito) }}">{{ $resposta->conceito }}</span>
                                             @else
-                                                <span>N/A</span>
+                                                <span>-</span>
                                             @endif
                                         </td>
                                     </tr>
@@ -84,7 +91,7 @@
                 <div class="card">
                     <div class="card-header">
                         <i class='bx bxs-file-find'></i>
-                        <h3>Desempenho Detalhado nas Provas</h3>
+                        <h3>Desempenho em Provas</h3>
                     </div>
                     <div class="table-container">
                         <table>
@@ -93,8 +100,8 @@
                                     <th>Prova</th>
                                     <th>Data</th>
                                     <th>Pontuação</th>
-                                    <th>Acertos / Erros</th>
-                                    <th>Questões Erradas</th>
+                                    <th>Resumo</th>
+                                    <th>Erros</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -108,13 +115,15 @@
                                     <tr>
                                         <td>{{ $tentativa->prova->titulo ?? 'N/A' }}</td>
                                         <td>{{ $tentativa->hora_fim ? $tentativa->hora_fim->format('d/m/Y') : 'N/A' }}</td>
-                                        <td>{{ $tentativa->pontuacao_final ?? 'N/A' }}</td>
+                                        <td><strong>{{ $tentativa->pontuacao_final ?? 'N/A' }}</strong></td>
                                         <td>
                                             @if($totalQuestoes > 0)
-                                                <span class="text-success">{{ $acertos }}</span> Acertos<br>
-                                                <span class="text-danger">{{ $erros }}</span> Erros
+                                                <div style="font-size: 0.85rem;">
+                                                    <span class="text-success"><i class='bx bx-check'></i> {{ $acertos }}</span> &nbsp;|&nbsp; 
+                                                    <span class="text-danger"><i class='bx bx-x'></i> {{ $erros }}</span>
+                                                </div>
                                             @else
-                                                <span>N/A</span>
+                                                <span>-</span>
                                             @endif
                                         </td>
                                         <td>
@@ -122,19 +131,19 @@
                                                 <ul class="erros-detalhes-list">
                                                     @foreach ($respostas->where('correta', false) as $respostaQuestao)
                                                         <li>
-                                                            <i class='bx bx-x-circle'></i> 
-                                                            {{ Str::limit($respostaQuestao->provaQuestao->enunciado ?? 'Questão não encontrada', 50) }}
+                                                            <i class='bx bxs-x-circle'></i> 
+                                                            {{ Str::limit($respostaQuestao->provaQuestao->enunciado ?? 'Questão removida', 40) }}
                                                         </li>
                                                     @endforeach
                                                 </ul>
                                             @else
-                                                <span class="nenhum-erro">Nenhum erro.</span>
+                                                <span class="nenhum-erro"><i class='bx bx-check-circle'></i> Gabaritou!</span>
                                             @endif
                                         </td>
                                     </tr>
                                 @empty
                                     <tr>
-                                        <td colspan="5" class="empty-message">Nenhuma prova finalizada foi encontrada.</td>
+                                        <td colspan="5" class="empty-message">Nenhuma prova finalizada.</td>
                                     </tr>
                                 @endforelse
                             </tbody>
@@ -152,7 +161,7 @@
                             <thead>
                                 <tr>
                                     <th>Aula</th>
-                                    <th>Data de Conclusão</th>
+                                    <th>Conclusão</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -162,15 +171,15 @@
                                     @php $aulasConcluidas++; @endphp
                                     <tr>
                                         <td>{{ $aula->titulo }}</td>
-                                        <td>{{ \Carbon\Carbon::parse($aula->pivot->concluido_em)->format('d/m/Y') }}</td>
+                                        <td><i class='bx bx-check-double' style="color:var(--success-color)"></i> {{ \Carbon\Carbon::parse($aula->pivot->concluido_em)->format('d/m/Y H:i') }}</td>
                                     </tr>
                                     @endif
                                 @empty
-                                @endforelse
+                                    @endforelse
 
                                 @if($aulasConcluidas == 0)
                                     <tr>
-                                        <td colspan="2" class="empty-message">Nenhuma aula concluída.</td>
+                                        <td colspan="2" class="empty-message">Nenhuma aula assistida ainda.</td>
                                     </tr>
                                 @endif
                             </tbody>
@@ -180,9 +189,11 @@
             </div>
 
             <aside class="sidebar">
+                
                 <div class="card summary-card">
-                    <img src="{{ $aluno->avatar ? asset('storage/' . $aluno->avatar) : 'https://i.pravatar.cc/100?u='.$aluno->id }}" alt="Avatar do Aluno" class="summary-avatar">
+                    <img src="{{ $aluno->avatar ? asset('storage/' . $aluno->avatar) : 'https://i.pravatar.cc/150?u='.$aluno->id }}" alt="Avatar" class="summary-avatar">
                     <h3>{{ $aluno->nome }}</h3>
+                    
                     <div class="summary-stats">
                         <div class="stat-item">
                             <strong>{{ $aluno->total_pontos }}</strong>
@@ -194,17 +205,18 @@
                         </div>
                     </div>
                 </div>
+
                 <div class="card">
                     <div class="card-header">
                         <i class='bx bx-line-chart'></i>
-                        <h3>Evolução de Notas</h3>
+                        <h3>Evolução</h3>
                     </div>
                     <div class="chart-container">
                         @if($aluno->respostasExercicios->count() > 1)
                             <canvas id="notasAlunoChart"></canvas>
                         @else
                             <div class="empty-message">
-                                <p>É necessário que o aluno tenha entregue pelo menos dois exercícios para gerar o gráfico.</p>
+                                <p>Dados insuficientes para gerar o gráfico.</p>
                             </div>
                         @endif
                     </div>
@@ -215,10 +227,17 @@
 
     <script>
         @if($aluno->respostasExercicios->count() > 1)
+            const ctx = document.getElementById('notasAlunoChart').getContext('2d');
+            
+            // Gradiente Verde
+            let gradient = ctx.createLinearGradient(0, 0, 0, 300);
+            gradient.addColorStop(0, 'rgba(0, 121, 107, 0.4)');
+            gradient.addColorStop(1, 'rgba(0, 121, 107, 0.0)');
+
             const notasData = {
                 labels: [
                     @foreach($aluno->respostasExercicios as $resposta)
-                        '{{ Str::limit($resposta->exercicio->nome, 15) }}',
+                        '{{ Str::limit($resposta->exercicio->nome, 10) }}',
                     @endforeach
                 ],
                 datasets: [{
@@ -229,9 +248,12 @@
                         @endforeach
                     ],
                     fill: true,
-                    backgroundColor: 'rgba(0, 121, 107, 0.2)',
-                    borderColor: 'rgba(0, 121, 107, 1)',
-                    tension: 0.3
+                    backgroundColor: gradient,
+                    borderColor: '#00796b',
+                    pointBackgroundColor: '#fff',
+                    pointBorderColor: '#00796b',
+                    borderWidth: 2,
+                    tension: 0.4
                 }]
             };
 
@@ -244,17 +266,18 @@
                     scales: {
                         y: { 
                             beginAtZero: true,
-                            max: 100
+                            max: 100,
+                            grid: { color: '#f0f0f0' }
+                        },
+                        x: {
+                            grid: { display: false }
                         }
                     },
                     plugins: { legend: { display: false } }
                 }
             };
 
-            const alunoChart = new Chart(
-                document.getElementById('notasAlunoChart'),
-                configAluno
-            );
+            new Chart(ctx, configAluno);
         @endif
     </script>
 

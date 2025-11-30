@@ -31,20 +31,20 @@
             </a>
             <a href="{{ route('professor.exercicios.index') }}" class="card-acao">
                 <i class='bx bxs-spreadsheet'></i>
-                <h3>Criar Exercício</h3>
+                <h3>Exercícios</h3>
                 <p>Elabore e atribua novos exercícios.</p>
             </a>
 
             <a href="{{ route('professor.provas.create') }}" class="card-acao">
                 <i class='bx bxs-file'></i>
-                <h3>Criar Prova</h3>
+                <h3>Provas</h3>
                 <p>Acompanhe o rendimento da jornada dos alunos.</p>
             </a>
           
-            <a href="{{ route('professor.avisos.create') }}" class="card-acao">
-                <i class='bx bxs-bell'></i>
-                <h3>Enviar Aviso</h3>
-                <p>Mande comunicados para uma ou mais turmas.</p>
+            <a href="{{ route('professor.turmas', ['contexto' => 'relatorios']) }}" class="card-acao">
+                <i class='bx bxs-bar-chart-square'></i>
+                <h3>Desempenho</h3>
+                <p>Acompanhe o progresso de suas turmas.</p>
             </a>
         </section>
 
@@ -115,6 +115,10 @@
                     <div class="item-estatistica">
                         <span class="numero">{{ $totalAulas }}</span>
                         <span class="descricao">Aulas Criadas</span>
+                    </div>
+                    <div class="item-estatistica">
+                        <span class="numero">{{ $totalTurmas  }}</span>
+                        <span class="descricao">Turmas Criadas</span>
                     </div>
                  
                 </div>

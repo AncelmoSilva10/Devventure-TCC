@@ -20,26 +20,39 @@ class AvisoController extends Controller
 
    
     public function store(Request $request)
-    {
-        // 1. Validação dos dados
-        $request->validate([
-            'titulo' => 'required|string|max:255',
-            'conteudo' => 'required|string',
-            'turmas' => 'required|array|min:1', 
-            'turmas.*' => 'exists:turmas,id', 
-        ]);
+{
+    // 1. Validação Básica
+    $rules = [
+        'titulo' => 'required|string|max:255',
+        'conteudo' => 'required|string',
+        'turma_id' => 'required|exists:turmas,id', // Confirme se sua tabela é 'turmas' ou 'turma'
+        'alcance' => 'required|in:todos,selecionados'
+    ];
 
-        
-        $aviso = Aviso::create([
-            'professor_id' => Auth::id(),
-            'titulo' => $request->titulo,
-            'conteudo' => $request->conteudo,
-        ]);
-
-        
-        $aviso->turmas()->attach($request->turmas);
-
-        
-        return redirect()->route('professorDashboard')->with('sweet_success', 'Aviso enviado com sucesso!');
+    // 2. Validação Condicional (Só exige alunos se a aba for 'selecionados')
+    if ($request->alcance === 'selecionados') {
+        $rules['alunos'] = 'required|array|min:1';
+        $rules['alunos.*'] = 'exists:aluno,id'; // Confirme se sua tabela é 'aluno' ou 'alunos'
     }
+
+    $request->validate($rules, [
+        'alunos.required' => 'Selecione pelo menos um aluno ou mude para "Toda a Turma".'
+    ]);
+
+    // 3. Criar o Aviso
+    $aviso = Aviso::create([
+        'professor_id' => Auth::guard('professor')->id(),
+        'titulo' => $request->titulo,
+        'conteudo' => $request->conteudo,
+ 
+    ]);
+    if ($request->alcance === 'todos') {
+        $aviso->turmas()->attach($request->turma_id);
+    } else {
+        $aviso->alunos()->attach($request->alunos);
+    }
+
+    return redirect()->route('turmas.especificaID', $request->turma_id)
+                     ->with('sweet_success', 'Aviso enviado com sucesso!');
+}
 }
