@@ -10,21 +10,39 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Response;
 use App\Models\Depoimento;
+use App\Models\User;
+use Illuminate\Support\Facades\Hash;
+use App\Models\Turma;
+use App\Models\Exercicio;
 class DashboardController extends Controller
 {
-    public function admDashboard()
-    {
-        $alunosCount = Aluno::count();
-    $professoresCount = Professor::count();
+  // Adicione os Models no topo
 
-    // Paginação com 5 registros por página
+
+public function admDashboard()
+{
+    $alunosCount = Aluno::count();
+    $professoresCount = Professor::count();
+    
+    // NOVOS DADOS
+    $turmasCount = Turma::count();
+    $exerciciosCount = Exercicio::count();
+
+    // Paginação (Mantenha o que já tem)
     $alunosData = Aluno::paginate(5);
     $professoresData = Professor::paginate(5);
-
     $depoimentosData = Depoimento::latest()->paginate(5);
 
-    return view('Adm/dashboard', compact('alunosCount', 'professoresCount', 'alunosData', 'professoresData', 'depoimentosData'));
-    }
+    return view('Adm/dashboard', compact(
+        'alunosCount', 
+        'professoresCount', 
+        'turmasCount',     // Passando novo dado
+        'exerciciosCount', // Passando novo dado
+        'alunosData', 
+        'professoresData', 
+        'depoimentosData'
+    ));
+}
 
    
 

@@ -1,0 +1,183 @@
+/* Importando a fonte Poppins */
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+
+/* Reset e Base */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Poppins', sans-serif;
+}
+
+body {
+    background-color: #f3f4f6;
+    color: #1f2937;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+/* Layout Principal */
+.container {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    width: 100%;
+}
+
+/* Card */
+.card {
+    background-color: #ffffff;
+    width: 100%;
+    max-width: 420px; /* Um pouco mais estreito para focar no código */
+    padding: 2.5rem;
+    border-radius: 16px;
+    box-shadow: 0 10px 20px -5px rgba(0, 0, 0, 0.1);
+    text-align: center; /* Centraliza textos por padrão nesta tela */
+    animation: fadeInScale 0.4s ease-out;
+}
+
+/* Títulos e Textos */
+.card h2 {
+    color: #111827;
+    font-size: 1.75rem;
+    font-weight: 700;
+    margin-bottom: 0.5rem;
+}
+
+.card p {
+    color: #6b7280;
+    font-size: 0.95rem;
+    line-height: 1.6;
+    margin-bottom: 2rem;
+}
+
+/* Destaque para o e-mail no texto */
+.card p strong {
+    color: #4f46e5; /* Cor destaque */
+    font-weight: 600;
+}
+
+/* Formulário */
+.form-group {
+    margin-bottom: 1.5rem;
+    text-align: left; /* Volta o label para a esquerda */
+}
+
+.form-group label {
+    display: block;
+    font-size: 0.9rem;
+    font-weight: 500;
+    color: #374151;
+    margin-bottom: 0.75rem;
+    text-align: center; /* Label centralizado combina com input de código */
+}
+
+/* ESTILO ESPECIAL PARA O INPUT DE CÓDIGO */
+#code {
+    width: 100%;
+    padding: 0.75rem;
+    font-size: 1.5rem !important; /* Sobrescreve estilo inline se necessário */
+    font-weight: 600;
+    letter-spacing: 0.8rem !important; /* Espaçamento largo entre números */
+    text-align: center;
+    border: 2px solid #e5e7eb; /* Borda levemente mais grossa */
+    border-radius: 12px;
+    background-color: #f9fafb;
+    color: #1f2937;
+    transition: all 0.2s ease;
+    outline: none;
+}
+
+/* Foco no Input de Código */
+#code:focus {
+    border-color: #4f46e5;
+    background-color: #fff;
+    box-shadow: 0 0 0 4px rgba(79, 70, 229, 0.1);
+    transform: translateY(-2px); /* Leve subida ao focar */
+}
+
+/* Placeholder do Código */
+#code::placeholder {
+    color: #d1d5db;
+    letter-spacing: 0.8rem;
+    font-weight: 400;
+}
+
+/* Mensagens de Erro */
+.form-group span strong {
+    color: #ef4444;
+    font-size: 0.85rem;
+    display: block;
+    text-align: center;
+    margin-top: 0.5rem;
+}
+
+/* Botão Principal */
+button[type="submit"] {
+    width: 100%;
+    padding: 0.875rem;
+    font-size: 1rem;
+    font-weight: 600;
+    color: #ffffff;
+    background-color: #4f46e5;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.2s, transform 0.1s;
+    box-shadow: 0 4px 6px -1px rgba(79, 70, 229, 0.2);
+}
+
+button[type="submit"]:hover {
+    background-color: #4338ca;
+}
+
+button[type="submit"]:active {
+    transform: scale(0.98);
+}
+
+/* Links (Reenviar) */
+.links {
+    margin-top: 1.5rem;
+}
+
+.links a {
+    color: #6b7280;
+    text-decoration: none;
+    font-size: 0.9rem;
+    font-weight: 500;
+    transition: color 0.2s;
+}
+
+.links a:hover {
+    color: #4f46e5;
+    text-decoration: underline;
+}
+
+/* Animação */
+@keyframes fadeInScale {
+    from {
+        opacity: 0;
+        transform: scale(0.95);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+/* Responsividade */
+@media (max-width: 640px) {
+    .card {
+        padding: 1.5rem;
+        box-shadow: none;
+        border: 1px solid #e5e7eb;
+    }
+    
+    #code {
+        font-size: 1.25rem !important;
+        letter-spacing: 0.5rem !important;
+    }
+}

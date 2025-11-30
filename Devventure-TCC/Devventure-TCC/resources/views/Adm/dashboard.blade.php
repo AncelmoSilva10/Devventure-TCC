@@ -26,7 +26,6 @@
                     <li><a href="#professores"><i class="fas fa-chalkboard-teacher"></i><span>Professores</span></a></li>
                     <li><a href="#depoimentos"><i class="fas fa-comment-dots"></i><span>Depoimentos</span></a></li>
                     <li><a href="#charts-section"><i class="fas fa-chart-pie"></i><span>Análises</span></a></li>
-                    <li><a href="#settings"><i class="fas fa-cog"></i><span>Configurações</span></a></li>
                     <li><a href="{{ route('admin.logout') }}" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
                         <i class="fas fa-sign-out-alt"></i><span>Sair</span>
                     </a></li>
@@ -301,34 +300,43 @@
 <section id="charts-section" class="dashboard-section">
 
                 <section id="charts-section" class="dashboard-section">
-                    <h2>Análises e Gráficos</h2>
-                    <div class="charts-grid-full">
-                        <div class="chart-card">
-                            <h3>Distribuição de Usuários (Pizza)</h3>
-                            <div id="userDistributionPieChart" style="height: 350px;"></div>
-                        </div>
-                        <div class="chart-card">
-                            <h3>Distribuição de Usuários (Barras)</h3>
-                            <div id="userDistributionBarChart" style="height: 350px;"></div>
-                        </div>
-                    </div>
-                </section>
+    <h2>Análises e Gráficos</h2>
+    
+    <div class="charts-grid-full" style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+        
+        <div class="chart-card">
+            <h3>Distribuição de Usuários (Pizza)</h3>
+            <div id="userDistributionPieChart" style="height: 350px;"></div>
+        </div>
+        <div class="chart-card">
+            <h3>Distribuição de Usuários (Barras)</h3>
+            <div id="userDistributionBarChart" style="height: 350px;"></div>
+        </div>
 
-                <section id="settings" class="dashboard-section">
-                    <h2>Configurações</h2>
-                    <div class="card">
-                        <p>Área para configurações gerais do sistema, gestão de permissões de admin, etc.</p>
-                    </div>
-                </section>
+        <div class="chart-card">
+            <h3>Conteúdo: Turmas vs Exercícios (Pizza)</h3>
+            <div id="contentDistributionPieChart" style="height: 350px;"></div>
+        </div>
+        <div class="chart-card">
+            <h3>Panorama Geral da Plataforma (Barras)</h3>
+            <div id="contentDistributionBarChart" style="height: 350px;"></div>
+        </div>
+
+    </div>
+</section>
+
             </div>
         </div>
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/echarts@5.4.3/dist/echarts.min.js"></script>
     <script>
+        // Passando dados do PHP para o JavaScript
         window.dashboardData = {
             alunosCount: {{ $alunosCount ?? 0 }},
             professoresCount: {{ $professoresCount ?? 0 }},
+            turmasCount: {{ $turmasCount ?? 0 }},         // Novo
+            exerciciosCount: {{ $exerciciosCount ?? 0 }}   // Novo
         };
     </script>
     <script src="{{ asset('js/Adm/admDashboard.js') }}"></script>

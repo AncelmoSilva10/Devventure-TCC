@@ -10,6 +10,38 @@
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 
     <link href="<?php echo e(asset('css/Professor/respostasExercicio.css')); ?>" rel="stylesheet">
+
+    <style>
+        /* Estilo limpo para o botão de arquivo */
+        .arquivo-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            text-decoration: none;
+            color: #0f766e;
+            background-color: #f0fdfa;
+            padding: 10px 16px;
+            border-radius: 8px;
+            margin-bottom: 8px;
+            border: 1px solid #ccfbf1;
+            transition: all 0.2s ease;
+            font-weight: 500;
+            font-size: 0.95rem;
+            width: auto; /* Não precisa mais ocupar tudo */
+        }
+
+        .arquivo-link:hover {
+            background-color: #0f766e;
+            color: #ffffff;
+            border-color: #0f766e;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 6px -1px rgba(15, 118, 110, 0.1);
+        }
+
+        .arquivo-link i {
+            font-size: 1.2rem;
+        }
+    </style>
 </head>
 <body>
 
@@ -55,10 +87,22 @@
                         <div class="arquivos-enviados">
                             <h5>Arquivo Enviado:</h5>
                             <?php $__empty_2 = true; $__currentLoopData = $resposta->arquivos; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $arquivo): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); $__empty_2 = false; ?>
-                                <a href="<?php echo e(asset('storage/' . $arquivo->arquivo_path)); ?>" target="_blank" class="arquivo-link" download>
-                                    <i class='bx bxs-file-pdf'></i> <?php echo e(basename($arquivo->arquivo_path)); ?>
+                                
+                                <?php
+                                    // Pega a extensão do arquivo (ex: pdf, png, docx)
+                                    $extensao = pathinfo($arquivo->arquivo_path, PATHINFO_EXTENSION);
+                                ?>
 
+                                <a href="<?php echo e(asset('storage/' . $arquivo->arquivo_path)); ?>" 
+                                   target="_blank" 
+                                   class="arquivo-link" 
+                                   download>
+                                   
+                                    <i class='bx bxs-file-blank'></i> 
+                                    
+                                    Visualizar Arquivo (.<?php echo e($extensao); ?>)
                                 </a>
+
                             <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); if ($__empty_2): ?>
                                 <p style="font-size:0.9rem; color:#64748b; font-style:italic;">Apenas texto.</p>
                             <?php endif; ?>

@@ -4,7 +4,7 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     
-    <link href="{{ asset('css/Aluno/aluno.css') }}" rel="stylesheet">
+    <link href="{{ asset('css/Auth/email.css') }}" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <title>Redefinir Senha</title>
 </head>

@@ -1,0 +1,161 @@
+/* Importando a fonte Poppins para garantir o visual (caso não esteja no navbar) */
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+
+/* Reset básico e configurações do corpo */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Poppins', sans-serif;
+}
+
+body {
+    background-color: #f3f4f6; /* Cinza claro suave */
+    color: #1f2937; /* Cinza escuro para texto */
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+/* Container principal */
+.container {
+    flex: 1; /* Ocupa o espaço restante abaixo da navbar */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    width: 100%;
+}
+
+/* Estilo do Card */
+.card {
+    background-color: #ffffff;
+    width: 100%;
+    max-width: 480px; /* Largura máxima ideal para formulários */
+    padding: 2.5rem;
+    border-radius: 12px;
+    box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 
+                0 8px 10px -6px rgba(0, 0, 0, 0.1); /* Sombra suave e moderna */
+    animation: fadeIn 0.5s ease-out;
+}
+
+/* Títulos e Textos */
+.card h2 {
+    color: #111827;
+    text-align: center;
+    font-size: 1.75rem;
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+}
+
+.card p {
+    color: #6b7280;
+    font-size: 0.95rem;
+    line-height: 1.5;
+}
+
+/* Grupos do Formulário */
+.form-group {
+    margin-bottom: 1.5rem;
+    text-align: left;
+}
+
+.form-group label {
+    display: block;
+    font-size: 0.9rem;
+    font-weight: 500;
+    color: #374151;
+    margin-bottom: 0.5rem;
+}
+
+/* Campos de Input */
+.form-group input[type="email"] {
+    width: 100%;
+    padding: 0.75rem 1rem;
+    font-size: 1rem;
+    border: 1px solid #d1d5db;
+    border-radius: 8px;
+    background-color: #f9fafb;
+    transition: all 0.2s ease;
+    outline: none;
+}
+
+.form-group input[type="email"]:focus {
+    border-color: #4f46e5; /* Cor primária (Indigo/Azul) */
+    background-color: #fff;
+    box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.15); /* Anel de foco */
+}
+
+/* Estilização de Erro (caso o backend retorne erro) */
+.form-group input.is-invalid {
+    border-color: #ef4444;
+    background-color: #fef2f2;
+}
+
+/* Botão de Enviar */
+button[type="submit"] {
+    width: 100%;
+    padding: 0.875rem;
+    font-size: 1rem;
+    font-weight: 600;
+    color: #ffffff;
+    background-color: #4f46e5; /* Cor primária */
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.2s ease, transform 0.1s ease;
+}
+
+button[type="submit"]:hover {
+    background-color: #4338ca; /* Tom mais escuro no hover */
+}
+
+button[type="submit"]:active {
+    transform: scale(0.98); /* Leve efeito de clique */
+}
+
+/* Links (Voltar) */
+.links {
+    text-align: center;
+    margin-top: 1.5rem;
+}
+
+.links a {
+    color: #6b7280;
+    text-decoration: none;
+    font-size: 0.9rem;
+    font-weight: 500;
+    display: inline-flex;
+    align-items: center;
+    transition: color 0.2s;
+}
+
+.links a:hover {
+    color: #4f46e5;
+    text-decoration: underline;
+}
+
+/* Animação de entrada */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Responsividade para celulares */
+@media (max-width: 640px) {
+    .card {
+        padding: 1.5rem;
+        box-shadow: none; /* Remove sombra em telas muito pequenas para visual mais limpo */
+        border: 1px solid #e5e7eb;
+    }
+    
+    .card h2 {
+        font-size: 1.5rem;
+    }
+}
