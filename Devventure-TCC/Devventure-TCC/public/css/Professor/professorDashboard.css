@@ -27,7 +27,7 @@ body {
 
 /* --- Wrapper Principal --- */
 .page-professor-dashboard {
-    margin-top: 70px; /* Altura da navbar */
+    margin-top: 20px; /* Altura da navbar */
 }
 .page-professor-dashboard .container {
     max-width: 1400px;

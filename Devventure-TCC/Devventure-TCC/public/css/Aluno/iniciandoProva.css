@@ -1,336 +1,119 @@
-/* =================================
-   ESTILOS DE BASE E LAYOUT
-   ================================= */
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&family=Inter:wght@400;500;600;700&display=swap');
+
+:root {
+    /* Padrão Azul (Aluno) */
+    --primary-color: #1a62ff;
+    --primary-hover: #1550d1;
+    --primary-light: #eff6ff;
+    --bg-color: #f8fafc;
+    --card-bg: #ffffff;
+    --text-dark: #1e293b;
+    --text-gray: #64748b;
+    --border-color: #e2e8f0;
+    
+    /* Status Específicos de Prova */
+    --status-pending-bg: #fff3cd; --status-pending-text: #856404;
+    --status-active-bg: #d1ecf1;  --status-active-text: #0c5460;
+    --status-done-bg: #d4edda;    --status-done-text: #155724;
+    --status-closed-bg: #f8d7da;  --status-closed-text: #721c24;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; }
 
 body {
-    font-family: 'Poppins', sans-serif;
-    background-color: #f4f7f6; /* Fundo cinza claro */
-    margin: 0;
-    padding: 30px 15px; /* Mais espaço para respirar */
-    min-height: 100vh;
-    color: #333;
+    background-color: var(--bg-color);
+    color: var(--text-dark);
     line-height: 1.6;
+    min-height: 100vh;
 }
 
-.container {
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 0 15px;
-}
-
-/* Layout de grid 2 colunas */
-.content-grid {
-    display: grid;
-    /* Coluna principal 65%, lateral 35% */
-    grid-template-columns: 2fr 1fr; 
-    gap: 30px; /* Mais espaço entre as colunas */
-    align-items: start;
-}
-
-/* =================================
-   CARD (BASE)
-   ================================= */
-
-.card {
-    background-color: #fff;
-    border-radius: 12px; /* Cantos mais arredondados */
-    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.06); /* Sombra mais suave */
-    border: 1px solid #e9ecef; /* Borda sutil */
-    margin-bottom: 30px;
-}
-
-/* =================================
-   CARD PRINCIPAL (ESQUERDA)
-   ================================= */
-
-/* Remove o padding padrão do card principal para o header "colar" */
-.content-grid > div:first-child .card {
-    padding: 0;
-}
-
-.card-header-custom {
-    background-color: #343a40; /* Cor escura */
+/* --- HEADER AZUL PADRÃO --- */
+.page-header-blue {
+    position: relative;
+    background: linear-gradient(135deg, var(--primary-color), var(--primary-hover));
+    padding: 2rem;
+    border-radius: 0 0 20px 20px;
     color: #fff;
-    padding: 25px 30px;
-    /* Arredonda apenas os cantos superiores */
-    border-radius: 12px 12px 0 0; 
+    box-shadow: 0 6px 20px rgba(26, 98, 255, 0.2);
+    margin-bottom: 2rem;
 }
 
-.card-header-custom h2 {
-    margin: 0;
-    font-size: 2rem; /* Título maior */
-    font-weight: 600;
+.header-container {
+    max-width: 1200px; margin: 0 auto; display: flex; flex-direction: column; gap: 1rem;
 }
 
-.card-header-custom .deadline-info {
-    font-size: 1rem;
-    color: #ced4da; /* Cinza claro */
-    display: flex;
-    align-items: center;
-    margin-top: 10px;
+.back-link {
+    display: inline-flex; align-items: center; gap: 0.5rem; padding: 0.5rem 1rem;
+    background: rgba(255, 255, 255, 0.15); color: #fff; border-radius: 8px; font-weight: 600;
+    text-decoration: none; font-size: 0.9rem; backdrop-filter: blur(4px); width: fit-content;
+    transition: all 0.2s;
+}
+.back-link:hover { background: rgba(255, 255, 255, 0.25); transform: translateX(-4px); }
+
+.header-info h1 { font-size: 2rem; font-weight: 700; margin: 0; line-height: 1.2; }
+.header-info p { margin: 0; color: rgba(255, 255, 255, 0.9); font-weight: 500; font-size: 1rem; display: flex; align-items: center; gap: 10px; }
+
+/* --- CONTEÚDO --- */
+.page-wrapper { width: 100%; }
+.content-grid {
+    max-width: 1200px; margin: 0 auto; padding: 0 2rem 3rem 2rem;
+    display: grid; grid-template-columns: 2fr 1fr; gap: 2rem;
 }
 
-.card-header-custom .deadline-info i {
-    margin-right: 10px;
-    font-size: 1.2rem;
+/* --- CARDS --- */
+.card {
+    background: var(--card-bg); border-radius: 12px;
+    box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05); border: 1px solid var(--border-color);
+    padding: 2rem; margin-bottom: 2rem;
 }
 
-/* Corpo do card principal */
-.card-body {
-    padding: 30px;
+/* Card Principal (Instruções) */
+.card h2 { font-size: 1.5rem; color: var(--text-dark); margin-bottom: 0.5rem; }
+.card h3 { font-size: 1.2rem; color: var(--text-dark); margin: 1.5rem 0 0.5rem 0; font-weight: 600; }
+
+.deadline-info {
+    color: #ef4444; font-weight: 600; font-size: 0.9rem; display: flex; align-items: center; gap: 5px; margin-bottom: 1.5rem;
 }
 
-.card-body h3 {
-    font-size: 1.25rem;
-    font-weight: 600;
-    color: #343a40;
-    margin-top: 20px;
-    margin-bottom: 15px;
-    /* Remove a borda do H3 genérico */
-    border-bottom: none; 
-    padding-bottom: 0;
-}
+.card-text { color: var(--text-gray); margin-bottom: 0.5rem; font-size: 0.95rem; }
+.card-text strong { color: var(--text-dark); }
 
-.card-text {
-    font-size: 1rem;
-    line-height: 1.7;
-    color: #555;
-    margin-bottom: 12px;
-}
-.card-text strong {
-    color: #212529;
-    font-weight: 600;
-}
-
-/* =================================
-   BOTÕES DE AÇÃO
-   ================================= */
-
-.button-group {
-    display: flex;
-    gap: 15px;
-    margin-top: 30px;
-    justify-content: flex-end; /* Alinha à direita (mais comum) */
-}
+/* Botões */
+.button-group { margin-top: 2rem; display: flex; justify-content: flex-end; gap: 1rem; }
 
 .btn {
-    padding: 12px 28px;
-    border-radius: 8px;
-    cursor: pointer;
-    border: 2px solid transparent; /* Borda transparente para alinhamento */
-    font-weight: 600;
-    font-size: 0.95rem;
-    text-decoration: none;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    transition: all 0.2s ease-in-out;
-}
-.btn i {
-    margin-right: 8px;
-    font-size: 1.2rem;
+    padding: 0.8rem 1.5rem; border-radius: 8px; border: none; font-weight: 600; cursor: pointer;
+    display: inline-flex; align-items: center; gap: 8px; transition: all 0.2s; text-decoration: none; font-size: 1rem;
 }
 
-/* Botão "Iniciar" (Principal) */
-.btn-primary-custom {
-    background-color: #6f42c1; /* Roxo */
-    border-color: #6f42c1;
-    color: white;
-    box-shadow: 0 4px 15px rgba(111, 66, 193, 0.2);
-}
-.btn-primary-custom:hover {
-    background-color: #5c37a0;
-    border-color: #5c37a0;
-    transform: translateY(-2px);
-    box-shadow: 0 6px 20px rgba(111, 66, 193, 0.3);
-}
+.btn-primary-custom { background: var(--primary-color); color: #fff; }
+.btn-primary-custom:hover { background: var(--primary-hover); transform: translateY(-2px); }
 
-/* Botão "Voltar" (Secundário / Ghost) */
-.btn-secondary-custom {
-    background-color: transparent;
-    color: #6c757d; /* Cinza */
-    border-color: #6c757d;
-}
-.btn-secondary-custom:hover {
-    background-color: #6c757d;
-    color: #fff;
-}
+.btn-secondary-custom { background: #f1f5f9; color: var(--text-dark); }
+.btn-secondary-custom:hover { background: #e2e8f0; }
 
-/* =================================
-   CARDS DA SIDEBAR (DIREITA)
-   ================================= */
-
-/* Estilo comum para h3 da sidebar */
-.card h3 {
-    font-size: 1.3rem;
-    color: #343a40;
-    margin-top: 0; /* Remove margem do topo */
-    margin-bottom: 20px;
-    border-bottom: 1px solid #eee;
-    padding-bottom: 10px;
-}
-
-/* Card de Status */
-.status-card {
-    text-align: center;
-    padding: 20px 25px; /* MODIFICADO: Menos padding vertical */
-}
+/* --- SIDEBAR (STATUS) --- */
+.status-card { text-align: center; }
+.status-card h3 { margin-top: 0; margin-bottom: 1rem; text-align: left; border-bottom: 1px solid var(--border-color); padding-bottom: 10px; }
 
 .status-badge {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    padding: 10px 22px;
-    border-radius: 30px; /* Pílula */
-    font-weight: 600;
-    font-size: 0.9rem;
-    margin-bottom: 10px; /* MODIFICADO: Menos margem */
-}
-.status-badge i {
-    margin-right: 10px;
-    font-size: 1.3rem;
-}
-.status-card p {
-    font-size: 1rem;
-    color: #555;
-    margin: 0;
+    display: inline-flex; align-items: center; gap: 8px; padding: 0.6rem 1.2rem;
+    border-radius: 50px; font-weight: 600; font-size: 0.9rem; margin-bottom: 1rem;
 }
 
-/* NOVO: Centraliza e aplica padding ao card de pontuação */
-.content-grid > div:last-child .card:not(.status-card) {
-    text-align: center;
-    padding: 20px 25px;
-}
+.status-badge.pending { background: var(--status-pending-bg); color: var(--status-pending-text); }
+.status-badge.iniciada { background: var(--status-active-bg); color: var(--status-active-text); }
+.status-badge.realizada { background: var(--status-done-bg); color: var(--status-done-text); }
+.status-badge.fechada { background: var(--status-closed-bg); color: var(--status-closed-text); }
 
+/* --- ALERTAS --- */
+.alert { padding: 1rem; border-radius: 8px; margin-bottom: 1.5rem; display: flex; align-items: center; gap: 10px; font-weight: 500; }
+.alert-success { background: #dcfce7; color: #166534; }
+.alert-danger { background: #fee2e2; color: #991b1b; }
+.alert-info { background: #eff6ff; color: #1e40af; }
 
-/* Card de Pontuação */
-.card:not(.status-card) p {
-    font-size: 1rem;
-    color: #555;
-    margin-bottom: 10px;
-}
-/* MODIFICADO: Esta regra agora afeta o NOME "Pontuação Final", não o valor */
-.card p strong {
-    font-size: 1rem; /* Tamanho normal */
-    font-weight: 600;
-    color: #333;
-    display: inline; /* Não quebra mais a linha */
-    margin-bottom: 0;
-}
-
-/* NOVO: Estilo para o VALOR da pontuação (ex: "0 pontos", "Aguardando correção") */
-/* Alveja o último parágrafo dentro do card de pontuação, SE não for o link "aqui" */
-.card:not(.status-card) p:last-of-type:not(:has(a)) {
-    font-size: 1.8rem;
-    font-weight: 600;
-    color: #333;
-    margin-top: 5px;
-}
-
-/* NOVO: Ajuste para o caso "Em Andamento" (frase mais longa) */
-.card:not(.status-card) p:nth-child(3):last-of-type {
-    font-size: 1.2rem; /* Um pouco menor por ser uma frase */
-}
-
-/* NOVO: Ajuste para o caso "Não iniciou" (apenas "0 pontos") */
-.card:not(.status-card) p:nth-child(2) + p:last-of-type {
-     font-size: 1.8rem; /* Garante que "0 pontos" fique grande */
-}
-
-
-.card p a {
-    color: #6f42c1;
-    font-weight: 600;
-    text-decoration: none;
-}
-.card p a:hover {
-    text-decoration: underline;
-}
-
-
-/* Cores dos badges de status */
-.status-badge.pending {
-    background-color: #fff3cd;
-    color: #856404;
-}
-.status-badge.iniciada {
-    background-color: #d1ecf1;
-    color: #0c5460;
-}
-.status-badge.realizada {
-    background-color: #d4edda;
-    color: #155724;
-}
-.status-badge.fechada {
-    background-color: #f8d7da;
-    color: #721c24;
-}
-
-/* =================================
-   ALERTAS (MENSAGENS DE SESSÃO)
-   ================================= */
-
-.alert {
-    padding: 15px 20px;
-    margin: 0 15px 25px 15px; /* Ajuste para alinhar com container */
-    max-width: 1200px;
-    margin-left: auto;
-    margin-right: auto;
-    border-radius: 8px;
-    font-weight: 500;
-    display: flex;
-    align-items: center;
-}
-.alert i {
-    margin-right: 10px;
-    font-size: 1.3rem;
-}
-.alert-success {
-    background-color: #d4edda;
-    color: #155724;
-    border: 1px solid #c3e6cb;
-}
-.alert-danger {
-    background-color: #f8d7da;
-    color: #721c24;
-    border: 1px solid #f5c6cb;
-}
-.alert-info {
-    background-color: #d1ecf1;
-    color: #0c5460;
-    border: 1px solid #bee5eb;
-}
-
-/* =================================
-   RESPONSIVIDADE
-   ================================= */
-
-@media (max-width: 992px) {
-    /* Coluna única */
-    .content-grid {
-        grid-template-columns: 1fr;
-    }
-}
-
-@media (max-width: 768px) {
-    body {
-        padding: 20px 10px;
-    }
-    
-    .card-header-custom h2 {
-        font-size: 1.7rem;
-    }
-    
-    .card-body {
-        padding: 20px;
-    }
-
-    .button-group {
-        /* Botões um abaixo do outro */
-        flex-direction: column-reverse; 
-    }
-    .btn {
-        width: 100%;
-        box-sizing: border-box; 
-    }
+@media (max-width: 900px) {
+    .content-grid { grid-template-columns: 1fr; }
+    .button-group { flex-direction: column; }
+    .btn { width: 100%; justify-content: center; }
 }

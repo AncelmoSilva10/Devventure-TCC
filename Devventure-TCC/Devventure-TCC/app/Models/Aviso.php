@@ -26,4 +26,10 @@ class Aviso extends Model
     {
         return $this->belongsToMany(Turma::class, 'aviso_turma');
     }
+
+    public function alunos()
+    {
+        // Define que um Aviso pode pertencer a vários Alunos
+        return $this->belongsToMany(Aluno::class, 'aviso_aluno', 'aviso_id', 'aluno_id');
+    }
 }

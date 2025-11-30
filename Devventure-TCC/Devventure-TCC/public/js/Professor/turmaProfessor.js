@@ -1,33 +1,41 @@
- const abrirBtn = document.querySelector('.add-turma button');
+document.addEventListener('DOMContentLoaded', function() {
+    
+    // Elementos do DOM
     const modal = document.getElementById('modal');
-    const cancelarBtn = document.getElementById('cancelar');
+    const btnHeader = document.getElementById('btnAdicionarHeader');
+    const btnEmpty = document.getElementById('btnAdicionarEmpty'); 
+    const btnCancel = document.getElementById('cancelar');
 
-    abrirBtn.addEventListener('click', () => {
-      modal.style.display = 'flex';
-    });
+    // Função para abrir o modal
+    function openModal() {
+        if(modal) modal.classList.add('active');
+    }
 
-    cancelarBtn.addEventListener('click', () => {
-      modal.style.display = 'none';
-    });
+    // Função para fechar o modal
+    function closeModal() {
+        if(modal) modal.classList.remove('active');
+    }
 
-    modal.addEventListener('click', (e) => {
-      if (e.target === modal) {
-        modal.style.display = 'none';
-      }
-    });
+    // Event Listeners
+    if(btnHeader) {
+        btnHeader.addEventListener('click', openModal);
+    }
 
+    if(btnEmpty) {
+        btnEmpty.addEventListener('click', openModal);
+    }
 
-    const btnVerTudo = document.getElementById('btnVerTudo');
-const exerciciosScroll = document.querySelector('.turmas-scroll');
+    if(btnCancel) {
+        btnCancel.addEventListener('click', closeModal);
+    }
 
+    // Fechar ao clicar fora do modal (na parte escura)
+    if(modal) {
+        modal.addEventListener('click', (e) => {
+            if(e.target === modal) {
+                closeModal();
+            }
+        });
+    }
 
-btnVerTudo.addEventListener('click', () => {
-  exerciciosScroll.classList.toggle('expandido');
-
-  // Troca o texto do botão
-  if (exerciciosScroll.classList.contains('expandido')) {
-    btnVerTudo.textContent = 'Mostrar em grade';
-  } else {
-    btnVerTudo.textContent = 'Ver tudo';
-  }
 });

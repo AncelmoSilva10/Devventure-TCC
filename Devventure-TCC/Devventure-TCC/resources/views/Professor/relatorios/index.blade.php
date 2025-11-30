@@ -3,11 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Relatórios de Desempenho - {{ $turma->nome_turma }}</title>
+    <title>Relatórios - {{ $turma->nome_turma }}</title>
     
     <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
     
     <link href="{{ asset('css/Professor/relatorios.css') }}" rel="stylesheet">
@@ -15,151 +13,175 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body>
-<header class="reports-header">
-    <a href="{{ route('turmas.especificaID', $turma) }}" class="back-link">
-        <i class='bx bx-chevron-left'></i> Voltar para a Turma
-    </a>
 
-    <div class="header-content-row">
-        <div class="header-info">
-            <h1><i class='bx bxs-bar-chart-alt-2'></i> Relatórios de Desempenho</h1>
-            <p>{{ $turma->nome_turma }}</p>
+    <header class="reports-header">
+        <div class="header-container">
+            <div class="header-left">
+                <a href="{{ route('professor.turmas') }}" class="back-link">
+                    <i class='bx bx-chevron-left'></i> Voltar para Minhas Turmas
+                </a>
+                
+                <div class="header-title">
+                    <h1><i class='bx bxs-bar-chart-alt-2'></i> Relatórios de Desempenho</h1>
+                    <p>{{ $turma->nome_turma }}</p>
+                </div>
+            </div>
+
+            <div class="header-actions">
+                <span class="export-label">Exportar:</span>
+                <a href="{{ route('professor.relatorios.exportar', ['turma' => $turma->id, 'formato' => 'pdf']) }}" class="btn-export" target="_blank">
+                    <i class='bx bxs-file-pdf'></i> PDF
+                </a>
+                <a href="{{ route('professor.relatorios.exportar', ['turma' => $turma->id, 'formato' => 'csv']) }}" class="btn-export">
+                    <i class='bx bxs-spreadsheet'></i> Excel
+                </a>
+            </div>
         </div>
+    </header>
 
-        <div class="header-actions">
-            <span class="export-label">Exportar:</span>
+    <div class="reports-wrapper">
+        <div class="reports-grid">
+           
+            <div class="card card-media">
+                <div class="card-header">
+                    <h3>Média Geral</h3>
+                    <i class='bx bx-line-chart card-icon'></i>
+                </div>
+                <div class="card-body">
+                    <span class="main-metric">{{ round($mediaGeral, 1) }}</span>
+                    <small>/ 100 pontos</small>
+                </div>
+            </div>
+
+            <div class="card card-engajamento">
+                <div class="card-header">
+                    <h3>Engajamento</h3>
+                    <i class='bx bx-task card-icon'></i>
+                </div>
+                <div class="card-body">
+                    <span class="main-metric">{{ $taxaEngajamento }}<small>%</small></span>
+                    @if($ultimoExercicio)
+                        <small>na última atividade</small>
+                    @else
+                        <small>Sem atividades</small>
+                    @endif
+                </div>
+            </div>
+
+            <div class="card card-destaques">
+                <div class="card-header">
+                    <h3><i class='bx bxs-trophy'></i> Destaques</h3>
+                </div>
+                <ul class="user-list">
+                    @forelse($alunosDestaque as $aluno)
+                    <a href="{{ route('professor.relatorios.aluno', ['turma' => $turma, 'aluno' => $aluno]) }}">
+                        <img src="{{ $aluno->avatar ? asset('storage/' . $aluno->avatar) : 'https://i.pravatar.cc/40?u='.$aluno->id }}" alt="Avatar" class="avatar">
+                        <span class="user-name">{{ $aluno->nome }}</span>
+                        <span class="user-points">{{ $aluno->total_pontos }} pts</span>
+                    </a>
+                    @empty
+                        <p class="empty-message">Sem dados.</p>
+                    @endforelse
+                </ul>
+            </div>
             
-            <a href="{{ route('professor.relatorios.exportar', ['turma' => $turma->id, 'formato' => 'pdf']) }}" class="btn-export pdf" target="_blank">
-                <i class='bx bxs-file-pdf'></i> PDF
-            </a>
-            
-            <a href="{{ route('professor.relatorios.exportar', ['turma' => $turma->id, 'formato' => 'csv']) }}" class="btn-export csv">
-                <i class='bx bxs-spreadsheet'></i> Excel
-            </a>
+            <div class="card card-atencao">
+                <div class="card-header">
+                    <h3><i class='bx bxs-error-circle'></i> Atenção</h3>
+                </div>
+                 <ul class="user-list">
+                    @forelse($alunosAtencao as $aluno)
+                    <a href="{{ route('professor.relatorios.aluno', ['turma' => $turma, 'aluno' => $aluno]) }}">
+                        <img src="{{ $aluno->avatar ? asset('storage/' . $aluno->avatar) : 'https://i.pravatar.cc/40?u='.$aluno->id }}" alt="Avatar" class="avatar">
+                        <span class="user-name">{{ $aluno->nome }}</span>
+                        <span class="user-points low-score">Pendente</span>
+                    </a>
+                    @empty
+                        <p class="empty-message">Tudo em dia!</p>
+                    @endforelse
+                </ul>
+            </div>
+
+            <div class="card card-grafico">
+                <div class="card-header">
+                    <h3>Evolução da Turma</h3>
+                </div>
+                <div class="chart-container">
+                    @if($desempenhoPorExercicio->count() > 1)
+                        <canvas id="desempenhoChart"></canvas>
+                    @else
+                        <div class="empty-message">
+                            <p>Dados insuficientes para gerar o gráfico de evolução.</p>
+                        </div>
+                    @endif
+                </div>
+            </div>
+
         </div>
     </div>
-</header>
 
-    <div class="reports-grid">
-       
-        <div class="card card-media">
-            <div class="card-header">
-                <h3>Média Geral da Turma</h3>
-                <i class='bx bx-line-chart card-icon'></i>
-            </div>
-            <div class="card-body">
-                <span class="main-metric">{{ round($mediaGeral, 1) }}</span>
-                <small>/ 100 pontos</small>
-            </div>
-        </div>
+    <script>
+        @if($desempenhoPorExercicio->count() > 1)
+            const ctx = document.getElementById('desempenhoChart').getContext('2d');
+            
+            // Gradiente Verde
+            let gradient = ctx.createLinearGradient(0, 0, 0, 400);
+            gradient.addColorStop(0, 'rgba(0, 121, 107, 0.5)'); // Verde forte topo
+            gradient.addColorStop(1, 'rgba(0, 121, 107, 0.0)'); // Transparente base
 
-        <!-- Card: Taxa de Engajamento  -->
-        <div class="card card-engajamento">
-            <div class="card-header">
-                <h3>Taxa de Engajamento</h3>
-                <i class='bx bx-task card-icon'></i>
-            </div>
-            <div class="card-body">
-                <span class="main-metric">{{ $taxaEngajamento }}<small>%</small></span>
-                @if($ultimoExercicio)
-                    <small>entregaram o exercício "{{ Str::limit($ultimoExercicio->nome, 20) }}"</small>
-                @else
-                    <small>Nenhum exercício publicado ainda.</small>
-                @endif
-            </div>
-        </div>
-
-        <!-- Card: Alunos em Destaque -->
-        <div class="card card-destaques">
-            <div class="card-header">
-                <h3><i class='bx bxs-trophy'></i> Alunos em Destaque</h3>
-            </div>
-            <ul class="user-list">
-                @forelse($alunosDestaque as $aluno)
-                <a href="{{ route('professor.relatorios.aluno', ['turma' => $turma, 'aluno' => $aluno]) }}">
-                    <img src="{{ $aluno->avatar ? asset('storage/' . $aluno->avatar) : 'https://i.pravatar.cc/40?u='.$aluno->id }}" alt="Avatar" class="avatar">
-                    <span class="user-name">{{ $aluno->nome }}</span>
-                    <span class="user-points">{{ $aluno->total_pontos }} pts</span>
-                </a>
-                @empty
-                    <p class="empty-message">Nenhum aluno com pontuação.</p>
-                @endforelse
-            </ul>
-        </div>
-        
-        <!-- Card: Alunos que Precisam de Atenção -->
-        <div class="card card-atencao">
-            <div class="card-header">
-                <h3><i class='bx bxs-user-error'></i> Alunos que Precisam de Atenção</h3>
-            </div>
-             <ul class="user-list">
-                @forelse($alunosAtencao as $aluno)
-                <a href="{{ route('professor.relatorios.aluno', ['turma' => $turma, 'aluno' => $aluno]) }}">
-                    <img src="{{ $aluno->avatar ? asset('storage/' . $aluno->avatar) : 'https://i.pravatar.cc/40?u='.$aluno->id }}" alt="Avatar" class="avatar">
-                    <span class="user-name">{{ $aluno->nome }}</span>
-                    <span class="user-points low-score">Não entregou</span>
-                </a>
-                @empty
-                    <p class="empty-message">Todos os alunos entregaram a última atividade. Ótimo!</p>
-                @endforelse
-            </ul>
-        </div>
-
-   <div class="card card-grafico">
-            <div class="card-header">
-                <h3>Desempenho por Exercício (Média da Turma)</h3>
-            </div>
-            <div class="chart-container">
-                
-                {{-- só mostra o gráfico se houver mais de um ponto de dados --}}
-                @if($desempenhoPorExercicio->count() > 1)
-                    <canvas id="desempenhoChart"></canvas>
-                @else
-                    <div class="empty-message">
-                        <p>É necessário que pelo menos dois exercícios tenham sido avaliados para gerar o gráfico de evolução.</p>
-                    </div>
-                @endif
-                
-            </div>
-        </div>
-    </div>
-</div>
-
-<script>
-    // Verifica se existem dados suficientes para o gráfico antes de tentar renderizá-lo
-    @if($desempenhoPorExercicio->count() > 1)
-        const desempenhoData = {
-            labels: [
-                @foreach($desempenhoPorExercicio as $desempenho)
-                    '{{ Str::limit($desempenho->nome, 20) }}',
-                @endforeach
-            ],
-            datasets: [{
-                label: 'Média da Turma',
-                data: [
+            const desempenhoData = {
+                labels: [
                     @foreach($desempenhoPorExercicio as $desempenho)
-                        {{ $desempenho->respostas_avg_nota }},
+                        '{{ Str::limit($desempenho->nome, 15) }}',
                     @endforeach
                 ],
-                fill: true,
-                backgroundColor: 'rgba(0, 121, 107, 0.2)',
-                borderColor: 'rgba(0, 121, 107, 1)',
-                tension: 0.3 
-            }]
-        };
-        const config = {
-            type: 'line', 
-            data: desempenhoData,
-            options: {
-                responsive: true,
-                maintainAspectRatio: false,
-                scales: { y: { beginAtZero: true, max: 100 } },
-                plugins: { legend: { display: false } }
-            }
-        };
-        const myChart = new Chart(document.getElementById('desempenhoChart'), config);
-    @endif
-</script>
+                datasets: [{
+                    label: 'Média da Turma',
+                    data: [
+                        @foreach($desempenhoPorExercicio as $desempenho)
+                            {{ $desempenho->respostas_avg_nota }},
+                        @endforeach
+                    ],
+                    fill: true,
+                    backgroundColor: gradient,
+                    borderColor: '#00796b', // Linha Verde Sólida
+                    borderWidth: 2,
+                    pointBackgroundColor: '#ffffff',
+                    pointBorderColor: '#00796b',
+                    pointRadius: 4,
+                    tension: 0.4 
+                }]
+            };
+
+            const config = {
+                type: 'line', 
+                data: desempenhoData,
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: { 
+                        y: { 
+                            beginAtZero: true, 
+                            max: 100,
+                            grid: { color: '#f0f0f0' }
+                        },
+                        x: {
+                            grid: { display: false }
+                        }
+                    },
+                    plugins: { 
+                        legend: { display: false },
+                        tooltip: {
+                            backgroundColor: '#004d40',
+                            padding: 10,
+                            cornerRadius: 8
+                        }
+                    }
+                }
+            };
+            new Chart(ctx, config);
+        @endif
+    </script>
 
 </body>
 </html>

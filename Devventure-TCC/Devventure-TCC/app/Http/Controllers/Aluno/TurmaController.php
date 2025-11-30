@@ -22,27 +22,36 @@ class TurmaController extends Controller
         return view('Aluno/turma', ['turmas' => $turmas]);
     }
 
- public function mostrarTurmaEspecifica(Turma $turma, Request $request)
+public function mostrarTurmaEspecifica(Turma $turma, Request $request)
 {
     $alunoLogado = Auth::guard('aluno')->user();
 
-    // PAGINAÇÃO: Colegas de Turma (10 por página, na sidebar)
+
+    $avisosDaTurma = Aviso::where(function($query) use ($turma, $alunoLogado) {
+       
+        $query->whereHas('turmas', function($q) use ($turma) {
+            $q->where('turma_id', $turma->id);
+        })
+        
+        ->orWhere(function($subQuery) use ($alunoLogado, $turma) {
+            $subQuery->whereHas('alunos', function($q) use ($alunoLogado) {
+                $q->where('aluno_id', $alunoLogado->id);
+            })
+            ->where('professor_id', $turma->professor_id);
+        });
+    })
+    ->with('professor')
+    ->orderBy('created_at', 'desc')
+    ->paginate(5, ['*'], 'avisosPage');
+
     $alunosDaTurma = $turma->alunos()
         ->orderBy('nome')
         ->paginate(10, ['*'], 'colegasPage');
 
-    // PAGINAÇÃO: Aulas (6 por página)
     $aulasDaTurma = $turma->aulas()
         ->orderBy('created_at', 'desc')
         ->paginate(6, ['*'], 'aulasPage');
-    
-    // PAGINAÇÃO: Avisos (5 por página)
-    $avisosDaTurma = $turma->avisos()
-        ->with('professor')
-        ->orderBy('created_at', 'desc')
-        ->paginate(5, ['*'], 'avisosPage');
 
-    // PAGINAÇÃO: Exercícios (6 por página)
     $exerciciosDaTurma = Exercicio::where('turma_id', $turma->id)
         ->where('data_publicacao', '<=', now()) 
         ->with(['respostas' => function ($query) use ($alunoLogado) {
@@ -51,22 +60,20 @@ class TurmaController extends Controller
         ->orderBy('data_fechamento', 'asc') 
         ->paginate(6, ['*'], 'exerciciosPage');
 
-    // PAGINAÇÃO: Provas (6 por página, para consistência com exercícios e aulas)
-        $provasDaTurma = $turma->provas()
-            ->where('data_abertura', '<=', now()) 
-            ->with(['tentativas' => function($query) use ($alunoLogado) { 
-                $query->where('aluno_id', $alunoLogado->id);
-            }])
-            ->orderBy('data_fechamento', 'desc')
-            ->paginate(6, ['*'], 'provasPage');
-
+    $provasDaTurma = $turma->provas()
+        ->where('data_abertura', '<=', now()) 
+        ->with(['tentativas' => function($query) use ($alunoLogado) { 
+            $query->where('aluno_id', $alunoLogado->id);
+        }])
+        ->orderBy('data_fechamento', 'desc')
+        ->paginate(6, ['*'], 'provasPage');
 
     return view('Aluno/turmaEspecifica', [
         'turma' => $turma,
         'alunos' => $alunosDaTurma,
         'exercicios' => $exerciciosDaTurma, 
         'aulas' => $aulasDaTurma,
-        'avisos' => $avisosDaTurma,
+        'avisos' => $avisosDaTurma, // Agora contém os dois tipos
         'provas' => $provasDaTurma,
     ]);
 }

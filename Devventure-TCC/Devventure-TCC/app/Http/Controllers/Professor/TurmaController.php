@@ -10,6 +10,8 @@ use App\Models\Convite;
 use App\Models\Aula;
 use App\Models\Exercicio;
 use App\Models\Aluno;
+use App\Models\RespostaExercicio;
+use App\Models\AlunoProvaTentativa;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Collection;
@@ -32,13 +34,63 @@ class TurmaController extends Controller
         return redirect('/professorGerenciar')->with('sweet_success', 'Turma criada com sucesso!');
     }
 
-      public function GerenciarTurma() 
+    public function GerenciarTurma() 
 {
-   $professorId = Auth::guard('professor')->id();
+    $professorId = Auth::guard('professor')->id();
    
     $turmas = Turma::where('professor_id', $professorId)
                         ->withCount(['alunos', 'exercicios']) 
                         ->get();
+
+    foreach($turmas as $turma) {
+        
+        // calculo de media baseada em respostas de: prova, exercicios e taxa de entrega
+        $mediaGeralExercicios = RespostaExercicio::whereHas('exercicio', function ($query) use ($turma) {
+            $query->where('turma_id', $turma->id);
+        })->avg('nota');
+
+        // média de Provas da Turma
+        $mediaGeralProvas = AlunoProvaTentativa::whereHas('prova', function ($query) use ($turma) {
+            $query->where('turma_id', $turma->id);
+        })->whereNotNull('hora_fim')->avg('pontuacao_final');
+
+        $mediasDisponiveis = [];
+        if (!is_null($mediaGeralExercicios)) {
+            $mediasDisponiveis[] = $mediaGeralExercicios;
+        }
+        if (!is_null($mediaGeralProvas)) {
+            $mediasDisponiveis[] = $mediaGeralProvas;
+        }
+
+        if (count($mediasDisponiveis) > 0) {
+            $mediaFinal = array_sum($mediasDisponiveis) / count($mediasDisponiveis);
+        } else {
+            $mediaFinal = 0; 
+        }
+
+        // --- FORMATAÇÃO E CORES ---
+        
+        if ($mediaFinal > 0 || count($mediasDisponiveis) > 0) {
+            
+            $turma->media_formatada = number_format($mediaFinal, 1);
+            
+            if ($mediaFinal >= 7) {
+                $turma->status_class = 'status-ok';
+                $turma->status_color = 'var(--success-green)';
+            } elseif ($mediaFinal >= 5) {
+                $turma->status_class = 'status-warning';
+                $turma->status_color = 'var(--warning-orange)';
+            } else {
+                $turma->status_class = 'status-danger';
+                $turma->status_color = 'var(--danger-red)';
+            }
+        } else {
+     
+            $turma->media_formatada = 'N/A';
+            $turma->status_class = 'status-warning'; 
+            $turma->status_color = 'var(--text-gray)';
+        }
+    }
 
     return view('Professor/turma', ['turmas' => $turmas]);
 }

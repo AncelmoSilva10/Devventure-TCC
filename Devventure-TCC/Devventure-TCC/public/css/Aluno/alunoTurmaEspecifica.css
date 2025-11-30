@@ -34,10 +34,12 @@ body {
 .turma-header {
     background: linear-gradient(45deg, var(--primary-dark), var(--primary-color));
     color: var(--white-color);
-    padding: 2rem;
-    border-radius: 0 0 var(--border-radius) var(--border-radius);
-    margin: 0 auto;
+    padding: 1.5rem 2rem;
+    border-radius: 50px;
+    margin: 8px auto;
+    width: 93.5%;
     max-width: 1400px;
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.18);
 }
 .header-content { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 1.5rem; }
 .back-link { color: var(--white-color); text-decoration: none; font-size: 1rem; font-weight: 500; display: inline-flex; align-items: center; gap: 0.5rem; transition: opacity 0.2s; }

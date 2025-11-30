@@ -1,197 +1,178 @@
- /* =================================
-           ESTILOS DE BASE E LAYOUT
-           ================================= */
-        body {
-            font-family: 'Poppins', sans-serif;
-            background-color: #f4f7f6; /* Fundo cinza claro (padrão do site) */
-            margin: 0;
-        }
-        .main-content {
-            flex: 1;
-            padding: 20px 0;
-        }
-        .container {
-            max-width: 960px;
-            margin: 20px auto;
-            padding: 20px;
-        }
-        
-        /* Título da Prova */
-        h1 {
-            font-size: 2.2rem;
-            font-weight: 600;
-            color: #343a40;
-            margin-bottom: 5px;
-        }
-        
-        /* Texto "Tempo restante:" */
-        .mb-3 {
-            font-size: 1.1rem;
-            color: #555;
-            margin-bottom: 25px;
-        }
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap');
 
-        /* =================================
-           TIMER (RELÓGIO)
-           ================================= */
-        .timer-display {
-            font-family: 'Poppins', monospace; /* Fonte boa para números */
-            font-size: 1.5rem; /* Reduzido para ficar mais elegante */
-            font-weight: 600;
-            color: #343a40; /* Cor padrão (escuro) */
-            background-color: #ffffff; /* Fundo branco */
-            padding: 10px 20px;
-            border-radius: 8px;
-            box-shadow: 0 4px 10px rgba(0,0,0,.1);
-            position: fixed;
-            top: 90px; /* Abaixo da navbar */
-            right: 20px;
-            z-index: 1000;
-            transition: background-color 0.3s ease, color 0.3s ease;
-        }
+:root {
+    /* --- PALETA AZUL (ALUNO) --- */
+    --primary-color: #1a62ff;
+    --primary-hover: #1550d1;
+    --primary-light: #eff6ff; /* Fundo azul bem clarinho */
+    
+    --bg-color: #f8fafc;
+    --card-bg: #ffffff;
+    --text-dark: #1e293b;
+    --text-gray: #64748b;
+    --border-color: #e2e8f0;
+    
+    --success: #22c55e;
+    --danger: #ef4444;
+    --warning: #f59e0b;
+}
 
-        /* Classe de perigo (10% restantes) */
-        .timer-display.timer-danger {
-            background-color: #dc3545; /* Vermelho */
-            color: #ffffff; /* Letras brancas */
-        }
+* { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; }
 
-        /* =================================
-           CARDS DE QUESTÃO
-           ================================= */
-        .card-questao {
-            background-color: #fff;
-            border-radius: 10px;
-            margin-bottom: 25px;
-            padding: 25px;
-            box-shadow: 0 4px 10px rgba(0,0,0,.05);
-            border: 1px solid #e9ecef;
-        }
-        .card-questao h4 {
-            margin-top: 0;
-            color: #0d3c70; /* Cor primária (azul escuro) */
-            font-size: 1.3rem;
-            margin-bottom: 15px;
-            border-bottom: 1px solid #eee;
-            padding-bottom: 10px;
-        }
-        .card-questao p {
-            margin-bottom: 20px;
-            line-height: 1.7;
-            color: #333;
-        }
-        .card-questao label {
-            display: block;
-            margin-bottom: 10px;
-            cursor: pointer;
-            padding: 12px 15px;
-            border-radius: 8px;
-            border: 1px solid #e9ecef;
-            transition: background-color 0.2s ease, border-color 0.2s ease;
-        }
-        .card-questao label:hover {
-            background-color: #f8f9fa;
-        }
-        .card-questao input[type="radio"]:checked + label {
-            background-color: #e6f7ff; /* Fundo azul claro ao selecionar */
-            border-color: #0d3c70;
-        }
-        .card-questao input[type="radio"] {
-            margin-right: 12px;
-            vertical-align: middle;
-            transform: scale(1.1);
-        }
-        /* Esconde o radio button, o label é o clicável */
-        .card-questao input[type="radio"] {
-           opacity: 0;
-           width: 0;
-           height: 0;
-           margin: 0;
-           padding: 0;
-        }
-        .card-questao label {
-            padding-left: 35px; /* Espaço para o ícone customizado */
-            position: relative;
-        }
-        /* Círculo customizado */
-        .card-questao label::before {
-            content: '';
-            position: absolute;
-            left: 10px;
-            top: 50%;
-            transform: translateY(-50%);
-            width: 18px;
-            height: 18px;
-            border: 2px solid #ced4da;
-            border-radius: 50%;
-            transition: all 0.2s ease;
-        }
-        /* Ponto central customizado (ao selecionar) */
-        .card-questao input[type="radio"]:checked + label::before {
-            border-color: #0d3c70;
-            background-color: #0d3c70;
-            box-shadow: 0 0 0 3px white inset;
-        }
+body {
+    background-color: var(--bg-color);
+    color: var(--text-dark);
+    min-height: 100vh;
+    padding-top: 90px; /* Espaço para o header fixo */
+    padding-bottom: 100px; /* Espaço para o footer fixo */
+}
 
+/* --- HEADER FIXO (Topo) --- */
+.exam-header {
+    position: fixed;
+    top: 0; left: 0; width: 100%;
+    background: #fff;
+    border-bottom: 1px solid var(--border-color);
+    box-shadow: 0 4px 20px rgba(26, 98, 255, 0.05); /* Sombra azulada leve */
+    z-index: 1000;
+    padding: 1rem 2rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    height: 80px;
+}
 
-        .card-questao textarea {
-            width: 100%;
-            padding: 12px;
-            border: 1px solid #ced4da;
-            border-radius: 8px;
-            min-height: 120px;
-            resize: vertical;
-            font-family: 'Poppins', sans-serif;
-            font-size: 1rem;
-            box-sizing: border-box; /* Garante que o padding não estoure */
-        }
-        .card-questao textarea:focus {
-            outline: none;
-            border-color: #0d3c70;
-            box-shadow: 0 0 0 3px rgba(13, 60, 112, 0.1);
-        }
+.exam-info h1 { font-size: 1.2rem; font-weight: 700; margin: 0; color: var(--text-dark); }
+.exam-info p { font-size: 0.85rem; color: var(--text-gray); margin: 0; }
 
-        /* =================================
-           BOTÃO E ALERTAS
-           ================================= */
-        .btn-submit {
-            background-color: #28a745; /* Verde */
-            color: white;
-            padding: 15px 30px;
-            font-size: 1.15rem;
-            border-radius: 8px;
-            border: none;
-            cursor: pointer;
-            display: block;
-            width: fit-content;
-            margin: 40px auto 20px auto;
-            box-shadow: 0 4px 10px rgba(40, 167, 69, 0.3);
-            transition: background-color 0.2s ease, transform 0.2s ease;
-            font-weight: 500;
-        }
-        .btn-submit:hover {
-            background-color: #218838;
-            transform: translateY(-2px);
-        }
-        .alert {
-            padding: 15px;
-            margin-bottom: 20px;
-            border-radius: 8px;
-            font-weight: 500;
-            display: flex;
-            align-items: center;
-        }
-        .alert i {
-            margin-right: 10px;
-            font-size: 1.3rem;
-        }
-        .alert-danger {
-            background-color: #f8d7da;
-            color: #721c24;
-            border: 1px solid #f5c6cb;
-        }
-        .alert-warning {
-            background-color: #fff3cd;
-            color: #856404;
-            border: 1px solid #ffeeba;
-        }
+/* Timer Azul */
+.timer-box {
+    background: var(--primary-light); 
+    color: var(--primary-color);
+    padding: 0.5rem 1.5rem; 
+    border-radius: 8px; 
+    font-weight: 700;
+    display: flex; align-items: center; gap: 10px; 
+    font-family: monospace; font-size: 1.3rem;
+    border: 1px solid #bfdbfe;
+    box-shadow: 0 2px 5px rgba(26, 98, 255, 0.1);
+}
+.timer-box i { font-size: 1.4rem; }
+
+/* Timer Crítico (Vermelho) */
+.timer-box.danger {
+    background: #fef2f2; color: var(--danger); border-color: #fecaca;
+    animation: pulse 1s infinite;
+}
+@keyframes pulse { 0% { transform: scale(1); } 50% { transform: scale(1.02); } 100% { transform: scale(1); } }
+
+/* --- CONTAINER --- */
+.container {
+    max-width: 850px; margin: 0 auto; padding: 0 1.5rem;
+}
+
+/* --- CARDS DE QUESTÃO --- */
+.card-questao {
+    background: var(--card-bg);
+    border-radius: 16px;
+    padding: 2.5rem;
+    margin-bottom: 2rem;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.02);
+    border: 1px solid var(--border-color);
+    position: relative;
+    transition: transform 0.2s;
+}
+.card-questao:hover { transform: translateY(-2px); border-color: #bfdbfe; }
+
+/* Número da Questão */
+.questao-header {
+    display: flex; justify-content: space-between; align-items: center;
+    margin-bottom: 1.5rem; padding-bottom: 1rem; border-bottom: 1px solid var(--border-color);
+}
+.questao-header h4 { 
+    font-size: 1.1rem; color: var(--primary-color); margin: 0; font-weight: 700; 
+    text-transform: uppercase; letter-spacing: 0.5px;
+}
+.badge-pontos { 
+    font-size: 0.8rem; background: var(--bg-color); padding: 4px 12px; 
+    border-radius: 20px; font-weight: 600; color: var(--text-gray); border: 1px solid var(--border-color);
+}
+
+.enunciado { font-size: 1.05rem; color: #334155; line-height: 1.7; margin-bottom: 2rem; }
+
+.img-apoio {
+    max-width: 100%; border-radius: 8px; border: 1px solid var(--border-color);
+    margin: 0 auto 2rem auto; display: block; max-height: 400px; object-fit: contain;
+}
+
+/* --- ALTERNATIVAS (RADIO) --- */
+.opcao-radio {
+    display: flex; align-items: center; padding: 1rem 1.2rem;
+    border: 2px solid var(--border-color); border-radius: 10px;
+    cursor: pointer; margin-bottom: 1rem; transition: all 0.2s;
+    background: #fff;
+}
+
+/* Hover Azul */
+.opcao-radio:hover { 
+    border-color: var(--primary-color); 
+    background: #f8fbff;
+}
+
+/* Input Escondido */
+.opcao-radio input[type="radio"] {
+    appearance: none; -webkit-appearance: none;
+    width: 22px; height: 22px; 
+    border: 2px solid var(--text-gray); border-radius: 50%;
+    margin-right: 15px; position: relative; flex-shrink: 0;
+    transition: all 0.2s;
+}
+
+/* Estado Selecionado (Azul) */
+.opcao-radio:has(input:checked) { 
+    border-color: var(--primary-color); 
+    background: var(--primary-light); 
+    box-shadow: 0 4px 10px rgba(26, 98, 255, 0.1);
+}
+
+.opcao-radio input[type="radio"]:checked {
+    border-color: var(--primary-color);
+    background-color: var(--primary-color);
+    box-shadow: inset 0 0 0 4px #fff; /* Cria o ponto branco no meio */
+}
+
+.opcao-radio label { cursor: pointer; font-size: 1rem; color: var(--text-dark); flex: 1; font-weight: 500; }
+.opcao-radio input:checked + label { color: var(--primary-color); font-weight: 700; }
+
+/* Textarea */
+textarea.form-control {
+    width: 100%; padding: 1rem; border: 2px solid var(--border-color); border-radius: 10px;
+    font-family: inherit; font-size: 1rem; resize: vertical; outline: none; transition: border 0.2s;
+}
+textarea.form-control:focus { border-color: var(--primary-color); box-shadow: 0 0 0 4px var(--primary-light); }
+
+/* --- RODAPÉ FIXO (Botão Enviar) --- */
+.footer-actions {
+    position: fixed; bottom: 0; left: 0; width: 100%;
+    background: #fff; border-top: 1px solid var(--border-color);
+    padding: 1.2rem 2rem; display: flex; justify-content: flex-end; align-items: center;
+    box-shadow: 0 -4px 20px rgba(0,0,0,0.05); z-index: 1000;
+}
+
+.btn-submit {
+    background: var(--success); color: white; border: none;
+    padding: 0.9rem 2.5rem; border-radius: 8px; font-weight: 700; font-size: 1.1rem;
+    cursor: pointer; transition: background 0.2s, transform 0.2s;
+    box-shadow: 0 4px 10px rgba(34, 197, 94, 0.3);
+    display: flex; align-items: center; gap: 8px;
+}
+.btn-submit:hover { background: #16a34a; transform: translateY(-2px); }
+
+/* Responsividade */
+@media (max-width: 768px) {
+    .exam-header { padding: 0.8rem 1rem; height: auto; flex-direction: column; align-items: flex-start; gap: 10px; }
+    .timer-box { position: absolute; top: 1rem; right: 1rem; font-size: 1rem; padding: 0.4rem 0.8rem; }
+    body { padding-top: 110px; }
+    .footer-actions { justify-content: center; }
+    .btn-submit { width: 100%; justify-content: center; }
+}

@@ -1,345 +1,143 @@
-/* =================================
-   ESTILOS DE BASE E LAYOUT
-   ================================= */
+/* Importando Fontes */
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700&display=swap');
+
+:root {
+    /* PALETA VERDE PADRÃO */
+    --primary-color: #00796b;
+    --primary-hover: #004d40;
+    --primary-light: #e0f2f1;
+    --bg-color: #f8fafc;
+    --card-bg: #ffffff;
+    --text-dark: #1e293b;
+    --text-gray: #64748b;
+    --border-color: #e2e8f0;
+    
+    /* Cores de Status */
+    --success: #10b981;
+    --warning: #f59e0b;
+    --danger: #ef4444;
+    --info: #3b82f6;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; }
 
 body {
-    font-family: 'Poppins', sans-serif;
-    background-color: #eef2f6; /* Um cinza-azul bem claro para o fundo */
-    margin: 0;
-    padding: 30px 10px;
+    background-color: var(--bg-color);
+    color: var(--text-dark);
     min-height: 100vh;
-    color: #333;
-    line-height: 1.6;
 }
 
-.container {
-    max-width: 1200px;
+/* --- HEADER VERDE (PADRONIZADO) --- */
+.page-header {
+    position: relative;
+    background: linear-gradient(135deg, var(--primary-color), var(--primary-hover));
+    padding: 2rem;
+    border-radius: 0 0 20px 20px;
+    color: #fff;
+    box-shadow: 0 6px 20px rgba(0, 121, 107, 0.2);
+    margin-bottom: 2rem;
+}
+
+.header-container {
+    max-width: 1280px;
     margin: 0 auto;
-    padding: 0 15px;
-}
-
-/* =================================
-   CARD PRINCIPAL
-   ================================= */
-
-.card {
-    background-color: #ffffff;
-    border-radius: 16px; /* Bordas mais arredondadas */
-    border: 1px solid #e0e7ed;
-    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1); /* Sombra mais pronunciada e suave */
-    overflow: hidden;
-    transition: transform 0.3s ease-in-out; /* Animação ao passar o mouse (se aplicável, ou para futuro) */
-}
-
-/* =================================
-   CABEÇALHO DO CARD (TÍTULO E BOTÕES)
-   ================================= */
-
-.card-header {
     display: flex;
-    flex-wrap: wrap;
     justify-content: space-between;
     align-items: center;
-    gap: 15px;
-    padding: 25px 30px; /* Mais padding */
-    border-bottom: 1px solid #e0e7ed;
-    background: linear-gradient(135deg, #f8fcfd 0%, #f0f4f7 100%); /* Gradiente sutil */
+    flex-wrap: wrap;
+    gap: 1.5rem;
 }
 
-.card-header h2 {
-    margin: 0;
-    font-size: 1.9rem; /* Título maior */
-    font-weight: 700; /* Mais negrito */
-    color: #2c3e50; /* Cor mais escura para contraste */
-    display: inline-flex;
-    align-items: center;
-    gap: 12px;
-    flex-grow: 1;
-    margin-right: auto;
+.header-left { display: flex; flex-direction: column; gap: 0.5rem; }
+
+/* Botão Voltar */
+.back-link {
+    display: inline-flex; align-items: center; gap: 0.5rem; padding: 0.5rem 1rem;
+    background: rgba(255, 255, 255, 0.15); color: #fff; border-radius: 8px; font-weight: 600;
+    text-decoration: none; font-size: 0.9rem; backdrop-filter: blur(4px); width: fit-content;
+    transition: all 0.2s;
+}
+.back-link:hover { background: rgba(255, 255, 255, 0.25); transform: translateX(-4px); }
+
+.header-info h1 { font-family: 'Poppins', sans-serif; font-size: 2rem; font-weight: 700; margin: 0; line-height: 1.2; }
+.header-info p { margin: 0; color: rgba(255, 255, 255, 0.9); font-weight: 500; font-size: 1rem; }
+
+/* Botão Excluir (Vermelho Suave no Header) */
+.btn-delete-header {
+    background: rgba(255, 255, 255, 0.15); color: #ffcccc; border: 1px solid rgba(255, 204, 204, 0.3);
+    padding: 0.6rem 1.2rem; border-radius: 8px; font-weight: 600; cursor: pointer;
+    display: inline-flex; align-items: center; gap: 8px; font-size: 0.9rem; transition: all 0.2s;
+}
+.btn-delete-header:hover { background: rgba(255, 0, 0, 0.2); color: #fff; border-color: rgba(255, 255, 255, 0.5); }
+
+
+/* --- CONTEÚDO PRINCIPAL --- */
+.content-body {
+    max-width: 1280px; margin: 0 auto; padding: 0 2rem 3rem 2rem;
 }
 
-.card-header h2 i {
-    font-size: 2.2rem; /* Ícone maior */
-    color: #4CAF50; /* Cor verde vibrante para o ícone principal */
-    background: #e8f5e9; /* Fundo suave para o ícone */
-    padding: 5px;
-    border-radius: 8px;
+/* Card da Tabela */
+.card-table {
+    background: var(--card-bg); border-radius: 16px;
+    box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05); border: 1px solid var(--border-color);
+    overflow: hidden; /* Para bordas arredondadas da tabela */
 }
 
-.card-header-actions { /* Adicionado para agrupar botões conforme sua sugestão anterior */
-    display: flex;
-    gap: 10px;
-    align-items: center;
+/* Header do Card (Título interno) */
+.card-header-internal {
+    padding: 1.5rem; border-bottom: 1px solid var(--border-color);
+    background: #fff; display: flex; align-items: center; gap: 10px;
 }
+.card-header-internal h2 { font-size: 1.2rem; font-weight: 700; color: var(--text-dark); margin: 0; }
+.card-header-internal i { color: var(--primary-color); font-size: 1.4rem; }
 
-/* Estilizando o sub-cabeçalho (com base na sua div com inline-style) */
-.card > div:first-of-type { /* Seleciona a primeira div que é filha direta do card */
-    padding: 20px 30px !important;
-    background-color: #fdfdfd;
-    border-bottom: 1px solid #f0f4f7;
-}
-
-.card > div:first-of-type h3 {
-    font-size: 1.3rem;
-    font-weight: 600;
-    margin: 0 0 5px 0;
-    color: #34495e;
-}
-
-.card > div:first-of-type p {
-    margin: 0;
-    color: #7f8c8d;
-    font-size: 0.95rem;
-}
-
-/* =================================
-   BOTÕES CUSTOMIZADOS
-   ================================= */
-
-.btn-sm {
-    padding: 10px 18px; /* Mais padding para botões maiores */
-    font-size: 0.9rem;
-    font-weight: 600; /* Mais negrito */
-    border-radius: 8px; /* Bordas mais arredondadas */
-    border: none;
-    cursor: pointer;
-    text-decoration: none;
-    color: white;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    gap: 8px; /* Mais espaço entre ícone e texto */
-    transition: all 0.25s ease-in-out; /* Transição suave */
-    white-space: nowrap;
-    box-shadow: 0 4px 10px rgba(0,0,0,0.1); /* Sombra para os botões */
-}
-
-.btn-sm i {
-    font-size: 1.2rem;
-}
-
-.btn-danger-custom {
-    background-color: #e74c3c; /* Vermelho mais vibrante */
-}
-.btn-danger-custom:hover {
-    background-color: #c0392b;
-    transform: translateY(-2px); /* Efeito de elevação */
-    box-shadow: 0 6px 15px rgba(231, 76, 60, 0.3);
-}
-
-.btn-secondary-custom {
-    background-color: #95a5a6; /* Cinza médio */
-}
-.btn-secondary-custom:hover {
-    background-color: #7f8c8d;
-    transform: translateY(-2px);
-    box-shadow: 0 6px 15px rgba(149, 165, 166, 0.3);
-}
-
-.btn-info-custom {
-    background-color: #3498db; /* Azul vibrante */
-}
-.btn-info-custom:hover {
-    background-color: #2980b9;
-    transform: translateY(-2px);
-    box-shadow: 0 6px 15px rgba(52, 152, 219, 0.3);
-}
-
-/* =================================
-   TABELA DE RESULTADOS
-   ================================= */
-
-.table-container {
-    width: 100%;
-    overflow-x: auto;
-    padding: 0 30px 20px 30px; /* Adiciona padding ao redor da tabela */
-    box-sizing: border-box;
-}
-
-.table {
-    width: 100%;
-    border-collapse: separate; /* Permite border-spacing para "ar" entre células */
-    border-spacing: 0 10px; /* Espaçamento entre as linhas */
-    min-width: 900px;
-}
-
-.table th,
-.table td {
-    padding: 15px 20px;
-    text-align: left;
-    vertical-align: middle;
-}
+/* Tabela */
+.table-responsive { overflow-x: auto; }
+.table { width: 100%; border-collapse: collapse; min-width: 900px; }
 
 .table th {
-    background-color: #ecf0f1; /* Fundo mais claro para o cabeçalho da tabela */
-    font-weight: 700;
-    color: #7f8c8d; /* Cinza para o texto do cabeçalho */
-    font-size: 0.85rem;
-    text-transform: uppercase;
-    letter-spacing: 0.7px;
-    border-bottom: 2px solid #dde7ee; /* Borda mais forte */
-}
-
-.table tbody tr {
-    background-color: #ffffff;
-    border-radius: 8px; /* Bordas arredondadas para as linhas */
-    box-shadow: 0 2px 8px rgba(0,0,0,0.05); /* Sombra para cada linha */
-    transition: all 0.2s ease-in-out;
-}
-
-.table tbody tr:hover {
-    transform: translateY(-2px); /* Efeito de elevação ao passar o mouse */
-    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
-    background-color: #fcfdfe; /* Fundo ainda mais claro no hover */
+    background: var(--primary-light); color: var(--primary-color);
+    font-weight: 600; text-transform: uppercase; font-size: 0.8rem;
+    padding: 1rem 1.5rem; text-align: left;
 }
 
 .table td {
-    color: #4a4a4a;
-    font-size: 0.95rem;
-    border: none; /* Remove bordas individuais da célula para a sombra da linha funcionar */
-    /* Ajusta as bordas arredondadas para as células das extremidades */
+    padding: 1rem 1.5rem; border-bottom: 1px solid var(--border-color);
+    color: var(--text-dark); vertical-align: middle; font-size: 0.95rem;
 }
+.table tr:last-child td { border-bottom: none; }
+.table tr:hover { background-color: #fafafa; }
 
-/* Arredondar as bordas das primeiras e últimas células de cada linha */
-.table tbody tr td:first-child {
-    border-top-left-radius: 8px;
-    border-bottom-left-radius: 8px;
-}
-.table tbody tr td:last-child {
-    border-top-right-radius: 8px;
-    border-bottom-right-radius: 8px;
-}
+/* Estilos de Células */
+.table td strong { color: var(--primary-color); font-size: 1rem; }
 
-
-.table td strong {
-    color: #2c3e50;
-    font-weight: 700;
-    font-size: 1.1rem; /* Pontuação mais destacada */
-}
-
-/* =================================
-   BADGES (Status, etc.)
-   ================================= */
-
+/* Badges de Status */
 .badge {
-    padding: 6px 12px; /* Mais padding */
-    font-size: 0.85rem;
-    font-weight: 700; /* Mais negrito */
-    border-radius: 25px; /* Mais arredondado */
-    color: #fff;
-    display: inline-flex;
-    align-items: center;
-    gap: 5px;
+    padding: 4px 10px; border-radius: 20px; font-size: 0.75rem; font-weight: 600; display: inline-block;
+}
+.bg-success { background: #dcfce7; color: #166534; } /* Verde suave */
+.bg-primary { background: #dbeafe; color: #1e40af; } /* Azul suave */
+.text-warning { color: #d97706; font-weight: 600; } /* Laranja escuro */
+
+/* Botão de Ação (Ver Detalhes) */
+.btn-action {
+    display: inline-flex; align-items: center; gap: 5px;
+    padding: 6px 12px; background: var(--bg-color); border: 1px solid var(--border-color);
+    border-radius: 6px; color: var(--text-gray); text-decoration: none;
+    font-size: 0.85rem; font-weight: 500; transition: all 0.2s;
+}
+.btn-action:hover {
+    background: var(--primary-light); color: var(--primary-color); border-color: var(--primary-color);
 }
 
-.bg-success {
-    background-color: #2ecc71; /* Verde esmeralda vibrante */
-    box-shadow: 0 2px 8px rgba(46, 204, 113, 0.4);
+/* Alerta Vazio */
+.empty-state {
+    text-align: center; padding: 3rem; color: var(--text-gray);
 }
-
-.bg-primary {
-    background-color: #3498db; /* Azul vibrante */
-    box-shadow: 0 2px 8px rgba(52, 152, 219, 0.4);
-}
-
-.text-warning {
-    color: #f39c12 !important; /* Laranja mais forte */
-    font-weight: 600;
-}
-
-/* =================================
-   ALERTAS (Caso não haja tentativas)
-   ================================= */
-
-.alert {
-    padding: 18px 25px;
-    margin: 25px 30px;
-    border-radius: 12px;
-    font-weight: 500;
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    font-size: 1.05rem;
-    background-color: #eaf6fa; /* Fundo suave de alerta */
-    color: #2980b9; /* Texto azul */
-    border: 1px solid #b3e0f0;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
-}
-
-.alert i {
-    font-size: 1.5rem;
-    color: #3498db;
-}
-
-/* =================================
-   RESPONSIVIDADE
-   ================================= */
+.empty-state i { font-size: 3rem; margin-bottom: 1rem; opacity: 0.5; display: block; }
 
 @media (max-width: 768px) {
-    body {
-        padding: 15px 5px;
-    }
-
-    .container {
-        padding: 0 5px;
-    }
-    
-    .card-header {
-        padding: 18px 20px;
-        flex-direction: column;
-        align-items: flex-start;
-    }
-    
-    .card-header h2 {
-        font-size: 1.6rem;
-        margin-right: 0;
-        text-align: center;
-        width: 100%; /* Ocupa toda a largura */
-    }
-
-    .card-header h2 i {
-        font-size: 1.8rem;
-    }
-
-    .card-header-actions { /* Ajusta o grupo de botões */
-        flex-direction: column;
-        width: 100%;
-        gap: 8px;
-    }
-    
-    .btn-sm {
-        width: 100%;
-        box-sizing: border-box;
-    }
-
-    .card > div:first-of-type {
-        padding: 15px 20px !important;
-    }
-
-    .card > div:first-of-type h3 {
-        font-size: 1.1rem;
-    }
-
-    .table-container {
-        padding: 0 15px 15px 15px; /* Ajusta padding para o container da tabela */
-    }
-
-    .table th,
-    .table td {
-        padding: 12px 15px;
-        font-size: 0.9rem;
-    }
-
-    .table td strong {
-        font-size: 1rem;
-    }
-
-    .alert {
-        margin: 15px;
-        font-size: 0.95rem;
-        padding: 15px 18px;
-    }
-    .alert i {
-        font-size: 1.3rem;
-    }
+    .header-container { flex-direction: column; align-items: flex-start; }
+    .header-actions { width: 100%; display: flex; justify-content: flex-start; }
+    .content-body { padding: 1rem; }
 }
