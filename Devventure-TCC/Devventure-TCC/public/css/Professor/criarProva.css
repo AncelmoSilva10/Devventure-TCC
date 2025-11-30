@@ -27,15 +27,17 @@ body {
 .page-header {
     position: relative;
     background: linear-gradient(135deg, var(--primary-color), var(--primary-hover));
-    padding: 2rem;
-    border-radius: 0 0 20px 20px;
+    padding: 1.5rem;
+    border-radius: 50px;
     color: #fff;
-    box-shadow: 0 6px 20px rgba(0, 121, 107, 0.2);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.18);
+    margin: 8px auto;
+    width: 98%;
     margin-bottom: 2rem;
 }
 
 .header-container {
-    max-width: 1280px;
+    max-width: 1300px;
     margin: 0 auto;
     display: flex;
     justify-content: space-between;
