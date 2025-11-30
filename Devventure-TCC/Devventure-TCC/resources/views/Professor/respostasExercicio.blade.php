@@ -18,7 +18,7 @@
         <header class="turma-header">
             <div class="header-content">
                 <div class="header-left">
-                    <a href="{{ url()->previous() }}" class="back-link">
+                    <a href="{{ url('/professorExercicios') }}" class="back-link">
                         <i class='bx bx-chevron-left'></i> Voltar
                     </a>
                     <div class="header-info">

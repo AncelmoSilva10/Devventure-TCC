@@ -5,15 +5,15 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <title>Jornada de Aprendizado</title>
     
-    <link rel="stylesheet" href="{{ asset('css/style.css') }}" />
+    <link rel="stylesheet" href="<?php echo e(asset('css/style.css')); ?>" />
     
     <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
 </head>
 <body  id="welcome-page">
 
-    {{-- O id na body, é para a logica de scrollagem funcionar somente aqui --}}
+    
 
-    @include('layouts.navbar')
+    <?php echo $__env->make('layouts.navbar', \Illuminate\Support\Arr::except(get_defined_vars(), ['__data', '__path']))->render(); ?>
 
      <main>
     
@@ -39,7 +39,7 @@
             <div class="icon-cards__item d-flex align-items-center justify-content-center">
                 <span class="h1">
                     <video autoplay muted loop playsinline style="width: 100%; height: 100%; object-fit: cover; border-radius: inherit;">
-                        <source src="{{ asset('videos/video1.mp4') }}" type="video/mp4">
+                        <source src="<?php echo e(asset('videos/video1.mp4')); ?>" type="video/mp4">
                         Seu navegador não suporta vídeos.
                     </video>
                 </span>
@@ -48,7 +48,7 @@
             <div class="icon-cards__item d-flex align-items-center justify-content-center">
                 <span class="h1">
                     <video autoplay muted loop playsinline style="width: 100%; height: 100%; object-fit: cover; border-radius: inherit;">
-                        <source src="{{ asset('videos/video1.mp4') }}" type="video/mp4">
+                        <source src="<?php echo e(asset('videos/video1.mp4')); ?>" type="video/mp4">
                         Seu navegador não suporta vídeos.
                     </video>
                 </span>
@@ -57,7 +57,7 @@
             <div class="icon-cards__item d-flex align-items-center justify-content-center">
                 <span class="h1">
                     <video autoplay muted loop playsinline style="width: 100%; height: 100%; object-fit: cover; border-radius: inherit;">
-                        <source src="{{ asset('videos/video1.mp4') }}" type="video/mp4">
+                        <source src="<?php echo e(asset('videos/video1.mp4')); ?>" type="video/mp4">
                         Seu navegador não suporta vídeos.
                     </video>
                 </span>
@@ -135,8 +135,8 @@
     <div class="container-depoimentos-grid">
         <div class="formulario-depoimento">
             <h3>Deixe seu depoimento</h3>
-            <form id="formDepoimento" data-url="{{ route('depoimentos.store') }}" method="POST">
-                @csrf
+            <form id="formDepoimento" data-url="<?php echo e(route('depoimentos.store')); ?>" method="POST">
+                <?php echo csrf_field(); ?>
                 <div class="campo-formulario">
                     <label for="textoDepoimento">Seu depoimento:</label>
                     <textarea id="textoDepoimento" required maxlength="300" placeholder="Compartilhe sua experiência com a plataforma..."></textarea>
@@ -153,26 +153,26 @@
         <div class="carrossel-depoimentos">
             <div class="container-depoimentos" id="containerDepoimentos">
                 
-              {{-- 1. Exibe os depoimentos que vêm do banco --}}
-    @if(isset($depoimentos) && $depoimentos->count() > 0)
-        @foreach($depoimentos as $depoimento)
+              
+    <?php if(isset($depoimentos) && $depoimentos->count() > 0): ?>
+        <?php $__currentLoopData = $depoimentos; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $depoimento): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
         
-            @if($depoimento->aprovado)
+            <?php if($depoimento->aprovado): ?>
                 <div class="card-wrapper">
                     <div class="camada-fundo">
                         <div class="card-fundo"></div>
                         <div class="card-fundo"></div>
                     </div>
                     <div class="card-depoimento">
-                        <p>"{{ $depoimento->texto }}"</p>
-                        <span>- {{ $depoimento->autor }}</span>
+                        <p>"<?php echo e($depoimento->texto); ?>"</p>
+                        <span>- <?php echo e($depoimento->autor); ?></span>
                     </div>
                 </div>
-            @endif
-            @endforeach
-    @endif
+            <?php endif; ?>
+            <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
+    <?php endif; ?>
 
-                {{-- 2. Exibe o depoimento fixo (sempre) --}}
+                
                 <div class="card-wrapper">
                     <div class="camada-fundo">
                         <div class="card-fundo"></div><div class="card-fundo"></div>
@@ -189,10 +189,10 @@
 </section>
     </main>
     
-    @include('layouts.footer')
+    <?php echo $__env->make('layouts.footer', \Illuminate\Support\Arr::except(get_defined_vars(), ['__data', '__path']))->render(); ?>
     
     <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-    <script src="{{ asset('js/hero.js') }}"></script>
-    <script src="{{ asset('js/script.js') }}"></script>
+    <script src="<?php echo e(asset('js/hero.js')); ?>"></script>
+    <script src="<?php echo e(asset('js/script.js')); ?>"></script>
 </body>
-</html>
+</html><?php /**PATH C:\Users\ancel\Documents\MeusProjetos\Devventure---TCC\Devventure-TCC\Devventure-TCC\resources\views/welcome.blade.php ENDPATH**/ ?>

@@ -6,19 +6,19 @@
   <title>Área do Professor - Login</title>
   
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-  <link href="{{ asset('css/Professor/loginProfessor.css') }}" rel="stylesheet">
+  <link href="<?php echo e(asset('css/Professor/loginProfessor.css')); ?>" rel="stylesheet">
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </head>
 <body>
 
-  @include('layouts.navbar')
+  <?php echo $__env->make('layouts.navbar', \Illuminate\Support\Arr::except(get_defined_vars(), ['__data', '__path']))->render(); ?>
 
   <main class="split-screen-container">
     
     <div class="left-panel">
         <div class="professor-icon-large">
             <img 
-                src="{{ asset('images/professor.png') }}" 
+                src="<?php echo e(asset('images/professor.png')); ?>" 
                 alt="Ícone Professor" 
                 class="professor-img-custom"
                 onerror="this.style.display='none'; this.parentNode.innerHTML='<svg viewBox=\'0 0 24 24\' fill=\'none\' stroke=\'white\' stroke-width=\'2\' stroke-linecap=\'round\' stroke-linejoin=\'round\' style=\'width:100px;height:100px;\'><path d=\'M22 10v6M2 10l10-5 10 5-10 5z\'/><path d=\'M6 12v5c3 3 9 3 12 0v-5\'/></svg>'" 
@@ -45,17 +45,17 @@
             </div>
 
             <form method="POST" id="professor-form" enctype="multipart/form-data"
-                action="{{ route('professor.login.action') }}" 
-                data-login-url="{{ route('professor.login.action') }}"
-                data-cadastro-url="{{ route('professor.cadastro.action') }}">
-                @csrf
+                action="<?php echo e(route('professor.login.action')); ?>" 
+                data-login-url="<?php echo e(route('professor.login.action')); ?>"
+                data-cadastro-url="<?php echo e(route('professor.cadastro.action')); ?>">
+                <?php echo csrf_field(); ?>
 
-                <input type="hidden" name="form_tipo" id="form_tipo" value="{{ old('form_tipo', 'login') }}">
+                <input type="hidden" name="form_tipo" id="form_tipo" value="<?php echo e(old('form_tipo', 'login')); ?>">
 
                 <div id="login-section">
                     <div class="form-group">
                         <label for="email-login">E-mail Institucional</label>
-                        <input type="email" id="email-login" name="email" placeholder="professor@escola.com" value="{{ old('email') }}">
+                        <input type="email" id="email-login" name="email" placeholder="professor@escola.com" value="<?php echo e(old('email')); ?>">
                     </div>
                     
                     <div class="form-group">
@@ -93,11 +93,11 @@
 
                         <div class="form-group">
                             <label for="nome">Nome Completo *</label>
-                            <input type="text" id="nome" name="nome" value="{{ old('nome') }}">
+                            <input type="text" id="nome" name="nome" value="<?php echo e(old('nome')); ?>">
                         </div>
                         <div class="form-group">
                             <label for="cpf">CPF *</label>
-                            <input type="text" id="cpf" name="cpf" placeholder="000.000.000-00" maxlength="14" value="{{ old('cpf') }}">
+                            <input type="text" id="cpf" name="cpf" placeholder="000.000.000-00" maxlength="14" value="<?php echo e(old('cpf')); ?>">
                             <small id="cpf-feedback" style="display: block; height: 18px; font-size: 0.8rem; margin-top: 2px;"></small>
                         </div>
                     </div>
@@ -105,22 +105,22 @@
                     <div class="step-content" data-step="2" style="display: none;">
                         <div class="form-group">
                             <label for="area">Área de Ensino *</label>
-                            <input type="text" id="area" name="area" placeholder="Ex: Matemática" value="{{ old('area') }}">
+                            <input type="text" id="area" name="area" placeholder="Ex: Matemática" value="<?php echo e(old('area')); ?>">
                         </div>
                         <div class="form-group">
                             <label for="formacao">Formação *</label>
-                            <textarea id="formacao" name="formacao" rows="3">{{ old('formacao') }}</textarea>
+                            <textarea id="formacao" name="formacao" rows="3"><?php echo e(old('formacao')); ?></textarea>
                         </div>
                         <div class="form-group">
                             <label for="telefone">Celular</label>
-                            <input type="text" id="telefone" name="telefone" placeholder="(11) 99999-9999" value="{{ old('telefone') }}">
+                            <input type="text" id="telefone" name="telefone" placeholder="(11) 99999-9999" value="<?php echo e(old('telefone')); ?>">
                         </div>
                     </div>
 
                     <div class="step-content" data-step="3" style="display: none;">
                         <div class="form-group">
                             <label for="email-cadastro">E-mail *</label>
-                            <input type="email" id="email-cadastro" name="email" value="{{ old('email') }}">
+                            <input type="email" id="email-cadastro" name="email" value="<?php echo e(old('email')); ?>">
                         </div>
                         <div class="form-group">
                             <label for="password-cadastro">Senha *</label>
@@ -162,12 +162,12 @@
     </div>
   </main>
 
-  <script src="{{ asset('js/Professor/loginProfessor.js') }}"></script>
+  <script src="<?php echo e(asset('js/Professor/loginProfessor.js')); ?>"></script>
   
   <script>
     document.addEventListener('DOMContentLoaded', function() {
-        @if ($errors->any())
-            const errorFields = @json($errors->keys());
+        <?php if($errors->any()): ?>
+            const errorFields = <?php echo json_encode($errors->keys(), 15, 512) ?>;
             if (errorFields.length > 0) {
                 // Marca os campos com erro
                 errorFields.forEach(function(field) {
@@ -183,21 +183,21 @@
                 Swal.fire({
                     icon: 'error',
                     title: 'Atenção',
-                    html: '<ul style="text-align: left;">@foreach ($errors->all() as $error)<li>{{ $error }}</li>@endforeach</ul>',
+                    html: '<ul style="text-align: left;"><?php $__currentLoopData = $errors->all(); $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $error): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?><li><?php echo e($error); ?></li><?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?></ul>',
                     confirmButtonColor: '#00796B'
                 });
             }
-        @endif
+        <?php endif; ?>
 
-        @if (session('status'))
+        <?php if(session('status')): ?>
              Swal.fire({
                 icon: 'success',
                 title: 'Sucesso',
-                text: "{{ session('status') }}",
+                text: "<?php echo e(session('status')); ?>",
                 confirmButtonColor: '#00796B'
             });
-        @endif
+        <?php endif; ?>
     });
   </script>
 </body>
-</html>
+</html><?php /**PATH C:\Users\ancel\Documents\MeusProjetos\Devventure---TCC\Devventure-TCC\Devventure-TCC\resources\views/Professor/login.blade.php ENDPATH**/ ?>

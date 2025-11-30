@@ -3,37 +3,37 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Área do Professor - Login</title>
+  <title>Área do Aluno - Login</title>
   
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-  <link href="{{ asset('css/Professor/loginProfessor.css') }}" rel="stylesheet">
-  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  <link href="<?php echo e(asset('css/Aluno/aluno.css')); ?>" rel="stylesheet"> <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </head>
 <body>
 
-  @include('layouts.navbar')
+  <?php echo $__env->make('layouts.navbar', \Illuminate\Support\Arr::except(get_defined_vars(), ['__data', '__path']))->render(); ?>
 
   <main class="split-screen-container">
     
-    <div class="left-panel">
-        <div class="professor-icon-large">
-            <img 
-                src="{{ asset('images/professor.png') }}" 
-                alt="Ícone Professor" 
-                class="professor-img-custom"
-                onerror="this.style.display='none'; this.parentNode.innerHTML='<svg viewBox=\'0 0 24 24\' fill=\'none\' stroke=\'white\' stroke-width=\'2\' stroke-linecap=\'round\' stroke-linejoin=\'round\' style=\'width:100px;height:100px;\'><path d=\'M22 10v6M2 10l10-5 10 5-10 5z\'/><path d=\'M6 12v5c3 3 9 3 12 0v-5\'/></svg>'" 
-            >
-        </div>
-        <h2>Portal do Professor</h2>
-        <p>Acesse suas ferramentas de ensino, gerencie turmas e acompanhe o desempenho dos alunos.</p>
+  <div class="left-panel">
+    <div class="student-icon-large">
+        <img 
+            src="<?php echo e(asset('images/aluna.png')); ?>" 
+            alt="Ícone Aluno" 
+            class="professor-img-custom"
+            onerror="this.style.display='none'; this.parentNode.innerHTML='<svg viewBox=\'0 0 24 24\' fill=\'none\' stroke=\'white\' stroke-width=\'2\' stroke-linecap=\'round\' stroke-linejoin=\'round\' style=\'width:100px;height:100px;\'><path d=\'M12 14l9-5-9-5-9 5 9 5z\'/><path d=\'M12 14l6.16-3.422a12.083 12.083 0 01.665 6.479A11.952 11.952 0 0012 20.055a11.952 11.952 0 00-6.824-2.998 12.078 12.078 0 01.665-6.479L12 14z\'/><path d=\'M12 14l9-5-9-5-9 5 9 5zm0 0l6.16-3.422a12.083 12.083 0 01.665 6.479A11.952 11.952 0 0012 20.055a11.952 11.952 0 00-6.824-2.998 12.078 12.078 0 01.665-6.479L12 14zm-4 6v-7.5l4-2.222\'/></svg>'" 
+        >
     </div>
+    
+    <h2>Portal do Aluno</h2>
+    <p>Acesse suas aulas, acompanhe suas notas e interaja com seus professores em um ambiente exclusivo.</p>
+</div>
 
     <div class="right-panel">
         <div class="form-content-wrapper">
             
             <div class="form-header">
                 <h3 id="form-title">Login</h3>
-                <p id="form-subtitle" style="color: #666; font-size: 0.9rem; margin-top: 5px;">Bem-vindo de volta, professor!</p>
+                <p id="form-subtitle" style="color: #666; font-size: 0.9rem; margin-top: 5px;">Olá, estudante! Bem-vindo de volta.</p>
             </div>
 
             <div id="stepper-indicators" class="stepper" style="display: none;">
@@ -44,18 +44,18 @@
                 <div class="step-dot" data-step="3">3</div>
             </div>
 
-            <form method="POST" id="professor-form" enctype="multipart/form-data"
-                action="{{ route('professor.login.action') }}" 
-                data-login-url="{{ route('professor.login.action') }}"
-                data-cadastro-url="{{ route('professor.cadastro.action') }}">
-                @csrf
+            <form method="POST" id="aluno-form" enctype="multipart/form-data"
+                action="<?php echo e(route('aluno.login')); ?>" 
+                data-login-url="<?php echo e(route('aluno.login')); ?>"
+                data-cadastro-url="<?php echo e(route('aluno.cadastrar')); ?>">
+                <?php echo csrf_field(); ?>
 
-                <input type="hidden" name="form_tipo" id="form_tipo" value="{{ old('form_tipo', 'login') }}">
+                <input type="hidden" name="form_tipo" id="form_tipo" value="<?php echo e(old('form_tipo', 'login')); ?>">
 
                 <div id="login-section">
                     <div class="form-group">
-                        <label for="email-login">E-mail Institucional</label>
-                        <input type="email" id="email-login" name="email" placeholder="professor@escola.com" value="{{ old('email') }}">
+                        <label for="email-login">E-mail</label>
+                        <input type="email" id="email-login" name="email" placeholder="aluno@escola.com" value="<?php echo e(old('email')); ?>">
                     </div>
                     
                     <div class="form-group">
@@ -79,11 +79,9 @@
                         <div style="text-align: center; margin-bottom: 25px;">
                             <div class="avatar-circle" id="avatar-wrapper" title="Adicionar Foto">
                                 <span id="avatar-preview">
-                                    <svg width="40px" height="40px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                        <path d="M16 8.99991C16 11.2091 14.2091 12.9999 12 12.9999C9.79086 12.9999 8 11.2091 8 8.99991C8 6.79077 9.79086 4.99991 12 4.99991C14.2091 4.99991 16 6.79077 16 8.99991Z" stroke="#888" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-                                        <path d="M12 15.9999C8.13401 15.9999 5 18.2385 5 20.9999" stroke="#888" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-                                        <path d="M18 11.5V17.5" stroke="#888" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-                                        <path d="M21 14.5H15" stroke="#888" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                                    <svg width="40px" height="40px" viewBox="0 0 24 24" fill="none" stroke="#888" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                                        <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                                        <circle cx="12" cy="7" r="4"></circle>
                                     </svg>
                                 </span>
                                 <input type="file" id="avatar" name="avatar" accept="image/*" style="display: none;">
@@ -93,34 +91,38 @@
 
                         <div class="form-group">
                             <label for="nome">Nome Completo *</label>
-                            <input type="text" id="nome" name="nome" value="{{ old('nome') }}">
+                            <input type="text" id="nome" name="nome" value="<?php echo e(old('nome')); ?>">
                         </div>
+                        
                         <div class="form-group">
-                            <label for="cpf">CPF *</label>
-                            <input type="text" id="cpf" name="cpf" placeholder="000.000.000-00" maxlength="14" value="{{ old('cpf') }}">
-                            <small id="cpf-feedback" style="display: block; height: 18px; font-size: 0.8rem; margin-top: 2px;"></small>
+                            <label for="ra">RA / Matrícula *</label>
+                            <input type="text" id="ra" name="ra" placeholder="Ex: 2023001" maxlength="20" value="<?php echo e(old('ra')); ?>">
                         </div>
                     </div>
 
                     <div class="step-content" data-step="2" style="display: none;">
                         <div class="form-group">
-                            <label for="area">Área de Ensino *</label>
-                            <input type="text" id="area" name="area" placeholder="Ex: Matemática" value="{{ old('area') }}">
+                            <label for="semestre">Semestre Atual *</label>
+                            <select id="semestre" name="semestre">
+                                <option value="">Selecione...</option>
+                                <option value="1" <?php echo e(old('semestre') == '1' ? 'selected' : ''); ?>>1º Semestre</option>
+                                <option value="2" <?php echo e(old('semestre') == '2' ? 'selected' : ''); ?>>2º Semestre</option>
+                                <option value="3" <?php echo e(old('semestre') == '3' ? 'selected' : ''); ?>>3º Semestre</option>
+                                <option value="4" <?php echo e(old('semestre') == '4' ? 'selected' : ''); ?>>4º Semestre</option>
+                                <option value="5" <?php echo e(old('semestre') == '5' ? 'selected' : ''); ?>>5º Semestre</option>
+                                <option value="6" <?php echo e(old('semestre') == '6' ? 'selected' : ''); ?>>6º Semestre</option>
+                            </select>
                         </div>
                         <div class="form-group">
-                            <label for="formacao">Formação *</label>
-                            <textarea id="formacao" name="formacao" rows="3">{{ old('formacao') }}</textarea>
-                        </div>
-                        <div class="form-group">
-                            <label for="telefone">Celular</label>
-                            <input type="text" id="telefone" name="telefone" placeholder="(11) 99999-9999" value="{{ old('telefone') }}">
+                            <label for="telefone">Celular (Opcional)</label>
+                            <input type="text" id="telefone" name="telefone" placeholder="(11) 99999-9999" value="<?php echo e(old('telefone')); ?>">
                         </div>
                     </div>
 
                     <div class="step-content" data-step="3" style="display: none;">
                         <div class="form-group">
                             <label for="email-cadastro">E-mail *</label>
-                            <input type="email" id="email-cadastro" name="email" value="{{ old('email') }}">
+                            <input type="email" id="email-cadastro" name="email" value="<?php echo e(old('email')); ?>">
                         </div>
                         <div class="form-group">
                             <label for="password-cadastro">Senha *</label>
@@ -162,42 +164,37 @@
     </div>
   </main>
 
-  <script src="{{ asset('js/Professor/loginProfessor.js') }}"></script>
+  <script src="<?php echo e(asset('js/Aluno/loginAluno.js')); ?>"></script>
   
   <script>
     document.addEventListener('DOMContentLoaded', function() {
-        @if ($errors->any())
-            const errorFields = @json($errors->keys());
+        <?php if($errors->any()): ?>
+            const errorFields = <?php echo json_encode($errors->keys(), 15, 512) ?>;
             if (errorFields.length > 0) {
-                // Marca os campos com erro
+                // Marca campos inválidos
                 errorFields.forEach(function(field) {
                     const input = document.getElementsByName(field)[0];
                     if (input) input.classList.add('is-invalid');
-                    // Se o erro for no email/senha do cadastro, marca os IDs específicos também para garantir
-                    if(field === 'email') {
-                         let emailCad = document.getElementById('email-cadastro');
-                         if(emailCad && !emailCad.disabled) emailCad.classList.add('is-invalid');
-                    }
                 });
-
+                // Exibe alerta de erro
                 Swal.fire({
                     icon: 'error',
                     title: 'Atenção',
-                    html: '<ul style="text-align: left;">@foreach ($errors->all() as $error)<li>{{ $error }}</li>@endforeach</ul>',
-                    confirmButtonColor: '#00796B'
+                    html: '<ul style="text-align: left;"><?php $__currentLoopData = $errors->all(); $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $error): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?><li><?php echo e($error); ?></li><?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?></ul>',
+                    confirmButtonColor: '#007bff'
                 });
             }
-        @endif
+        <?php endif; ?>
 
-        @if (session('status'))
+        <?php if(session('status')): ?>
              Swal.fire({
                 icon: 'success',
                 title: 'Sucesso',
-                text: "{{ session('status') }}",
-                confirmButtonColor: '#00796B'
+                text: "<?php echo e(session('status')); ?>",
+                confirmButtonColor: '#007bff'
             });
-        @endif
+        <?php endif; ?>
     });
   </script>
 </body>
-</html>
+</html><?php /**PATH C:\Users\ancel\Documents\MeusProjetos\Devventure---TCC\Devventure-TCC\Devventure-TCC\resources\views/Aluno/login.blade.php ENDPATH**/ ?>
