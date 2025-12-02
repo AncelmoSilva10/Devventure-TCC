@@ -11,10 +11,8 @@
 </head>
 <body  id="welcome-page">
 
-    {{-- O id na body, é para a logica de scrollagem funcionar somente aqui --}}
-
     @include('layouts.navbar')
-
+ 
      <main>
     
         <section class="hero">

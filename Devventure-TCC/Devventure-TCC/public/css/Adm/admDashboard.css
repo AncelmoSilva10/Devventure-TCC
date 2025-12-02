@@ -4,13 +4,13 @@
 
 /* --- Variáveis de Cores --- */
 :root {
-    --primary-color: #3f51b5; /* Azul Royal */
-    --primary-light: #7986cb;
-    --primary-dark: #303f9f;
+    --primary-color: #233475; /* Azul Royal */
+    --primary-light: #ffffff;
+    --primary-dark: #17245D;
     --secondary-color: #ff4081; /* Rosa para destaque secundário */
 
     --bg-light: #f4f6f9; /* Fundo claro principal */
-    --bg-dark: #2c3e50; /* Fundo escuro da sidebar */
+    --bg-dark: #17245D; /* Fundo escuro da sidebar */
     --card-bg: #ffffff;
     --text-color: #34495e; /* Texto escuro */
     --text-light: #ecf0f1; /* Texto claro para fundo escuro */
@@ -31,6 +31,7 @@
     /* Transições */
     --transition-speed: 0.3s ease;
 }
+
 
 /* --- Base --- */
 * {
@@ -88,14 +89,24 @@ h1, h2, h3, h4, h5, h6 {
 .sidebar.collapsed span {
     display: none;
 }
-
 .sidebar-header {
     display: flex;
-    align-items: center;
+    flex-direction: column; /* Um embaixo do outro */
+    align-items: center;    /* Centraliza os elementos (logo e texto) */
     justify-content: center;
-    padding: 0 1.5rem 1.5rem;
+    text-align: center;     /* Garante que o TEXTO fique centralizado */
+    padding: 1rem;
     border-bottom: 1px solid rgba(255, 255, 255, 0.1);
     margin-bottom: 1.5rem;
+    gap: 0.8rem;            /* Espaço entre a imagem e o texto */
+}
+
+/* Propriedades para a Logo */
+.sidebar-header img {
+    width: 90px;           /* Defina o tamanho ideal aqui (ex: 60px a 100px) */
+    height: auto;          /* Mantém a proporção da imagem */
+    object-fit: contain;   /* Garante que a logo não distorça */
+    display: block;        /* Remove espaços fantasmas de imagens inline */
 }
 
 .admin-logo {
@@ -453,6 +464,21 @@ h1, h2, h3, h4, h5, h6 {
 .pagination span {
     font-weight: 500;
     color: var(--text-color);
+}
+
+/* Remove os pontos de lista da paginação */
+.pagination, 
+.pagination li {
+    list-style: none !important;
+    list-style-type: none !important;
+    padding-left: 0 !important; /* Remove recuo padrão se houver */
+}
+
+/* Garante que nenhum pseudo-elemento esteja criando bolinhas */
+.pagination li::before,
+.pagination li::after {
+    content: none !important;
+    display: none !important;
 }
 
 /* --- Responsividade --- */

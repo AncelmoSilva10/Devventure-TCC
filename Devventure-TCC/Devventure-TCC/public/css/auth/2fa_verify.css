@@ -1,0 +1,198 @@
+ /* Reset Básico */
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: 'Poppins', sans-serif;
+    /* Azul escuro profundo (baseado no Header/Landing Page do DevVenture) */
+    background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+    color: #333;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    padding: 1rem;
+}
+
+.main-container {
+    width: 100%;
+    max-width: 450px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1.5rem;
+}
+
+/* Logo da marca acima do card */
+.brand-logo img {
+    height: 50px; /* Ajuste conforme necessário */
+    width: auto;
+    object-fit: contain;
+    margin-bottom: 0.5rem;
+}
+
+/* Cartão Principal */
+.card {
+    background-color: #ffffff;
+    padding: 2.5rem;
+    border-radius: 16px;
+    /* Sombra suave inspirada no Painel do Professor */
+    box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
+    width: 100%;
+    text-align: center;
+    border-top: 5px solid #007bff; /* Azul vibrante do DevVenture */
+}
+
+.icon-header {
+    background-color: #eff6ff;
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 1.5rem auto;
+}
+
+.card h2 {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: #1e293b;
+    margin-bottom: 0.5rem;
+}
+
+.card p {
+    font-size: 0.9rem;
+    color: #64748b;
+    margin-bottom: 2rem;
+    line-height: 1.5;
+}
+
+/* Alertas */
+.alert {
+    padding: 0.75rem 1rem;
+    border-radius: 8px;
+    margin-bottom: 1.5rem;
+    font-size: 0.875rem;
+    font-weight: 500;
+}
+
+.alert-error {
+    color: #991b1b;
+    background-color: #fef2f2;
+    border: 1px solid #fecaca;
+}
+
+.alert-success {
+    color: #065f46;
+    background-color: #d1fae5;
+    border: 1px solid #a7f3d0;
+}
+
+/* Formulário e Inputs */
+.form-group {
+    margin-bottom: 1.5rem;
+}
+
+.form-group label {
+    display: none;
+}
+
+.input-code {
+    font-family: 'Poppins', monospace;
+    font-size: 2rem;
+    font-weight: 600;
+    text-align: center;
+    letter-spacing: 0.5em; /* Espaçamento para parecer slots de código */
+    padding: 0.75rem;
+    width: 100%;
+    background-color: #f8fafc; /* Fundo cinza claro igual ao Login */
+    border: 2px solid #e2e8f0;
+    border-radius: 12px;
+    color: #1e293b;
+    transition: all 0.3s ease;
+}
+
+.input-code:focus {
+    outline: none;
+    border-color: #007bff;
+    background-color: #fff;
+    box-shadow: 0 0 0 4px rgba(0, 123, 255, 0.1);
+}
+
+.input-code::placeholder {
+    color: #cbd5e1;
+    letter-spacing: 0.5em;
+    font-weight: 400;
+}
+
+/* Botão Principal */
+.btn-submit {
+    width: 100%;
+    padding: 14px;
+    /* Gradiente azul DevVenture */
+    background: linear-gradient(to right, #007bff, #0062cc);
+    color: white;
+    border: none;
+    border-radius: 10px;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.btn-submit:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 123, 255, 0.25);
+}
+
+.btn-submit:active {
+    transform: translateY(0);
+}
+
+/* Área de Reenvio */
+.resend-container {
+    margin-top: 2rem;
+    border-top: 1px solid #f1f5f9;
+    padding-top: 1.5rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    align-items: center;
+}
+
+.resend-container p {
+    margin: 0;
+    font-size: 0.85rem;
+}
+
+.btn-resend {
+    background: none;
+    border: none;
+    color: #007bff;
+    font-weight: 600;
+    cursor: pointer;
+    font-size: 0.9rem;
+    text-decoration: none;
+    transition: color 0.2s;
+}
+
+.btn-resend:hover {
+    color: #0056b3;
+    text-decoration: underline;
+}
+
+/* Link de voltar no rodapé */
+.footer-link a {
+    color: #94a3b8;
+    text-decoration: none;
+    font-size: 0.85rem;
+    transition: color 0.2s;
+}
+
+.footer-link a:hover {
+    color: #fff;
+}
