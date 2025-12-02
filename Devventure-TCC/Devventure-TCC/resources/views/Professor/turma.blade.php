@@ -133,7 +133,7 @@
         </select>
   
         <label for="disciplina">Ano da Turma</label>
-        <input type="text" id="disciplina" name="ano_turma" placeholder="Ex: 2025" required />
+        <input type="text" id="disciplina" name="ano_turma" placeholder="Ex: terceiro ano" required />
   
         <label for="data_inicio">Data de início</label>
         <input type="date" id="data_inicio" name="data_inicio" required />

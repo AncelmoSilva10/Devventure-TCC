@@ -170,7 +170,7 @@
                         <div class="col-md-8">
                             <div class="card mb-4 border-0 shadow-sm">
                                 <div class="card-header bg-white border-bottom-0 pt-4 px-4">
-                                    <h4 class="text-success fw-bold"><i class='bx bxs-file-plus'></i> Nova Prova</h4>
+                                    <h4 class="text-success fw-bold"><i class='bx bxs-notepad'></i> Nova Prova</h4>
                                 </div>
                                 <div class="card-body px-4 pb-4">
                                     @if ($errors->any())

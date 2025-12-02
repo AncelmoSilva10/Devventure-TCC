@@ -3,10 +3,19 @@
 
 /* Variáveis de Cor */
 :root {
+    /* Padrão (Aluno/Geral) */
     --navbar-bg: #17245D; /* Azul ardósia escuro */
-    --navbar-text: #e2e8f0; /* Cinza claro */
-    --navbar-text-hover: #ffffff;
     --navbar-highlight: #38bdf8; /* Azul claro para destaque */
+    --navbar-bg-hover: #233475;
+    
+    /* Cores do Professor */
+    --professor-bg: #00796b; /* Verde Escuro */
+    --professor-highlight: #e0f2f1; /* Verde Claro */
+    --professor-bg-hover: #004d40; /* Verde mais escuro */
+    
+    /* Cores Comuns */
+    --navbar-text: #e2e8f0; 
+    --navbar-text-hover: #ffffff;
 }
 
 /* Estilos Globais e Reset */
@@ -20,27 +29,36 @@ body {
     font-family: 'Poppins', sans-serif;
 }
 
+/* --- ESTILO BASE DA NAVBAR (FLUTUANTE, REDONDA - PADRÃO HOME/Geral) --- */
 .navbar {
-    background-color: var(--navbar-bg); /* <-- Alterado de 'transparent' */
-    padding: 0 5%;
+    background-color: var(--navbar-bg); 
     top: 0;
-    left: 1%;
-    margin: 8px auto;  /* Espaçamento no topo e laterais */
-    width: 98%;     
-    border-radius: 50px;
+    width: 100%;     
     z-index: 1000;
     box-shadow: 0 8px 25px rgba(0, 0, 0, 0.18);
-    transition: background-color 0.4s ease, box-shadow 0.4s ease; /* Adicionado transition para box-shadow */
+    transition: background-color 0.4s ease, box-shadow 0.4s ease, margin 0.3s ease, width 0.3s ease, border-radius 0.3s ease, padding 0.3s ease;
 }
 
-/* Aplica a posição fixa APENAS na homepage */
-#welcome-page .navbar {
-    position: fixed; 
+/* NOVO: ESTILO PARA PÁGINAS DE LOGIN (Apenas Fixo) */
+.navbar.status-nav {
+    
+    left: 2%;
+    width: 96%; /* Define a largura menor que 100% para sobrar espaço nas laterais */
+    max-width: 1400px; /* (Opcional) Limite máximo para telas muito grandes */
+    z-index: 1000;
+    transform: translateY(+10px);
+    padding: 0 5%;
+    border-radius: 50px;
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.18);
+    margin: 0 auto;
+    z-index: 1000;
 }
+
+
+
 
 /* Classe adicionada via JavaScript na rolagem */
 .navbar.scrolled {
-    background-color: var(--navbar-bg); 
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
 }
 
@@ -85,11 +103,13 @@ body {
     transition: color 0.3s ease, background-color 0.3s ease;
 }
 
+/* Efeito Hover nos Links (Padrão/Azul) */
 .navbar-links a:hover {
     color: var(--navbar-text-hover);
-    background-color: rgba(255, 255, 255, 0.1);
+    background-color: var(--navbar-bg-hover);
 }
 
+/* Linha de Destaque (Padrão/Azul) */
 .navbar-links a::after {
     content: '';
     position: absolute;
@@ -143,30 +163,30 @@ body {
     border-radius: 50px;
     transition: background-color 0.3s ease;
 }
+/* Efeito Hover Perfil (Padrão/Azul) */
 .profile-button:hover {
-    background-color: rgba(255, 255, 255, 0.1);
+    background-color: var(--navbar-bg-hover);
 }
 .profile-avatar {
     width: 45px;
     height: 45px;
     border-radius: 50%;
     object-fit: cover;
-    border: 2px solid var(--navbar-highlight, #38bdf8);
+    border: 2px solid var(--navbar-highlight);
 }
 .profile-name {
-    color: var(--navbar-text, #e2e8f0);
+    color: var(--navbar-text);
     font-weight: 500;
     font-size: 1rem;
 }
 
-/* Menu Dropdown do Perfil */
+/* Menu Dropdown do Perfil (Sem alterações) */
 .profile-dropdown-content {
     display: none;
     position: absolute;
     top: 110%;
     right: 0;
     background-color: #ffffff;
-    width: auto;
     min-width: 160px;
     max-width: 220px;
     box-shadow: 0 4px 12px rgba(0,0,0,0.12);
@@ -186,7 +206,7 @@ body {
     width: 100%;
     padding: 0.6rem 1rem;
     font-size: 0.95rem;
-    color: #333333;
+    color: var(--text-dark, #333333);
     background: none;
     border: none;
     cursor: pointer;
@@ -197,7 +217,6 @@ body {
     background-color: #f1f5f9;
 }
 .dropdown-item i {
-    font-size: 1.1rem;
     color: #64748b;
 }
 .dropdown-item-logout i {
@@ -209,6 +228,30 @@ body {
     margin: 0.3rem 0;
 }
 
+/* --- ESTILO PROFESSOR (SOBRESCRITA VERDE) --- */
+.navbar.professor-nav {
+    background-color: var(--professor-bg);
+}
+
+/* Sobrescreve o fundo e destaque dos elementos HOVER para VERDE */
+.navbar.professor-nav .navbar-links a:hover {
+    background-color: var(--professor-bg-hover);
+}
+.navbar.professor-nav .navbar-links a::after {
+    background-color: var(--professor-highlight);
+}
+.navbar.professor-nav .profile-button:hover {
+    background-color: var(--professor-bg-hover);
+}
+.navbar.professor-nav .profile-avatar {
+    border-color: var(--professor-highlight);
+}
+
+/* --- ESTILO PROFESSOR (SOBRESCRITA VERDE) --- */
+.navbar.aluno-nav {
+    background-color: #1a62ff;
+}
+
 /* --- RESPONSIVIDADE PARA CELULAR --- */
 @media (max-width: 992px) {
     .navbar-links {
@@ -217,11 +260,16 @@ body {
         top: 80px;
         left: 0;
         width: 100%;
-        background-color: var(--navbar-bg);
+        background-color: var(--navbar-bg); 
         flex-direction: column;
         align-items: center;
         padding: 20px 0;
         box-shadow: 0 8px 16px rgba(0,0,0,0.1);
+        
+        /* Ajuste do fundo mobile para Professor */
+        .professor-nav & {
+            background-color: var(--professor-bg);
+        }
     }
     
     .navbar-links.active {
