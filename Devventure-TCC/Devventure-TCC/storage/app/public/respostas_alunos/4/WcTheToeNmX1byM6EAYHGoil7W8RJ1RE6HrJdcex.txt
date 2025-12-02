@@ -1,0 +1,5 @@
+package cursoemvideo.olamundo;
+
+public interface OlaMundoJava {
+
+}
