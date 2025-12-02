@@ -55,4 +55,4 @@ class AvisoController extends Controller
     return redirect()->route('turmas.especificaID', $request->turma_id)
                      ->with('sweet_success', 'Aviso enviado com sucesso!');
 }
-}
+} 

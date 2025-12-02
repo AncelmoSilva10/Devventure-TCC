@@ -21,11 +21,13 @@
                 src="{{ asset('images/professor.png') }}" 
                 alt="Ícone Professor" 
                 class="professor-img-custom"
-                onerror="this.style.display='none'; this.parentNode.innerHTML='<svg viewBox=\'0 0 24 24\' fill=\'none\' stroke=\'white\' stroke-width=\'2\' stroke-linecap=\'round\' stroke-linejoin=\'round\' style=\'width:100px;height:100px;\'><path d=\'M22 10v6M2 10l10-5 10 5-10 5z\'/><path d=\'M6 12v5c3 3 9 3 12 0v-5\'/></svg>'" 
+                onerror="this.style.display='none'; this.parentNode.innerHTML='<svg viewBox=\'0 0 24 24\' fill=\'none\' stroke=\'white\' stroke-width=\'2\' stroke-linecap=\'round\' stroke-linejoin=\'round\' style=\'width:80px;height:80px;\'><path d=\'M22 10v6M2 10l10-5 10 5-10 5z\'/><path d=\'M6 12v5c3 3 9 3 12 0v-5\'/></svg>'" 
             >
         </div>
-        <h2>Portal do Professor</h2>
-        <p>Acesse suas ferramentas de ensino, gerencie turmas e acompanhe o desempenho dos alunos.</p>
+        <div>
+            <h2>Portal do Professor</h2>
+            <p>Gerencie turmas e acompanhe o desempenho dos alunos.</p>
+        </div>
     </div>
 
     <div class="right-panel">
@@ -33,7 +35,7 @@
             
             <div class="form-header">
                 <h3 id="form-title">Login</h3>
-                <p id="form-subtitle" style="color: #666; font-size: 0.9rem; margin-top: 5px;">Bem-vindo de volta, professor!</p>
+                <p id="form-subtitle">Bem-vindo de volta, professor!</p>
             </div>
 
             <div id="stepper-indicators" class="stepper" style="display: none;">
@@ -63,12 +65,12 @@
                         <div class="senha-wrapper">
                             <input type="password" id="password-login" name="password" placeholder="Sua senha">
                             <button type="button" class="toggle-password" onclick="togglePassword('password-login', this)" tabindex="-1">
-                                <svg class="icon-eye" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>
-                                <svg class="icon-eye-off" style="display:none;" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"></path><line x1="1" y1="1" x2="23" y2="23"></line></svg>
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>
+                                <svg style="display:none;" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"></path><line x1="1" y1="1" x2="23" y2="23"></line></svg>
                             </button>
                         </div>
-                        <div style="text-align: right; margin-top: 8px;">
-                            <a href="/esqueceu-senha" style="font-size: 0.85rem; color: #555; text-decoration: none;">Esqueceu a senha?</a>
+                        <div style="text-align: right; margin-top: 5px;">
+                            <a href="/esqueceu-senha" style="font-size: 0.8rem; color: #555; text-decoration: none;">Esqueceu a senha?</a>
                         </div>
                     </div>
                 </div>
@@ -76,19 +78,18 @@
                 <div id="cadastro-section" style="display: none;">
                     
                     <div class="step-content" data-step="1">
-                        <div style="text-align: center; margin-bottom: 25px;">
+                        <div style="text-align: center; margin-bottom: 15px;">
                             <div class="avatar-circle" id="avatar-wrapper" title="Adicionar Foto">
                                 <span id="avatar-preview">
-                                    <svg width="40px" height="40px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                        <path d="M16 8.99991C16 11.2091 14.2091 12.9999 12 12.9999C9.79086 12.9999 8 11.2091 8 8.99991C8 6.79077 9.79086 4.99991 12 4.99991C14.2091 4.99991 16 6.79077 16 8.99991Z" stroke="#888" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-                                        <path d="M12 15.9999C8.13401 15.9999 5 18.2385 5 20.9999" stroke="#888" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-                                        <path d="M18 11.5V17.5" stroke="#888" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-                                        <path d="M21 14.5H15" stroke="#888" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                                    <svg width="30px" height="30px" viewBox="0 0 24 24" fill="none" stroke="#888" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                                        <path d="M16 8.99991C16 11.2091 14.2091 12.9999 12 12.9999C9.79086 12.9999 8 11.2091 8 8.99991C8 6.79077 9.79086 4.99991 12 4.99991C14.2091 4.99991 16 6.79077 16 8.99991Z"/>
+                                        <path d="M12 15.9999C8.13401 15.9999 5 18.2385 5 20.9999"/>
+                                        <path d="M18 11.5V17.5"/><path d="M21 14.5H15"/>
                                     </svg>
                                 </span>
                                 <input type="file" id="avatar" name="avatar" accept="image/*" style="display: none;">
                             </div>
-                            <small style="color: #666; font-size: 0.8rem; margin-top: 5px; display: block;">Adicionar Foto</small>
+                            <small style="color: #666; font-size: 0.75rem; margin-top: 5px; display: block;">Foto (Opcional)</small>
                         </div>
 
                         <div class="form-group">
@@ -98,7 +99,7 @@
                         <div class="form-group">
                             <label for="cpf">CPF *</label>
                             <input type="text" id="cpf" name="cpf" placeholder="000.000.000-00" maxlength="14" value="{{ old('cpf') }}">
-                            <small id="cpf-feedback" style="display: block; height: 18px; font-size: 0.8rem; margin-top: 2px;"></small>
+                            <small id="cpf-feedback" style="display: block; height: 15px; font-size: 0.75rem; margin-top: 2px; color: var(--error);"></small>
                         </div>
                     </div>
 
@@ -109,7 +110,7 @@
                         </div>
                         <div class="form-group">
                             <label for="formacao">Formação *</label>
-                            <textarea id="formacao" name="formacao" rows="3">{{ old('formacao') }}</textarea>
+                            <textarea id="formacao" name="formacao" rows="2" style="resize: none;">{{ old('formacao') }}</textarea>
                         </div>
                         <div class="form-group">
                             <label for="telefone">Celular</label>
@@ -127,8 +128,8 @@
                             <div class="senha-wrapper">
                                 <input type="password" id="password-cadastro" name="password">
                                 <button type="button" class="toggle-password" onclick="togglePassword('password-cadastro', this)" tabindex="-1">
-                                    <svg class="icon-eye" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>
-                                    <svg class="icon-eye-off" style="display:none;" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"></path><line x1="1" y1="1" x2="23" y2="23"></line></svg>
+                                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>
+                                    <svg style="display:none;" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"></path><line x1="1" y1="1" x2="23" y2="23"></line></svg>
                                 </button>
                             </div>
                         </div>
@@ -137,8 +138,8 @@
                             <div class="senha-wrapper">
                                 <input type="password" id="confirm_password" name="password_confirmation">
                                 <button type="button" class="toggle-password" onclick="togglePassword('confirm_password', this)" tabindex="-1">
-                                    <svg class="icon-eye" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>
-                                    <svg class="icon-eye-off" style="display:none;" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"></path><line x1="1" y1="1" x2="23" y2="23"></line></svg>
+                                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>
+                                    <svg style="display:none;" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"></path><line x1="1" y1="1" x2="23" y2="23"></line></svg>
                                 </button>
                             </div>
                         </div>
@@ -153,42 +154,84 @@
 
             </form>
 
-            <div style="text-align: center; margin-top: 25px;">
-                <span id="toggle-text" style="color: #666; font-size: 0.95rem;">Ainda não tem conta?</span>
-                <button type="button" id="toggle-btn" style="background: none; border: none; color: var(--primary); font-weight: 700; cursor: pointer; text-decoration: underline; margin-left: 5px; font-size: 0.95rem;">Cadastre-se</button>
+            <div style="text-align: center; margin-top: 15px;">
+                <span id="toggle-text" style="color: #666; font-size: 0.85rem;">Ainda não tem conta?</span>
+                <button type="button" id="toggle-btn" style="background: none; border: none; color: var(--primary); font-weight: 700; cursor: pointer; text-decoration: underline; margin-left: 5px; font-size: 0.85rem;">Cadastre-se</button>
             </div>
 
         </div>
     </div>
   </main>
 
+  <!-- Formulário oculto para reenvio -->
+  <form id="form-reenviar-verificacao" action="{{ route('verification.resend') }}" method="POST" style="display: none;">
+      @csrf
+      <!-- Este input value será preenchido dinamicamente se o old() falhar -->
+      <input type="hidden" name="email" value="{{ old('email') }}" id="hidden-resend-email">
+  </form>
+
   <script src="{{ asset('js/Professor/loginProfessor.js') }}"></script>
   
   <script>
     document.addEventListener('DOMContentLoaded', function() {
+        
+        
         @if ($errors->any())
             const errorFields = @json($errors->keys());
             if (errorFields.length > 0) {
-                // Marca os campos com erro
                 errorFields.forEach(function(field) {
                     const input = document.getElementsByName(field)[0];
                     if (input) input.classList.add('is-invalid');
-                    // Se o erro for no email/senha do cadastro, marca os IDs específicos também para garantir
-                    if(field === 'email') {
-                         let emailCad = document.getElementById('email-cadastro');
-                         if(emailCad && !emailCad.disabled) emailCad.classList.add('is-invalid');
-                    }
                 });
-
+                
+                @if(!$errors->has('msg') && !session('needs_verification'))
                 Swal.fire({
                     icon: 'error',
                     title: 'Atenção',
                     html: '<ul style="text-align: left;">@foreach ($errors->all() as $error)<li>{{ $error }}</li>@endforeach</ul>',
                     confirmButtonColor: '#00796B'
                 });
+                @endif
             }
         @endif
 
+        
+        @if ($errors->has('msg'))
+             Swal.fire({
+                icon: 'error',
+                title: 'Erro',
+                text: "{{ $errors->first('msg') }}",
+                confirmButtonColor: '#d33'
+            });
+        @endif
+
+        
+        @if (session('needs_verification'))
+            Swal.fire({
+                icon: 'warning',
+                title: 'Verificação Necessária',
+                text: "{{ session('needs_verification') }}", 
+                showCancelButton: true,
+                confirmButtonText: 'Reenviar Código',
+                cancelButtonText: 'Cancelar',
+                confirmButtonColor: '#007bff',
+                cancelButtonColor: '#d33',
+                preConfirm: () => {
+                    
+                    const loginEmail = document.getElementById('email-login').value;
+                    const hiddenEmail = document.getElementById('hidden-resend-email');
+                    
+                   
+                    if (!hiddenEmail.value && loginEmail) {
+                        hiddenEmail.value = loginEmail;
+                    }
+                    
+                    document.getElementById('form-reenviar-verificacao').submit();
+                }
+            });
+        @endif
+
+        
         @if (session('status'))
              Swal.fire({
                 icon: 'success',

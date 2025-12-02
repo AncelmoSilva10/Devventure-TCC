@@ -27,13 +27,13 @@
                 <p>Olá, {{ Auth::guard('aluno')->user()->nome }}! Continue seus estudos.</p>
             </div>
             <a href="{{ route('aluno.turma') }}" class="btn-primary">
-                <i class='bx bxs-group'></i> Acessar Minha Turma
+                <i class='bx bxs-group'></i> Acessar Minhas Turmas
             </a>
         </div>
 
         @if($convites->isNotEmpty())
         <div class="card card-convites-destaque">
-            <h3>🔔 Você tem novos convites!</h3>
+            <h3>Você tem novos convites!</h3>
             <div class="convites-container">
                 @foreach ($convites as $convite)
                     <div class="convite-item">

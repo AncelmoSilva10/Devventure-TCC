@@ -1,20 +1,13 @@
-/* Importando uma fonte moderna do Google Fonts */
-@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
 
-/* PALETA DE CORES PARA ADMIN */
 :root {
-  --primary-color: #34495E; /* Cinza ardósia escuro */
-  --primary-hover: #2C3E50;
-  --background-color: #f0f2f5;
-  --card-background: #ffffff;
-  --text-color-dark: #333;
-  --text-color-light: #ffffff;
-  --border-color: #ddd;
-  --input-focus-border: #34495E;
-  --input-focus-shadow: rgba(52, 73, 94, 0.25);
+  --primary-color: #c62828;
+  --primary-hover: #b71c1c;
+  --bg-color: #ffffff;
+  --text-color: #333;
+  --border-color: #e5e7eb;
 }
 
-/* Reset básico e estilos globais */
 * {
   margin: 0;
   padding: 0;
@@ -23,186 +16,164 @@
 
 body {
   font-family: 'Poppins', sans-serif;
-  background-color: var(--background-color);
-  color: var(--text-color-dark);
+  height: 100vh;
+  overflow: hidden;
   display: flex;
   flex-direction: column;
-  min-height: 100vh;
 }
 
-/* Container principal para centralizar o card */
-.container {
+.split-screen-container {
   display: flex;
+  flex: 1;
+  height: 100%;
+}
+
+.left-panel {
+  flex: 1;
+  background-color: var(--primary-color);
+  display: flex;
+  flex-direction: column;
   justify-content: center;
   align-items: center;
-  flex-grow: 1;
-  padding: 20px;
-}
-
-/* Estilo do Card */
-.card {
-  background-color: var(--card-background);
-  border-radius: 12px;
-  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12);
-  width: 100%;
-  max-width: 400px;
-  overflow: hidden; /* Garante que o header se ajuste aos cantos arredondados */
-}
-
-/* Cabeçalho do Card */
-.card-header {
-  background-color: var(--primary-color);
-  color: var(--text-color-light);
-  padding: 30px 20px;
+  color: #fff;
+  padding: 2rem;
   text-align: center;
 }
 
-.icon-circle {
-  width: 70px;
-  height: 70px;
-  border-radius: 50%;
-  border: 2px solid var(--text-color-light);
+.admin-icon-large {
+  width: 180px;
+  height: 180px;
+  margin-bottom: 2rem;
   display: flex;
   justify-content: center;
   align-items: center;
-  margin: 0 auto 15px;
 }
 
-.icon-circle .icon {
-  color: var(--text-color-light);
+.admin-img-custom {
+  width: 20rem;
+  height: auto;
+  filter: brightness(0) invert(1);
 }
 
-.card-header h2 {
-  font-weight: 600;
-  font-size: 24px;
-  margin: 0;
+.left-panel h2 {
+  font-size: 2.5rem;
+  font-weight: 700;
+  margin-bottom: 0.5rem;
 }
 
-/* Conteúdo do Card (Formulário) */
-.card-content {
-  padding: 30px;
+.left-panel p {
+  font-size: 1.1rem;
+  opacity: 0.9;
+  max-width: 400px;
+  line-height: 1.5;
 }
 
-.form-group {
-  margin-bottom: 20px;
+.right-panel {
+  flex: 1;
+  background-color: var(--bg-color);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 2rem;
   position: relative;
 }
 
-/* Inputs */
-input[type="email"],
-input[type="password"] {
+.form-content-wrapper {
   width: 100%;
-  padding: 12px 15px;
+  max-width: 420px;
+}
+
+.form-header {
+  text-align: center;
+  margin-bottom: 2.5rem;
+}
+
+.form-header h3 {
+  color: var(--primary-color);
+  font-size: 2rem;
+  font-weight: 700;
+  margin-bottom: 0.5rem;
+}
+
+.form-header p {
+  color: #666;
+  font-size: 0.95rem;
+}
+
+.form-group {
+  margin-bottom: 1.25rem;
+}
+
+.form-group label {
+  display: block;
+  font-weight: 500;
+  color: #374151;
+  margin-bottom: 0.5rem;
+  font-size: 0.9rem;
+}
+
+.form-group input {
+  width: 100%;
+  padding: 0.875rem 1rem;
   border: 1px solid var(--border-color);
   border-radius: 8px;
-  font-size: 16px;
+  background-color: #f9fafb;
+  font-size: 1rem;
+  color: #1f2937;
   font-family: 'Poppins', sans-serif;
-  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+  transition: all 0.2s;
 }
 
-.senha-wrapper input {
-  padding-right: 45px; /* Espaço para o ícone */
-}
-
-input:focus {
+.form-group input:focus {
   outline: none;
-  border-color: var(--input-focus-border);
-  box-shadow: 0 0 0 3px var(--input-focus-shadow);
+  border-color: var(--primary-color);
+  background-color: #fff;
+  box-shadow: 0 0 0 3px rgba(198, 40, 40, 0.1);
 }
 
-/* Ícone de visibilidade da senha */
+.senha-wrapper {
+  position: relative;
+}
+
 .toggle-password {
   position: absolute;
+  right: 12px;
   top: 50%;
-  right: 15px;
   transform: translateY(-50%);
+  background: none;
+  border: none;
   cursor: pointer;
-  color: #aaa;
+  color: #9ca3af;
+  display: flex;
+  align-items: center;
 }
-.toggle-password:hover svg {
+
+.toggle-password:hover {
   color: var(--primary-color);
 }
-.d-none { display: none !important; }
 
-/* Botão principal */
 #submit-btn {
   width: 100%;
-  padding: 14px;
+  padding: 0.875rem;
   background-color: var(--primary-color);
   color: white;
   border: none;
   border-radius: 8px;
-  font-size: 16px;
+  font-size: 1rem;
   font-weight: 600;
   cursor: pointer;
-  transition: background-color 0.3s ease, transform 0.2s ease;
-  margin-top: 10px;
+  transition: background-color 0.2s;
+  margin-top: 1rem;
 }
 
 #submit-btn:hover {
   background-color: var(--primary-hover);
-  transform: translateY(-2px);
 }
 
-/*
-/* ADICIONE OU SUBSTITUA ESTAS REGRAS NO SEU loginAdm.css
-*/
+.d-none { display: none !important; }
 
-/* Garante que o .form-group seja a referência de posicionamento */
-.form-group {
-  position: relative;
-  margin-bottom: 25px; /* Aumenta um pouco o espaço */
+@media (max-width: 768px) {
+  .left-panel {
+    display: none;
+  }
 }
-
-/* Estilo do input (sem placeholder visível) */
-.form-input {
-  width: 100%;
-  padding: 12px 15px;
-  border: 1px solid var(--border-color);
-  border-radius: 8px;
-  font-size: 16px;
-  font-family: 'Poppins', sans-serif;
-  transition: border-color 0.3s ease;
-  background-color: transparent; /* Garante que a label atrás não seja escondida */
-}
-.senha-wrapper .form-input {
-    padding-right: 45px;
-}
-
-/* Estilo da label (estado inicial, "dentro" do campo) */
-.form-label {
-  position: absolute;
-  top: 50%;
-  left: 15px;
-  transform: translateY(-50%);
-  color: #999;
-  font-size: 16px;
-  pointer-events: none; /* Permite clicar "através" da label no input */
-  transition: all 0.2s ease-in-out;
-}
-.senha-wrapper .form-label {
-    /* Ajuste para a label não colidir com o ícone de olho */
-    max-width: calc(100% - 50px);
-}
-
-/* /* A MÁGICA ACONTECE AQUI! 
-/* Quando o input está focado OU quando não está vazio (graças ao placeholder=" "), a label sobe.
-*/
-.form-input:focus + .form-label,
-.form-input:not(:placeholder-shown) + .form-label {
-  top: 0;
-  transform: translateY(-50%) scale(0.85);
-  font-size: 14px;
-  color: var(--primary-color);
-  background-color: var(--card-background); /* Cria o efeito de "recorte" na borda */
-  padding: 0 5px;
-  font-weight: 500;
-}
-
-/* Ajusta a cor da borda no foco, agora que a label também muda de cor */
-.form-input:focus {
-  outline: none;
-  border-color: var(--input-focus-border);
-  box-shadow: none; /* Sombra não é mais necessária com a borda colorida */
-}
-

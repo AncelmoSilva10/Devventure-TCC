@@ -6,6 +6,9 @@
   --white: #ffffff;
   --text-main: #333;
   --border: #ddd;
+  --error: #dc3545;
+  --success: #2ecc71;
+  --navbar-height: 70px;
 }
 
 * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; }
@@ -14,84 +17,56 @@ body {
   height: 100vh;
   display: flex;
   flex-direction: column;
-  overflow: hidden; /* Evita rolagem na página inteira */
+  overflow: hidden; /* O scroll será controlado dentro do painel */
+  background-color: #f4f6f9;
 }
 
-/* Container Principal Split-Screen */
+/* --- CONTAINER PRINCIPAL --- */
 .split-screen-container {
   display: flex;
-  flex: 1; /* Ocupa todo o espaço abaixo da navbar */
   width: 100%;
+  height: calc(100vh - var(--navbar-height)); 
   overflow: hidden;
 }
-/* --- ATUALIZE ESTAS CLASSES NO SEU CSS --- */
 
+/* --- LADO ESQUERDO (Visual) --- */
 .left-panel {
   width: 45%;
-  /* Verde sólido igual da referência */
-  background-color: var(--primary); 
-  /* Se quiser degradê mantenha o linear-gradient, se quiser chapado use apenas a cor */
-  background: linear-gradient(135deg, #00796B, #004D40); 
-  
+  background: linear-gradient(135deg, var(--primary), var(--primary-dark));
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
   color: white;
-  padding: 40px;
+  padding: 30px; /* Reduzido */
   text-align: center;
 }
 
-/* Títulos e Textos */
 .left-panel h2 { 
-    font-size: 2.2rem; 
-    margin-bottom: 15px; 
+    font-size: 1.8rem; /* Reduzido */
+    margin-bottom: 10px; 
     font-weight: 700; 
-    letter-spacing: 0.5px;
 }
 
 .left-panel p { 
-    font-size: 1.1rem; 
+    font-size: 0.95rem; 
     opacity: 0.9; 
-    max-width: 80%; 
+    max-width: 85%; 
     line-height: 1.5; 
 }
 
-/* --- NOVO CSS PARA A IMAGEM DO PAINEL ESQUERDO --- */
-
-/* O container da imagem */
-.professor-icon-large {
+.student-icon-large {
   display: flex;
   justify-content: center;
-  margin-bottom: 30px; /* Espaço entre a imagem e o título */
+  margin-bottom: 20px; /* Reduzido */
 }
 
-/* A imagem em si */
 .professor-img-custom {
-  width: 180px;     /* Define o tamanho grande que você quer */
-  height: auto;     /* Mantém a proporção correta da imagem */
-  
-  /* Filtro opcional: se sua imagem for preta e você quiser ela branca via código */
-  /* filter: brightness(0) invert(1); */
-  
-  /* Sombra suave para destacar do fundo verde */
+  width: 150px; /* Reduzido */
+  height: auto;
   filter: drop-shadow(0 5px 15px rgba(0,0,0,0.2));
-  
-  /* Se quiser que a imagem fique redonda, descomente a linha abaixo: */
-  /* border-radius: 50%; */
 }
 
-/* --- Ajuste para Celular (Mobile) --- */
-@media (max-width: 900px) {
-  .professor-icon-large {
-      margin-bottom: 0; /* Remove margem no mobile */
-      margin-right: 20px;
-  }
-  
-  .professor-img-custom {
-    width: 70px; /* Imagem bem menor no celular */
-  }
-}
 /* --- LADO DIREITO (Formulário) --- */
 .right-panel {
   width: 55%;
@@ -99,91 +74,143 @@ body {
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
-  padding: 40px;
-  overflow-y: auto; /* Permite rolagem apenas no form se necessário */
+  justify-content: center; /* Centraliza verticalmente */
+  padding: 20px; /* Bem mais compacto que antes */
+  overflow-y: auto; /* Permite rolar se a tela for pequena */
 }
 
 .form-content-wrapper {
   width: 100%;
-  max-width: 450px; 
+  max-width: 400px; /* Mais estreito para elegância */
 }
 
-/* --- STEPPER --- */
+/* --- STEPPER COMPACTO --- */
 .stepper {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 35px;
+  margin-bottom: 20px; /* Reduzido */
 }
 .step-dot {
-  width: 35px; height: 35px; border-radius: 50%;
+  width: 30px; height: 30px; /* Menor */
+  border-radius: 50%;
   background: #f0f0f0; color: #999;
   display: flex; justify-content: center; align-items: center;
-  font-weight: 600; transition: 0.3s;
+  font-weight: 600; font-size: 0.9rem; transition: 0.3s;
 }
-.step-dot.active { background: var(--primary); color: white; box-shadow: 0 0 0 4px rgba(0, 121, 107, 0.15); }
-.step-line { flex: 1; height: 3px; background: #f0f0f0; margin: 0 10px; }
+.step-dot.active { background: var(--primary); color: white; box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.15); }
+.step-line { flex: 1; height: 2px; background: #f0f0f0; margin: 0 8px; }
 
-/* --- INPUTS --- */
-.form-header { margin-bottom: 30px; text-align: center; }
-.form-header h3 { color: var(--primary); font-size: 2rem; font-weight: 700; }
+/* --- INPUTS E FORMULÁRIO (Versão Compacta) --- */
+.form-header { margin-bottom: 15px; text-align: center; }
+.form-header h3 { color: var(--primary); font-size: 1.6rem; font-weight: 700; }
+.form-header p { font-size: 0.85rem; margin-top: 5px; }
 
-.form-group { margin-bottom: 18px; }
-.form-group label { display: block; font-size: 0.9rem; color: #555; margin-bottom: 6px; font-weight: 500; }
+.form-group { margin-bottom: 12px; /* Espaço entre inputs reduzido */ }
+.form-group label { display: block; font-size: 0.85rem; color: #555; margin-bottom: 4px; font-weight: 500; }
 
 input, select, textarea {
-  width: 100%; padding: 14px;
-  border: 1px solid var(--border); border-radius: 10px;
-  font-size: 1rem; background: #f9f9f9; transition: 0.3s;
+  width: 100%; padding: 10px 12px; /* Input mais fino */
+  border: 1px solid var(--border); border-radius: 8px;
+  font-size: 0.9rem; background: #f9f9f9; transition: 0.3s;
 }
-input:focus, textarea:focus {
+input:focus, select:focus, textarea:focus {
   outline: none; border-color: var(--primary); background: #fff;
-  box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+  box-shadow: 0 3px 10px rgba(0,0,0,0.05);
+}
+
+.is-invalid {
+    border-color: var(--error) !important;
 }
 
 /* --- BOTÃO OLHO --- */
 .senha-wrapper { position: relative; }
-.senha-wrapper input { padding-right: 50px; }
+.senha-wrapper input { padding-right: 40px; }
 
 .toggle-password {
-  position: absolute; right: 15px; top: 50%; transform: translateY(-50%);
+  position: absolute; right: 10px; top: 50%; transform: translateY(-50%);
   background: none; border: none; cursor: pointer; color: #888;
   display: flex; align-items: center; justify-content: center;
 }
+.toggle-password svg { width: 18px; height: 18px; }
 .toggle-password:hover { color: var(--primary); }
 
-/* --- AVATAR UPLOAD --- */
+/* --- AVATAR UPLOAD COMPACTO (CORRIGIDO) --- */
 .avatar-circle {
-  width: 90px; height: 90px; border-radius: 50%; background: #f8f9fa; 
+  width: 70px; height: 70px; /* Reduzido drasticamente */
+  border-radius: 50%; background: #f8f9fa; 
   margin: 0 auto; display: flex; align-items: center; justify-content: center; 
   cursor: pointer; border: 2px dashed #ccc; overflow: hidden; transition: all 0.3s ease;
+  position: relative; /* Importante para o posicionamento absoluto da imagem */
 }
-.avatar-circle:hover { border-color: var(--primary); background: #e0f2f1; }
-.avatar-circle svg { width: 40px; height: 40px; stroke: #888; transition: stroke 0.3s; }
-.avatar-circle:hover svg path { stroke: var(--primary); }
+.avatar-circle:hover { border-color: var(--primary); background: #eef7ff; }
+
+/* Ícone Padrão */
+.avatar-circle svg { 
+    width: 30px; height: 30px; stroke: #888; 
+    z-index: 1; /* Garante que fique atrás quando a imagem aparecer */
+}
+.avatar-circle:hover svg { stroke: var(--primary); }
+
+/* --- CORREÇÃO DA IMAGEM --- */
+#avatar-preview {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: absolute;
+    top: 0; left: 0;
+    z-index: 5;
+}
+
+#avatar-preview img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover; /* Ajusta a imagem para cobrir o círculo sem distorção */
+    border-radius: 50%;
+    display: block;
+}
 
 /* --- BOTÕES --- */
-.btn-block { width: 100%; margin-top: 10px; }
+.btn-block { width: 100%; margin-top: 8px; }
 .btn-primary {
-  background: var(--primary); color: white; padding: 15px;
-  border: none; border-radius: 10px; font-size: 1rem; font-weight: 600;
+  background: var(--primary); color: white; padding: 12px; /* Botão mais fino */
+  border: none; border-radius: 8px; font-size: 0.95rem; font-weight: 600;
   cursor: pointer; transition: 0.3s;
 }
 .btn-primary:hover { background: var(--primary-dark); transform: translateY(-2px); }
 .btn-secondary {
-  background: #e0e0e0; color: #555; padding: 15px;
-  border: none; border-radius: 10px; font-size: 1rem; font-weight: 600; cursor: pointer;
+  background: #e0e0e0; color: #555; padding: 12px;
+  border: none; border-radius: 8px; font-size: 0.95rem; font-weight: 600; cursor: pointer;
 }
-.buttons-row { display: flex; gap: 15px; margin-top: 10px; }
+.buttons-row { display: flex; gap: 10px; margin-top: 5px; }
 
-/* --- MOBILE --- */
+/* --- RESPONSIVIDADE --- */
 @media (max-width: 900px) {
-  .split-screen-container { flex-direction: column; overflow-y: auto; }
-  body { overflow: auto; }
-  .left-panel { width: 100%; padding: 30px 20px; flex-direction: row; justify-content: flex-start; gap: 20px; text-align: left; }
-  .professor-icon-large svg { width: 50px; height: 50px; margin: 0; }
-  .left-panel h2 { font-size: 1.4rem; margin: 0; }
+  body { overflow: auto; } /* Libera scroll no mobile */
+  
+  .split-screen-container { 
+      flex-direction: column; 
+      margin-top: 60px; /* Ajuste conforme navbar mobile */
+      height: auto; 
+      overflow: visible;
+  }
+  
+  .left-panel { 
+      width: 100%; 
+      padding: 20px; 
+      flex-direction: row; 
+      justify-content: flex-start; 
+      gap: 15px; 
+      text-align: left; 
+      min-height: auto;
+  }
+  
+  .professor-img-custom { width: 50px; }
+  .student-icon-large { margin-bottom: 0; }
+  .left-panel h2 { font-size: 1.3rem; margin: 0; }
   .left-panel p { display: none; }
+  
   .right-panel { width: 100%; padding: 30px 20px; flex: 1; }
 }

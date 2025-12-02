@@ -5,37 +5,58 @@ const ctx = can.getContext("2d");
 if (can) {
     can.width = window.innerWidth;
     can.height = window.innerHeight;
-    // Removi can.style.background = "black"; pois o CSS já define o background do .hero
-    // e o canvas será transparente ou com opacidade
 
     let particles = [];
+    
+    // Altura da zona do degradê (deve bater com o CSS: 250px)
+    const DEGRADE_ZONE_HEIGHT = 250; 
 
     function Clear() {
-        // Usamos rgba com uma opacidade muito baixa para um efeito de rastro sutil
-        ctx.fillStyle = "rgba(255, 255, 255, 0.08)"; // Cor clara com baixa opacidade
-        ctx.fillRect(0, 0, can.width, can.height);
+        // Limpa o canvas completamente para deixar o degradê do CSS aparecer
+        ctx.clearRect(0, 0, can.width, can.height);
     }
 
     function Particle(x, y, speed, color) {
         this.x = x;
         this.y = y;
         this.speed = speed;
-        this.color = color;
+        this.baseColor = color; // Guarda a cor original (Teal/Verde)
+
+        // Armazena a posição anterior para desenhar o rastro
+        this.oldX = x;
+        this.oldY = y;
 
         this.update = function () {
-            ctx.strokeStyle = this.color;
-            ctx.lineWidth = 1;
+            // LÓGICA DE MUDANÇA DE COR
+            // Se estiver na parte superior (azul escuro), fica branco.
+            // Se estiver na parte inferior (claro), usa a cor original.
+            if (this.y < DEGRADE_ZONE_HEIGHT) {
+                ctx.strokeStyle = "#2c68ffff"; 
+                ctx.shadowBlur = 5; // Adiciona um brilho extra no branco
+                ctx.shadowColor = "#ffffff";
+            } else {
+                ctx.strokeStyle = this.baseColor;
+                ctx.shadowBlur = 0; // Remove brilho na parte clara
+                ctx.shadowColor = "transparent";
+            }
+
+            ctx.lineWidth = 2;
             ctx.lineCap = "round";
 
             ctx.beginPath();
-            ctx.moveTo(this.x, this.y);
-
+            ctx.moveTo(this.oldX, this.oldY);
+            
+            // Atualiza posições
+            this.oldX = this.x;
+            this.oldY = this.y;
+            
             this.x += this.speed.x;
             this.y += this.speed.y;
 
             ctx.lineTo(this.x, this.y);
             ctx.stroke();
 
+            // Lógica de movimento aleatório
             const angle = Math.atan2(this.speed.y, this.speed.x);
             const magnitude = Math.sqrt(this.speed.x * this.speed.x + this.speed.y * this.speed.y);
             
@@ -55,12 +76,16 @@ if (can) {
     function pulse() {
         setTimeout(pulse, period);
 
-        const hue = Math.random() * (220 - 180) + 180; // Faixa de azul/ciano (180 a 220)
-        const saturation = 100; // Sempre saturado
-        const lightness = 60; // Brilho constante para ser visível
+        const hue = Math.random() * (220 - 180) + 180; // Faixa de azul/ciano
+        const saturation = 100; 
+        const lightness = 50; // Um pouco mais escuro para contrastar com o fundo claro
+
+        // --- AJUSTE DE ALTURA ---
+        const liftAmount = 150; // Define quantos pixels subir o centro da explosão
 
         const origins = [
-            { x: can.width / 2, y: can.height / 2 },
+            // Subtraímos liftAmount do Y para subir o centro
+            { x: can.width / 2, y: (can.height / 2) - liftAmount }, 
             { x: 0, y: 0 },
             { x: can.width, y: 0 },
             { x: 0, y: can.height },
@@ -78,7 +103,7 @@ if (can) {
                             x: Math.cos(angle) * speed,
                             y: Math.sin(angle) * speed,
                         },
-                        `hsl(${hue}, ${saturation}%, ${lightness}%)` // Cor verde/teal
+                        `hsl(${hue}, ${saturation}%, ${lightness}%)` 
                     )
                 );
             }
@@ -92,6 +117,7 @@ if (can) {
         for (let i = 0; i < particles.length; i++) {
             particles[i].update();
 
+            // Remove partículas que saem da tela
             if (
                 particles[i].x < 0 ||
                 particles[i].x > can.width ||
@@ -107,17 +133,16 @@ if (can) {
     pulse();
     animate();
 
-    // Adiciona listener para redimensionar o canvas junto com a janela
     window.addEventListener('resize', () => {
         can.width = window.innerWidth;
         can.height = window.innerHeight;
     });
 }
 
+// --- INTERSECTION OBSERVERS (JORNADA E REVEALS) ---
 
-// A parte do IntersectionObserver está correta e não precisa de alterações.
 const reveals = document.querySelectorAll('.reveal');
-const observer = new IntersectionObserver((entries) => {
+const revealObserver = new IntersectionObserver((entries) => {
     entries.forEach(entry => {
         if (entry.isIntersecting) {
             entry.target.classList.add('active');
@@ -125,66 +150,52 @@ const observer = new IntersectionObserver((entries) => {
     });
 }, { threshold: 0.1 });
 
-reveals.forEach(el => observer.observe(el));
+reveals.forEach(el => revealObserver.observe(el));
 
 document.addEventListener("DOMContentLoaded", () => {
     const etapas = document.querySelectorAll(".etapa");
 
     if (etapas.length > 0) {
         const observerOptions = {
-            root: null, // Observa em relação ao viewport
+            root: null,
             rootMargin: "0px",
-            threshold: 0.6 // Ativa quando 60% do elemento está visível
+            threshold: 0.6
         };
 
-        const observer = new IntersectionObserver((entries) => {
+        const etapaObserver = new IntersectionObserver((entries) => {
             entries.forEach(entry => {
                 if (entry.isIntersecting) {
-                    // Adiciona a classe quando entra na tela
                     entry.target.classList.add("is-active");
                 } else {
-                    // Remove a classe quando sai da tela
                     entry.target.classList.remove("is-active");
                 }
             });
         }, observerOptions);
 
-        // Inicia a observação para cada etapa
         etapas.forEach(etapa => {
-            observer.observe(etapa);
+            etapaObserver.observe(etapa);
         });
     }
 });
 
-// CÓDIGO DE DIAGNÓSTICO - Cole isso no final do seu hero.js
-
+// --- LÓGICA DE COR DA NAVBAR (Baseado no Scroll) ---
 document.addEventListener("DOMContentLoaded", () => {
-    // Só executa este script se estivermos na página inicial
     if (document.body.id === 'welcome-page') {
         
-        console.log("Script da Navbar Ativo na Home!"); // Mensagem 1: O script começou?
+        const navbar = document.querySelector('.navbar');
+        const heroSection = document.querySelector('.hero');
 
-        const navbar = document.querySelector('.navbar'); // Tenta encontrar a navbar
-        const heroSection = document.querySelector('.hero'); // Tenta encontrar a hero section
+        if (navbar && heroSection) {
+            const heroHeight = heroSection.offsetHeight;
 
-        console.log("Elemento Navbar encontrado:", navbar); // Mensagem 2: Encontrou a navbar? (Se aparecer 'null', o nome da classe está errado)
-        console.log("Elemento Hero encontrado:", heroSection); // Mensagem 3: Encontrou a hero?
-
-        if (!navbar || !heroSection) {
-            console.error("ERRO: Não foi possível encontrar a navbar ou a hero section. Verifique os nomes das classes no HTML.");
-            return;
+            window.addEventListener('scroll', () => {
+                // Quando passar do Hero, adiciona classe para mudar a cor da navbar se necessário
+                if (window.scrollY > heroHeight - 80) {
+                    navbar.classList.add('navbar-scrolled-past-hero');
+                } else {
+                    navbar.classList.remove('navbar-scrolled-past-hero');
+                }
+            });
         }
-
-        const heroHeight = heroSection.offsetHeight;
-
-        window.addEventListener('scroll', () => {
-            if (window.scrollY > heroHeight - 80) {
-                navbar.classList.add('navbar-scrolled');
-                console.log("Adicionando classe 'navbar-scrolled'"); // Mensagem 4: Deve aparecer quando você rola para baixo
-            } else {
-                navbar.classList.remove('navbar-scrolled');
-                console.log("Removendo classe 'navbar-scrolled'"); // Mensagem 5: Deve aparecer quando você rola para cima
-            }
-        });
     }
 });

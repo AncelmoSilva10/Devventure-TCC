@@ -191,17 +191,6 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         });
 
-        // Validar CPF na etapa 1
-        if (currentStep === 1) {
-            const cpfInput = document.getElementById('cpf');
-            const cpfFeedback = document.getElementById('cpf-feedback');
-            if (cpfInput && (cpfInput.value.length < 14 || (cpfFeedback && cpfFeedback.classList.contains('invalido')))) {
-                isValid = false;
-                highlightError(cpfInput);
-                Swal.fire({ toast: true, position: 'top-end', icon: 'error', title: 'CPF Inválido ou incompleto.', showConfirmButton: false, timer: 3000 });
-            }
-        }
-        
         // Validar Senha na etapa 3
         if (currentStep === 3) {
             const p1 = document.getElementById('password-cadastro');
@@ -221,12 +210,17 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function highlightError(input) {
+        input.classList.add('is-invalid'); // Usa classe CSS para borda vermelha
         input.style.borderColor = '#dc3545';
-        input.addEventListener('input', function() { this.style.borderColor = '#ddd'; }, { once: true });
+        input.addEventListener('input', function() { 
+            this.style.borderColor = '#ddd'; 
+            this.classList.remove('is-invalid');
+        }, { once: true });
     }
     
     function removeHighlight(input) {
         input.style.borderColor = '#ddd';
+        input.classList.remove('is-invalid');
     }
 
     // ============================================================
@@ -244,7 +238,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 const reader = new FileReader();
                 reader.onload = (ev) => {
                     const preview = document.getElementById('avatar-preview');
-                    preview.innerHTML = `<img src="${ev.target.result}" style="width:100%; height:100%; object-fit:cover; border-radius:50%;">`;
+                    // O CSS garante que a imagem preencha corretamente com object-fit: cover
+                    preview.innerHTML = `<img src="${ev.target.result}" alt="Preview">`;
                     avatarWrapper.style.borderColor = 'var(--primary)';
                 }
                 reader.readAsDataURL(file);
@@ -252,63 +247,85 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // --- MÁSCARA CPF ---
+    // --- MÁSCARA E VALIDAÇÃO CPF (COM SWEETALERT) ---
     const cpfInput = document.getElementById('cpf');
     const cpfFeedback = document.getElementById('cpf-feedback');
 
     if (cpfInput) {
+        // 1. MÁSCARA (Enquanto digita)
         cpfInput.addEventListener('input', (e) => {
             let v = e.target.value.replace(/\D/g, '');
+            if (v.length > 11) v = v.slice(0, 11);
+            
             v = v.replace(/(\d{3})(\d)/, '$1.$2');
             v = v.replace(/(\d{3})(\d)/, '$1.$2');
             v = v.replace(/(\d{3})(\d{1,2})$/, '$1-$2');
             e.target.value = v;
 
-            const cleanCPF = v.replace(/\D/g, '');
-            if (cleanCPF.length === 11) {
-                if (validarCPF(cleanCPF)) {
-                    cpfFeedback.textContent = '✅ CPF válido';
-                    cpfFeedback.style.color = '#2ecc71';
-                    cpfFeedback.className = 'valido';
-                    cpfInput.style.borderColor = '#2ecc71';
-                } else {
-                    cpfFeedback.textContent = '❌ CPF inválido';
-                    cpfFeedback.style.color = '#e74c3c';
-                    cpfFeedback.className = 'invalido';
-                    cpfInput.style.borderColor = '#e74c3c';
+            // Limpa erros visuais enquanto digita
+            if (cpfInput.classList.contains('is-invalid')) {
+                removeHighlight(cpfInput);
+            }
+        });
+
+        // 2. VALIDAÇÃO (Ao sair do campo)
+        cpfInput.addEventListener('blur', function() {
+            const cleanCPF = this.value.replace(/\D/g, '');
+            
+            // Se estiver vazio, não faz nada (a validação de required cuida disso)
+            if (cleanCPF.length === 0) return;
+
+            // Se for inválido
+            if (cleanCPF.length < 11 || !validarCPF(cleanCPF)) {
+                
+                // DISPARA O SWEETALERT (Estilizado pelo CSS global)
+                Swal.fire({
+                    icon: 'error',
+                    title: 'CPF Inválido',
+                    text: 'O número informado está incorreto. Verifique e tente novamente.',
+                    confirmButtonText: 'Corrigir',
+                    confirmButtonColor: '#00796B' // Cor verde professor
+                });
+
+                // Limpa o campo e marca erro
+                this.value = '';
+                highlightError(this);
+                if (cpfFeedback) {
+                    cpfFeedback.textContent = '';
                 }
+
             } else {
-                cpfFeedback.textContent = '';
-                cpfFeedback.className = '';
-                cpfInput.style.borderColor = '#ddd';
+                // Sucesso
+                if (cpfFeedback) {
+                    cpfFeedback.textContent = 'CPF válido';
+                    cpfFeedback.style.color = '#2ecc71';
+                }
+                this.style.borderColor = '#2ecc71';
             }
         });
     }
 
     function validarCPF(cpf) {
-        cpf = cpf.replace(/[^\d]+/g, '');
-        if (cpf.length !== 11 || /^(\d)\1+$/.test(cpf)) return false;
+        if (cpf.length !== 11 || /^(\d)\1{10}$/.test(cpf)) return false;
         let soma = 0, resto;
-        for (let i = 1; i <= 9; i++) soma += parseInt(cpf.substring(i - 1, i)) * (11 - i);
+        for (let i = 1; i <= 9; i++) soma = soma + parseInt(cpf.substring(i-1, i)) * (11 - i);
         resto = (soma * 10) % 11;
         if ((resto === 10) || (resto === 11)) resto = 0;
         if (resto !== parseInt(cpf.substring(9, 10))) return false;
         soma = 0;
-        for (let i = 1; i <= 10; i++) soma += parseInt(cpf.substring(i - 1, i)) * (12 - i);
+        for (let i = 1; i <= 10; i++) soma = soma + parseInt(cpf.substring(i-1, i)) * (12 - i);
         resto = (soma * 10) % 11;
         if ((resto === 10) || (resto === 11)) resto = 0;
         if (resto !== parseInt(cpf.substring(10, 11))) return false;
         return true;
     }
 
-    // --- MÁSCARA TELEFONE (CORRIGIDA COM LIMITE DE 11 DÍGITOS) ---
+    // --- MÁSCARA TELEFONE ---
     const phoneInput = document.getElementById('telefone');
     if (phoneInput) {
         phoneInput.addEventListener('input', (e) => {
             let v = e.target.value.replace(/\D/g, '');
-            // Limita a 11 dígitos
             if (v.length > 11) v = v.slice(0, 11);
-            // Máscara (11) 91234-5678
             v = v.replace(/^(\d{2})(\d)/g, '($1) $2');
             v = v.replace(/(\d)(\d{4})$/, '$1-$2');
             e.target.value = v;
@@ -319,25 +336,17 @@ document.addEventListener('DOMContentLoaded', () => {
     // 5. AUTO-DETECTAR ERROS E MANTER O CADASTRO ABERTO
     // ============================================================
     
-    // Verifica se o Laravel devolveu valor 'cadastro' no input hidden
     const tipoForm = formTipoInput ? formTipoInput.value : 'login';
-    
-    // OU Verifica se tem erro visual (.is-invalid) nos campos exclusivos de cadastro
     const hasCadastroErrors = document.querySelector('#cadastro-section .is-invalid');
 
     if (tipoForm === 'cadastro' || hasCadastroErrors) {
-        // Força abrir a tela de cadastro
         switchMode(true);
-        
-        // Se o erro for na etapa 2 ou 3, tenta avançar o stepper visualmente
-        // Exemplo: se tem erro no email (Etapa 3), vamos para etapa 3
         const erroEmail = document.getElementById('email-cadastro');
         if(erroEmail && erroEmail.classList.contains('is-invalid')) {
             currentStep = 3;
             updateStepView();
         }
     } else {
-        // Inicializa como Login padrão
         toggleInputsState(cadastroSection, true);
     }
 

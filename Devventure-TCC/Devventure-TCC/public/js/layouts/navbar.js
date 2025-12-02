@@ -1,6 +1,8 @@
 document.addEventListener('DOMContentLoaded', () => {
 
-    // --- LÓGICA PARA CONTROLAR OS DROPDOWNS DE PERFIL ---
+    const navbar = document.querySelector('.navbar'); 
+    const body = document.body;
+
     const dropdownButtons = document.querySelectorAll('.profile-button');
     dropdownButtons.forEach(button => {
         button.addEventListener('click', (event) => {
@@ -19,7 +21,6 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 
-    // --- LÓGICA INTELIGENTE PARA MODAIS ---
     const modalTriggers = document.querySelectorAll('.modal-trigger');
     modalTriggers.forEach(trigger => {
         trigger.addEventListener('click', () => {
@@ -51,25 +52,38 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 
-    // --- LÓGICA DA NAVBAR (ALTERADA) ---
-    const navbar = document.querySelector('.navbar'); 
-    const body = document.body;
+    const menuToggle = document.getElementById('menu-toggle');
+    const navbarLinks = document.getElementById('navbar-links');
 
-    // Verifica se a navbar existe na página antes de continuar
+    if (menuToggle && navbarLinks) {
+        menuToggle.addEventListener('click', () => {
+            menuToggle.classList.toggle('active');
+            navbarLinks.classList.toggle('active');
+        });
+    }
+
     if (navbar) {
-        // CONDIÇÃO: A lógica de transparência só se aplica se o <body> tiver o id 'welcome-page'
-        if (body.id === 'welcome-page') {
-            // Adiciona o listener de scroll APENAS na página de welcome
-            window.addEventListener('scroll', () => {
-                if (window.scrollY > 50) {
-                    navbar.classList.add('scrolled');
-                } else {
-                    navbar.classList.remove('scrolled');
-                }
-            });
-        } else {
-            // Para TODAS as outras páginas, a navbar já começa com a cor fixa
-            navbar.classList.add('scrolled');
-        }
+        
+        // 1. ANIMAÇÃO DE RECLUSÃO GERAL (APLICA ESTADO EXPANDIDO INICIAL)
+        navbar.classList.add('expanded', 'initial-shape');
+        
+        // 2. GARANTE A COR DE FUNDO GERAL
+        navbar.classList.add('scrolled');
+
+        requestAnimationFrame(() => {
+             requestAnimationFrame(() => {
+                navbar.classList.remove('initial-shape');
+                navbar.classList.remove('expanded');
+             });
+        });
+        
+        // 3. LÓGICA DE SCROLL (APLICADA GERALMENTE)
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 50) {
+                navbar.classList.add('scrolled');
+            } else {
+                navbar.classList.remove('scrolled');
+            }
+        });
     }
 });

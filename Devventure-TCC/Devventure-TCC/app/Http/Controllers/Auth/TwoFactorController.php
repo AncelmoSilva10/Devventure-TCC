@@ -17,7 +17,6 @@ class TwoFactorController extends Controller
      */
     public function showVerifyForm()
     {
-
         if (!session('user_to_verify')) {
             return redirect('/'); 
         }
@@ -36,18 +35,18 @@ class TwoFactorController extends Controller
         if (!$verificationData) {
             return redirect('/')->withErrors(['msg' => 'Sua sessão de verificação expirou. Por favor, tente novamente.']);
         }
-        
 
         $model = $verificationData['guard'] === 'professor' ? Professor::class : Aluno::class;
         $user = $model::find($verificationData['id']);
 
+        // Verifica validade do código
         if (!$user || $user->two_factor_code !== $request->code || now()->gt($user->two_factor_expires_at)) {
             return back()->withErrors(['msg' => 'Código inválido ou expirado.']);
         }
 
+        // Ativa o usuário
         $user->status = 'ativo'; 
         $user->email_verified_at = now();
-
         $user->two_factor_code = null;
         $user->two_factor_expires_at = null;
         $user->save();
@@ -63,10 +62,11 @@ class TwoFactorController extends Controller
      */
     public function resend(Request $request)
     {
-        $email = $request->session()->get('email_for_verification');
+        // CORREÇÃO: Tenta pegar da sessão OU do input (caso venha do alerta da tela de login)
+        $email = $request->session()->get('email_for_verification') ?? $request->input('email');
 
         if (!$email) {
-            return back()->withErrors(['msg' => 'Sessão expirada. Tente fazer login novamente.']);
+            return back()->withErrors(['msg' => 'E-mail não identificado. Tente fazer login novamente.']);
         }
 
         $user = null;
@@ -88,6 +88,7 @@ class TwoFactorController extends Controller
             return back()->withErrors(['msg' => 'Não foi possível encontrar uma conta pendente com este e-mail.']);
         }
 
+        // Gera novo código
         $code = rand(100000, 999999);
         $user->two_factor_code = $code;
         $user->two_factor_expires_at = now()->addMinutes(15);
@@ -99,12 +100,14 @@ class TwoFactorController extends Controller
             return back()->withErrors(['msg' => 'Não foi possível enviar o e-mail. Tente novamente mais tarde.']);
         }
 
+        // Renova a sessão para a tela de verificação
         $request->session()->put('user_to_verify', [
             'id' => $user->id,
             'guard' => $guard
         ]);
         
-        $request->session()->forget('email_for_verification');
+        // Opcional: manter o email na sessão caso precise reenviar novamente da próxima tela
+        $request->session()->put('email_for_verification', $email);
 
         return redirect()->route('2fa.verify.form')
                        ->with('status', 'Um novo código de verificação foi enviado para o seu e-mail.');

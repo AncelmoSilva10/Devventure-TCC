@@ -8,8 +8,28 @@
   <link href="{{ asset('css/layouts/navbar.css') }}" rel="stylesheet">
 </head>
 <body>
+    @php
+        $currentPath = Request::path();
+        
+        $colorClass = '';
 
-<nav class="navbar">
+        // Define a classe de cor/estilo do professor
+        if (Str::startsWith($currentPath, 'professorDashboard') || Str::startsWith($currentPath, 'perfilProfessor')) {
+        $colorClass = 'professor-nav';
+        } elseif (Str::startsWith($currentPath, 'aluno') || Str::startsWith($currentPath, 'perfilAluno')) {
+            $colorClass = 'aluno-nav';
+        }
+                     
+        // Define o status da nav
+        $statusClass = (Str::startsWith ($currentPath, 'professorDashboard') 
+        || Str::startsWith($currentPath, 'alunoDashboard') 
+        || Str::startsWith($currentPath, 'perfil') 
+        || Str::startsWith($currentPath, 'aluno/perfil')) ? 'status-nav' : '';
+        
+        $navClasses = trim($colorClass . ' ' . $statusClass);
+    @endphp
+
+<nav class="navbar {{ $navClasses }}">
     <div class="navbar-container">
 
         {{-- LOGO --}}
@@ -31,7 +51,7 @@
     {{-- Se for aluno logado --}}
     @auth('aluno')
         <a href="{{ route('aluno.dashboard') }}">
-            <i class="fa fa-home"></i><span>Painel Aluno</span>
+            <i class="fa fa-user-graduate"></i><span>Painel Aluno</span>
         </a>
 
         <a href="{{ route('aluno.turma') }}">
@@ -85,7 +105,7 @@
              <div class="navbar-links" id="navbar-links">
 
            <a href="{{ route('professorDashboard') }}">
-            <i class="fa fa-home"></i><span>Painel Professor</span>
+            <i class="fas fa-chalkboard-teacher"></i><span>Painel Professor</span>
         </a>
 
             </div>
@@ -114,7 +134,7 @@
                 </div>
             </div>
         @endauth
-
+ 
     </div>
 </nav>
 
