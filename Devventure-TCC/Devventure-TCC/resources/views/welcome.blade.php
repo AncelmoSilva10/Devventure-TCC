@@ -46,7 +46,7 @@
             <div class="icon-cards__item d-flex align-items-center justify-content-center">
                 <span class="h1">
                     <video autoplay muted loop playsinline style="width: 100%; height: 100%; object-fit: cover; border-radius: inherit;">
-                        <source src="{{ asset('videos/video1.mp4') }}" type="video/mp4">
+                        <source src="{{ asset('videos/video2.mp4') }}" type="video/mp4">
                         Seu navegador não suporta vídeos.
                     </video>
                 </span>
@@ -55,7 +55,7 @@
             <div class="icon-cards__item d-flex align-items-center justify-content-center">
                 <span class="h1">
                     <video autoplay muted loop playsinline style="width: 100%; height: 100%; object-fit: cover; border-radius: inherit;">
-                        <source src="{{ asset('videos/video1.mp4') }}" type="video/mp4">
+                        <source src="{{ asset('videos/video3.mp4') }}" type="video/mp4">
                         Seu navegador não suporta vídeos.
                     </video>
                 </span>
