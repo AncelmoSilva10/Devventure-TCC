@@ -230,6 +230,20 @@ a.content-item:hover {
 .checkbox-item label { margin: 0; font-weight: 500; cursor: pointer; flex: 1; }
 .checkbox-item input[type="checkbox"] { width: 16px; height: 16px; accent-color: var(--primary-color); }
 
+/* Remove os pontos de lista da paginação */
+.pagination, 
+.pagination li {
+    list-style: none !important;
+    list-style-type: none !important;
+    padding-left: 0 !important; /* Remove recuo padrão se houver */
+}
+
+/* Garante que nenhum pseudo-elemento esteja criando bolinhas */
+.pagination li::before,
+.pagination li::after {
+    content: none !important;
+    display: none !important;
+}
 @media (max-width: 900px) {
     .page-body { grid-template-columns: 1fr; }
     .student-list { height: auto; max-height: 500px; }

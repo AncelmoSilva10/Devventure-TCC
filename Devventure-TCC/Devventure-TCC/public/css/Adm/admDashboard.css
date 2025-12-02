@@ -466,6 +466,21 @@ h1, h2, h3, h4, h5, h6 {
     color: var(--text-color);
 }
 
+/* Remove os pontos de lista da paginação */
+.pagination, 
+.pagination li {
+    list-style: none !important;
+    list-style-type: none !important;
+    padding-left: 0 !important; /* Remove recuo padrão se houver */
+}
+
+/* Garante que nenhum pseudo-elemento esteja criando bolinhas */
+.pagination li::before,
+.pagination li::after {
+    content: none !important;
+    display: none !important;
+}
+
 /* --- Responsividade --- */
 @media (max-width: 992px) {
     .sidebar {
